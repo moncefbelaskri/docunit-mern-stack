@@ -1,0 +1,97 @@
+{
+  "name": "DocUniT - L'université Abou Bekr Belkaid Tlemcen",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "",
+  "description": "Gestion de Dossiers des Doctorants Faculté des Sciences",
+  "dependencies": {
+    "@date-io/date-fns": "^1.3.13",
+    "@emotion/react": "^11.8.1",
+    "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.4.4",
+    "@mui/lab": "^5.0.0-alpha.71",
+    "@mui/material": "^5.4.4",
+    "@mui/styles": "^5.4.4",
+    "@stripe/react-stripe-js": "^1.4.1",
+    "@stripe/stripe-js": "^1.16.0",
+    "aos": "^2.3.4",
+    "axios": "^0.26.1",
+    "bcryptjs": "^2.4.3",
+    "classnames": "^2.3.1",
+    "dayjs": "^1.11.2",
+    "emoji-mart": "^3.0.1",
+    "google-map-react": "^2.1.10",
+    "history": "^5.3.0",
+    "js-cookie": "^3.0.1",
+    "link": "^1.4.0",
+    "material-ui-phone-number": "^3.0.0",
+    "memo": "^1.0.1",
+    "onclick": "^0.1.0",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.2",
+    "react-cookie": "^4.1.1",
+    "react-cropper": "^2.1.8",
+    "react-dayjs": "^0.3.2",
+    "react-dom": "^17.0.2",
+    "react-dropzone": "^11.3.4",
+    "react-faq-component": "^1.3.1",
+    "react-icons": "^4.3.1",
+    "react-phone-number-input": "^3.1.52",
+    "react-redirect": "^1.0.0",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^2.1.8",
+    "recharts": "^2.1.2",
+    "setTimeout": "^0.4.9",
+    "twin.macro": "^2.8.2",
+    "validator": "^13.7.0",
+    "window-scroll": "^1.0.0",
+    "workbox-background-sync": "^6.2.4",
+    "workbox-broadcast-update": "^6.2.2",
+    "workbox-cacheable-response": "^6.2.4",
+    "workbox-core": "^6.1.5",
+    "workbox-expiration": "^6.1.5",
+    "workbox-google-analytics": "^6.2.4",
+    "workbox-navigation-preload": "^6.2.2",
+    "workbox-precaching": "^6.2.4",
+    "workbox-range-requests": "^6.1.5",
+    "workbox-routing": "^6.2.4",
+    "workbox-strategies": "^6.1.5",
+    "workbox-streams": "^6.1.5"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.2.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "repository": {
+    "type": "pdf",
+    "url": ""
+  },
+  "author": "moncef&hadi",
+  "license": "",
+  "bugs": {
+    "url": " "
+  }
+}
