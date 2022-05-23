@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState, useContext , Fragment,useEffect } from "react";
+import React, { memo, useCallback, useState, useContext , Fragment, useEffect , useReducer } from "react";
 import  { Redirect } from 'react-router-dom';
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -8,8 +8,6 @@ import NavBar from "./navigation/NavBar";
 import ConsecutiveSnackbarMessages from "../../../shared/components/ConsecutiveSnackbarMessages";
 import UserContext from "../../../shared/components/UserContext";
 import smoothScrollTop from "../../../shared/functions/smoothScrollTop";
-import Doctorants from "../data/Doctorants";
-import Enseignants from "../data/Enseignants";
 const axios = require('axios');
 
 const styles = (theme) => ({
@@ -26,52 +24,18 @@ const styles = (theme) => ({
   },
 });
 
-
-function Main(props) {
-
-  const [userDoc, setUserDoc] = useState({});
-
+ function Main(props) {
+  const { userData } = useContext(UserContext);
   const { classes } = props;
   const [selectedTab, setSelectedTab] = useState(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [docs, setDocs] = useState([]);
   const [dirs, setDirs] = useState([]);
   const [pushMessageToSnackbar, setPushMessageToSnackbar] = useState(null);
+
+  const [ignored, forceUpdate] = useReducer(x => x + 1,useReducer);
+
   
-  const fetchRandomDocs = useCallback(() => {
-    const getdoc = axios.get("http://localhost:5000/users/forsec");
-        setDocs(getdoc);
-    const docs = [];
-    for (let i = 0; i < getdoc; i += 1) {
-      const randomdoc = Doctorants[Math.floor(Math.random() * Doctorants.length)];
-      const target = {
-        id: i,
-        nom: randomdoc.nom,
-        prénom:  randomdoc.prénom,
-        ndc:  randomdoc.ndc,
-        mdp:  randomdoc.mdp,
-        isActivated: Math.round(Math.random()) ? true : false,
-      };
-      docs.push(target);
-    }
-    setDocs(docs);
-  }, [setDocs]);
-  const fetchRandomDirs = useCallback(() => {
-    const dirs = [];
-    for (let i = 0; i < 35; i += 1) {
-      const randomdocc = Enseignants[Math.floor(Math.random() * Enseignants.length)];
-      const targett = {
-        id: i,
-        nom: randomdocc.nom,
-        prénom:  randomdocc.prénom,
-        ndc:  randomdocc.ndc,
-        mdp:  randomdocc.mdp,
-        isActivated: Math.round(Math.random()) ? true : false,
-      };
-      dirs.push(targett);
-    }
-    setDirs(dirs);
-  }, [setDirs]);
 
   const selectDocs = useCallback(() => {
     smoothScrollTop();
@@ -101,13 +65,60 @@ function Main(props) {
   }, [setIsMobileDrawerOpen]);
  
   useEffect(() => {
-    fetchRandomDocs();
-    fetchRandomDirs();
-  }, [
-    fetchRandomDocs,
-    fetchRandomDirs,
-  ]);
-
+    const fetchRandomDocs = async() => {
+    
+      await axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+      const doclist = response.data;
+      const docs = [];
+      for (let i = 0; i < doclist.length; i += 1) {
+        const randomdoc = doclist[i];
+        if(userData.user.dept === randomdoc.dept){
+        const target = {
+          id: i,
+          nom: randomdoc.nom,
+          prénom:  randomdoc.prenom,
+          ndc:  randomdoc.username,
+          mdp:  randomdoc.password,
+          email : randomdoc.mail,
+        };
+        docs.push(target);
+      } 
+      }
+      setDocs(docs);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    
+      };
+      const fetchRandomDirs = async() => {
+        await axios.get("http://localhost:5000/users/secens").then(function (response) {
+          const enslist = response.data;
+        const dirs = [];
+        for (let i = 0; i < enslist.length; i += 1) {
+          const randomens = enslist[i];
+          if(userData.user.dept === randomens.ensdept){
+          const targett = {
+            id: i,
+            nom: randomens.ensnom,
+            prénom:  randomens.ensprenom,
+            ndc:  randomens.ensusername,
+            mdp:  randomens.enspassword,
+            email: randomens.ensmail,
+          };
+          dirs.push(targett);
+         }
+        }
+        setDirs(dirs);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      
+      };
+      fetchRandomDocs();
+      fetchRandomDirs();
+  }, []);
   return (
     <Fragment>
       
@@ -121,6 +132,7 @@ function Main(props) {
         getPushMessageFromChild={getPushMessageFromChild}
       />
       <main className={classNames(classes.main)} >
+     
         <Routing          
           pushMessageToSnackbar={pushMessageToSnackbar}
           docs={docs}          
@@ -130,6 +142,7 @@ function Main(props) {
           selectDirs={selectDirs}       
           setDirs={setDirs}
         />
+        
       </main>
     </Fragment>
   );

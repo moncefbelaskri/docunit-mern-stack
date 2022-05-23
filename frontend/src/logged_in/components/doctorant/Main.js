@@ -1,13 +1,12 @@
-import React, { memo, useCallback, useState, Fragment,useEffect } from "react";
+import React, { memo, useCallback, useState, Fragment , useEffect , useContext } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import withStyles from '@mui/styles/withStyles';
 import Routing from "./Routing";
 import NavBar from "./navigation/NavBar";
 import ConsecutiveSnackbarMessages from "../../../shared/components/ConsecutiveSnackbarMessages";
-import Doctorants from "../data/Doctorants";
 import smoothScrollTop from "../../../shared/functions/smoothScrollTop";
-
+import UserContext from "../../../shared/components/UserContext";
 
 const styles = (theme) => ({
   main: {
@@ -25,7 +24,7 @@ const styles = (theme) => ({
 
 
 function Main(props) {
- 
+  const { userData } = useContext(UserContext);
   const { classes } = props;
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [doct, setDoct] = useState([]);
@@ -34,7 +33,7 @@ function Main(props) {
 
   const fetchRandomDoct = useCallback(() => {
     const doct = [];
-    for (let i = 0; i < 35; i += 1) {
+   /* for (let i = 0; i < 35; i += 1) {
       const randomdoc = Doctorants[Math.floor(Math.random() * Doctorants.length)];
       const target = {
         id: i,
@@ -47,6 +46,7 @@ function Main(props) {
       };
       doct.push(target);
     }
+    */
     setDoct(doct);
   }, [setDoct]);
 

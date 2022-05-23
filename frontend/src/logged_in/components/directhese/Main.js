@@ -34,7 +34,7 @@ function Main(props) {
 
   const fetchRandomDirt = useCallback(() => {
     const dirt = [];
-    for (let i = 0; i < 35; i += 1) {
+    /* for (let i = 0; i < 35; i += 1) {
       const randomdoc = Doctorants[Math.floor(Math.random() * Doctorants.length)];
       const target = {
         id: i,
@@ -47,6 +47,7 @@ function Main(props) {
       };
       dirt.push(target);
     }
+    */
     setDirt(dirt);
   }, [setDirt]);
 

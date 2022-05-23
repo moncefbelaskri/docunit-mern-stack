@@ -57,8 +57,13 @@ function LoginDialog(props) {
         setTimeout(() => {
           setIsLoading(false);
           localStorage.setItem('auth-token', response.data.token);
-          localStorage.setItem('user_id', response.data.id);
+          
+          if(response.data.user.role === "sec")
           history.push("/sec");
+          else if(response.data.user.role === "doc")
+          history.push("/doct");
+          else if(response.data.user.role === "ens")
+          history.push("/dirt");
         }, 1000);
         
       })

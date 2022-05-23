@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 function sec(props) {
   const { selectsec } = props;
   useEffect(() => {
+    
     selectsec();
   }, [selectsec]);
   return (

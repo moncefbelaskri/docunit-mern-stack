@@ -26,20 +26,20 @@ function App() {
       if (token === null) {
         localStorage.setItem("auth-token", "");
         token = "";
+
       }
       const tokenRes = await axios.post(
         "http://localhost:5000/users/tokenIsValid",
         null,
         { headers: { "x-auth-token": token } }
       );
-      console.log(tokenRes.data);
       if (tokenRes.data) {
         const userRes = await axios.get("http://localhost:5000/users/", {
           headers: { "x-auth-token": token },
         });
         setUserData({
           token,
-          user: userRes.data,
+          user : userRes.data,
         });
       }
     };

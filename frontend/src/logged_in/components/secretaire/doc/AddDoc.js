@@ -6,6 +6,7 @@ import { withRouter } from "react-router-dom";
 import Bordered from "../../../../shared/components/Bordered";
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import { useHistory } from "react-router-dom";
 import VisibilityPasswordTextField from "../../../../shared/components/VisibilityPasswordTextField";
 import UserContext from "../../../../shared/components/UserContext";
 import ActionPaper from "../../../../shared/components/ActionPaper";
@@ -78,9 +79,10 @@ function AddDoc(props) {
     pushMessageToSnackbar,
     onClose,
   } = props;
-  
+  const { userData } = useContext(UserContext);
 
   let a = 0;
+  const history = useHistory();
   const DoctorantNom = useRef();
   const DoctorantPrenom = useRef();
   const DoctorantDateN = useRef();
@@ -397,57 +399,20 @@ function AddDoc(props) {
               }
   
       });
+      setIsLoading(true);
+  
+      setTimeout(() => {
         
-        setTimeout(() => {
-            setIsLoading(true);
-            pushMessageToSnackbar({
-              text: "Doctorant ajouté avec succès",
-            });
-            onClose();
-          }, 100);
+        pushMessageToSnackbar({
+            text: "ajouté avec succès",
+        });
+        window.location.reload(false);
+        }, 10);
+      
         }
         }  
   ,[ setIsLoading,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantDept,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantDatesout,DoctorantName,DoctorantPassword
     ,DirtNom,DirtPrenom,DirtGrade,DirtEtabori,DirtLaborata,DirtNumtel,DirtMail,CoDirtNom,CoDirtPrenom,CoDirtGrade,CoDirtEtabori,CoDirtLaborata,CoDirtNumtel,CoDirtMail]);
-   
-    const formudir = useCallback( async () => {
-      setIsLoading(true);
-  
-            await axios.post("http://localhost:5000/users/register_dir",
-             {
-              dirnom: DirtNom.current.value,
-              dirprenom: DirtPrenom.current.value,
-              dirgrade: DirtGrade.current.value,
-              diretabori: DirtEtabori.current.value,
-              dirlaborata: DirtLaborata.current.value,
-              dirnumtel: DirtNumtel.current.value,
-              dirmail: DirtMail.current.value,
-        
-             },{ headers: {"Content-Type": "application/json",} });
-
-            }
-            
-    ,[ setIsLoading,DirtNom,DirtPrenom,DirtGrade,DirtEtabori,DirtLaborata,DirtNumtel,DirtMail ]);  
-  
-    const formucodir = useCallback( async () => {
-
-      setIsLoading(true);
-  
-            await axios.post("http://localhost:5000/users/register_codir",
-             {
-              codirnom: CoDirtNom.current.value,
-              codirprenom: CoDirtPrenom.current.value,
-              codirgrade: CoDirtGrade.current.value,
-              codiretabori: CoDirtEtabori.current.value,
-              codirlaborata: CoDirtLaborata.current.value,
-              codirnumtel: CoDirtNumtel.current.value,
-              codirmail: CoDirtMail.current.value,
-        
-             },{ headers: {"Content-Type": "application/json",} });
-             
-            }
-    ,[ setIsLoading,CoDirtNom,CoDirtPrenom,CoDirtGrade,CoDirtEtabori,CoDirtLaborata,CoDirtNumtel,CoDirtMail ]);
-  
 
   const handleUpload = useCallback(async () => {
     setIsLoading(true);

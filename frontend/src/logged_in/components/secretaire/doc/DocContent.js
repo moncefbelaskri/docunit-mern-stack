@@ -19,6 +19,7 @@ import stableSort from "../../../../shared/functions/stableSort";
 import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
+import axios from "axios";
 
 const styles =(theme)=> ({
   tableWrapper: {
@@ -52,16 +53,20 @@ const rows = [
     label: "Nom",
   },
   {
-    id: "prénom",
+    id: "prenom",
     label: "Prénom",
   },
   {
-    id: "ndc",
+    id: "username",
     label: "Nom de compte",
   },
   {
-    id: "mdp",
+    id: "password",
     label: "Mot de passe",
+  }, 
+  {
+    id: "mail",
+    label: "Email",
   }, 
   {
     id: "actions",
@@ -87,7 +92,6 @@ function DocContent(props) {
   );
   const [deleteDocDialogRow, setDeleteDocDialogRow] = useState(null);
   const [isDeleteDocLoading, setIsDeleteDocLoading] = useState(false);
-
   const handleRequestSort = useCallback(
     (__, property) => {
       const _orderBy = property;
@@ -110,10 +114,18 @@ function DocContent(props) {
       const index = _docs.findIndex(
         (element) => element.id === deleteDocDialogRow.id
       );
+      axios.delete(
+        "http://localhost:5000/users/deletedoc",
+        {
+          headers: {
+            "x-delete": _docs[index].ndc ,
+          },
+        }
+      );
       _docs.splice(index, 1);
       setDocs(_docs);
       pushMessageToSnackbar({
-        text: "Doctorant supprimé",
+        text: "supprimé avec succès",
       });
     }, 1500);
   }, [
@@ -166,7 +178,9 @@ function DocContent(props) {
           content={deleteDocDialogRow ? (
               <span>
                   {"Voulez vous vraiment supprimer le doctorant"}
-                  <b>{deleteDocDialogRow.name}</b>
+                  <b> {deleteDocDialogRow.nom} </b>
+                  {" "}
+                  <b> {deleteDocDialogRow.prénom} </b>
                   {" de votre liste?"}
               </span>
           ) : null}
@@ -198,7 +212,10 @@ function DocContent(props) {
                                           </TableCell>
                                           <TableCell component="th" scope="row">
                                               {row.mdp}
-                                          </TableCell>                                      
+                                          </TableCell>   
+                                          <TableCell component="th" scope="row">
+                                              {row.email}
+                                          </TableCell>                                   
                                           <TableCell component="th" scope="row">
                                               <Box display="flex" justifyContent="flex-end">
                                                   <IconButton

@@ -19,6 +19,7 @@ import stableSort from "../../../../shared/functions/stableSort";
 import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
+const axios = require('axios');
 
 const styles = (theme) => ({
   tableWrapper: {
@@ -48,20 +49,24 @@ const styles = (theme) => ({
 });
 const rows = [
   {
-    id: "nom",
+    id: "ensnom",
     label: "Nom",
   },
   {
-    id: "prénom",
+    id: "ensprenom",
     label: "Prénom",
   },
   {
-    id: "ndc",
+    id: "ensusername",
     label: "Nom de compte",
   },
   {
-    id: "mdp",
+    id: "enspassword",
     label: "Mot de passe",
+  }, 
+  {
+    id: "ensmail",
+    label: "Email",
   }, 
   {
     id: "actions",
@@ -106,10 +111,18 @@ function DirContent(props) {
       const index = _dirs.findIndex(
         (element) => element.id === deleteDirDialogRow.id
       );
+      axios.delete(
+        "http://localhost:5000/users/deleteens",
+        {
+          headers: {
+            "x-delete": _dirs[index].ndc ,
+          },
+        }
+      );
       _dirs.splice(index, 1);
       setDirs(_dirs);
       pushMessageToSnackbar({
-        text: "Enseignant supprimé",
+        text: "supprimé avec succès",
       });
     }, 1500);
   }, [
@@ -161,9 +174,11 @@ function DirContent(props) {
           title="Confirmation"
           content={deleteDirDialogRow ? (
               <span>
-                  {"Voulez vous vraiment supprimer l'enseignant"}
-                  <b>{deleteDirDialogRow.name}</b>
-                  {" de votre liste?"}
+                  {"Voulez vous vraiment supprimer l'enseignant "}
+                  <b> {deleteDirDialogRow.nom} </b>
+                  {" "}
+                  <b> {deleteDirDialogRow.prénom} </b>
+                  {"  de votre liste?"}
               </span>
           ) : null}
           onClose={handleDeleteDirDialogClose}
@@ -194,7 +209,10 @@ function DirContent(props) {
                                           </TableCell>
                                           <TableCell component="th" scope="row">
                                               {row.mdp}
-                                          </TableCell>                                      
+                                          </TableCell>     
+                                          <TableCell component="th" scope="row">
+                                              {row.email}
+                                          </TableCell>                                   
                                           <TableCell component="th" scope="row">
                                               <Box display="flex" justifyContent="flex-end">                                             
                                                   <IconButton

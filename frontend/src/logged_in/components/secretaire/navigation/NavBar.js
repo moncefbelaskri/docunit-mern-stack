@@ -128,7 +128,7 @@ function NavBar(props) {
 
   const menuItems = [
     {
-      link: "/sec",
+      link: "/sec/doc",
       name: "Doctorant",
       onClick: closeMobileDrawer,
       icon: {
@@ -144,7 +144,7 @@ function NavBar(props) {
     },
     {
       link: "/sec/dir",
-      name: "Directeur",
+      name: "Enseignant",
       onClick: closeMobileDrawer,
       icon: {
         desktop: (
