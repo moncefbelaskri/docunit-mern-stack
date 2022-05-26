@@ -10,6 +10,7 @@ import VisibilityPasswordTextField from "../../../../shared/components/Visibilit
 import ActionPaper from "../../../../shared/components/ActionPaper";
 import ButtonCircularProgress from "../../../../shared/components/ButtonCircularProgress";
 import UserContext from "../../../../shared/components/UserContext";
+
 const axios = require('axios');
 
 const styles = () => ({
@@ -59,8 +60,9 @@ function ModifDoc(props) {
     pushMessageToSnackbar,
     onClose,
   } = props;
+  const { iddocData } = useContext(UserContext);
   const { userData } = useContext(UserContext);
-  
+
   const DoctorantNom = useRef();
   const DoctorantPrenom = useRef();
   const DoctorantDateN = useRef();
@@ -72,7 +74,6 @@ function ModifDoc(props) {
   const DoctorantAnebac = useRef();
   const DoctorantSeribac = useRef();
   const DoctorantNumbac = useRef();
-  const DoctorantDept = useRef();
   const DoctorantCatdoc = useRef();
   const DoctorantDerdip = useRef();
   const DoctorantSpederdip = useRef();
@@ -128,7 +129,7 @@ function ModifDoc(props) {
 
     if(DoctorantEtapro.current.value === "sal" && DoctorantDerdip.current.value === "au")
           {
-             await axios.post("http://localhost:5000/users/register_doc",
+            await axios.put("http://localhost:5000/users/update/doc/" + iddocData.iddocup._id,
            {
             nom: DoctorantNom.current.value,
             prenom: DoctorantPrenom.current.value,
@@ -179,7 +180,7 @@ function ModifDoc(props) {
 
     else if(DoctorantEtapro.current.value === "sal" && DoctorantDerdip.current.value !== "au")
              {
-               await axios.post("http://localhost:5000/users/register_doc",
+              await axios.put("http://localhost:5000/users/update/doc/" + iddocData.iddocup._id,
                {
                 nom: DoctorantNom.current.value,
                 prenom: DoctorantPrenom.current.value,
@@ -193,7 +194,7 @@ function ModifDoc(props) {
                 anebac: DoctorantAnebac.current.value,
                 seribac: DoctorantSeribac.current.value,
                 numbac: DoctorantNumbac.current.value,
-                dept: DoctorantDept.current.value,
+                dept: userData.user.dept,
                 catdoc:DoctorantCatdoc.current.value,
                 derdip: DoctorantDerdip.current.value,
                 spederdip: DoctorantSpederdip.current.value,
@@ -228,7 +229,7 @@ function ModifDoc(props) {
              }
       else if(DoctorantEtapro.current.value !== "sal" && DoctorantDerdip.current.value === "au")
              {
-          await axios.post("http://localhost:5000/users/register_doc",
+              await axios.put("http://localhost:5000/users/update/doc/" + iddocData.iddocup._id,
             {  
               nom: DoctorantNom.current.value,
       prenom: DoctorantPrenom.current.value,
@@ -241,7 +242,7 @@ function ModifDoc(props) {
       anebac: DoctorantAnebac.current.value,
       seribac: DoctorantSeribac.current.value,
       numbac: DoctorantNumbac.current.value,
-      dept: DoctorantDept.current.value,
+      dept: userData.user.dept,
       catdoc:DoctorantCatdoc.current.value,
       derdip: DoctorantDerdip.current.value,
       precii: DoctorantPrecii.current.value,
@@ -276,7 +277,7 @@ function ModifDoc(props) {
               }
       else 
         {
-       await axios.post("http://localhost:5000/users/register_doc",
+          await axios.put("http://localhost:5000/users/update/doc/" + iddocData.iddocup._id,
           {
             nom: DoctorantNom.current.value,
           prenom: DoctorantPrenom.current.value,
@@ -289,7 +290,7 @@ function ModifDoc(props) {
           anebac: DoctorantAnebac.current.value,
           seribac: DoctorantSeribac.current.value,
           numbac: DoctorantNumbac.current.value,
-          dept: DoctorantDept.current.value,
+          dept: userData.user.dept,
           catdoc:DoctorantCatdoc.current.value,
           derdip: DoctorantDerdip.current.value,
           spederdip: DoctorantSpederdip.current.value,
@@ -323,7 +324,7 @@ function ModifDoc(props) {
       });
         }     
       if(existed !== "yes") {
-        await axios.post("http://localhost:5000/users/register_dir",
+        await axios.put("http://localhost:5000/users/update/dir/" + iddocData.iddocup._id,
          {
           dirnom: DirtNom.current.value,
           dirprenom: DirtPrenom.current.value,
@@ -349,7 +350,7 @@ function ModifDoc(props) {
 
     });
         
-         await axios.post("http://localhost:5000/users/register_codir",
+    await axios.put("http://localhost:5000/users/update/codir/" + iddocData.iddocup._id,
           {
            codirnom: CoDirtNom.current.value,
            codirprenom: CoDirtPrenom.current.value,
@@ -369,7 +370,7 @@ function ModifDoc(props) {
   
                {
   
-                console.log("b");
+                console.log("codirecteur existe déjà.");
   
               }
   
@@ -379,14 +380,14 @@ function ModifDoc(props) {
       setTimeout(() => {
         
         pushMessageToSnackbar({
-            text: "ajouté avec succès",
+            text: "modifié avec succès",
         });
         window.location.reload(false);
         }, 10);
       
         }
         }  
-  ,[ setIsLoading,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantDept,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantDatesout,DoctorantName,DoctorantPassword
+  ,[ setIsLoading,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantDatesout,DoctorantName,DoctorantPassword
     ,DirtNom,DirtPrenom,DirtGrade,DirtEtabori,DirtLaborata,DirtNumtel,DirtMail,CoDirtNom,CoDirtPrenom,CoDirtGrade,CoDirtEtabori,CoDirtLaborata,CoDirtNumtel,CoDirtMail]);
 
   const handleUpload = useCallback(async () => {
@@ -402,7 +403,6 @@ function ModifDoc(props) {
     DoctorantAnebac.current.value === "" ||
     DoctorantSeribac.current.value === "" ||
     DoctorantNumbac.current.value === "" ||
-    DoctorantDept.current.value === "" ||
     DoctorantCatdoc.current.value === "" ||
     DoctorantDerdip.current.value === "" ||
     DoctorantSpederdip.current.value === "" ||
@@ -475,80 +475,80 @@ function ModifDoc(props) {
           <ListItem  disableGutters className="listItemLeftPadding">
             <ListItemText>
             <div>
-            <TextField required variant="outlined" label="Nom" defaultValue={"moncef"}  inputRef={DoctorantNom}/>            
-            <TextField required variant="outlined" label="Prénom" inputRef={DoctorantPrenom} />
+            <TextField required variant="outlined" label="Nom" defaultValue={iddocData.iddocup.nom} inputRef={DoctorantNom}/>            
+            <TextField required variant="outlined" label="Prénom" defaultValue={iddocData.iddocup.prénom} inputRef={DoctorantPrenom} />
             </div>
             <div>
-            <TextField required variant="outlined" label="Né(e) le" type="date" inputRef={DoctorantDateN}
+            <TextField required variant="outlined" label="Né(e) le" type="date" defaultValue={iddocData.iddocup.da} inputRef={DoctorantDateN}
              InputLabelProps={{
                shrink: true  
                }}/>
-            <TextField required variant="outlined" label="à" inputRef={DoctorantLieuN} />
-            <TextField required variant="outlined" label="Adresse" inputRef={DoctorantAdresse} />
+            <TextField required variant="outlined" label="à" defaultValue={iddocData.iddocup.li} inputRef={DoctorantLieuN} />
+            <TextField required variant="outlined" label="Adresse" defaultValue={iddocData.iddocup.ad} inputRef={DoctorantAdresse} />
             </div>     
            <div>
-           <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputRef={DoctorantNumtel} />
-           <TextField required variant="outlined" label="Email" name="email" type="email" inputRef={DoctorantMail}/>            
+           <TextField required variant="outlined" label="N° de téléphone " name="phone" defaultValue={iddocData.iddocup.nt} inputRef={DoctorantNumtel} />
+           <TextField required variant="outlined" label="Email" name="email" type="email" defaultValue={iddocData.iddocup.email} inputRef={DoctorantMail}/>            
            </div> 
             <div>
-            <TextField  required variant="outlined" select   label="Etat professionnel"  defaultValue={""} inputRef={DoctorantEtapro} onChange={handleChangeEtapro} >
+            <TextField  required variant="outlined" select   label="Etat professionnel"  defaultValue={iddocData.iddocup.ep} inputRef={DoctorantEtapro} onChange={handleChangeEtapro} >
           {currencies.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>
           ))}
         </TextField>
-        {etapro==="sal"? <TextField  variant="outlined" label="(Préciser)" inputRef={DoctorantPreci}/>:null}
+        {(etapro==="sal" || iddocData.iddocup.ep==="sal")? <TextField  variant="outlined" label="(Préciser)" defaultValue={iddocData.iddocup.pr} inputRef={DoctorantPreci}/>:null}
             </div>
             <div>
-            <TextField required variant="outlined" type="number" name="number" label="Année d’obtention du BAC" inputRef={DoctorantAnebac}/>
-            <TextField required variant="outlined" type="number" name="number" label="Série du BAC " inputRef={DoctorantSeribac}/>
-            <TextField required variant="outlined" type="number" name="number" label="N° du BAC " inputRef={DoctorantNumbac}/>
+            <TextField required variant="outlined" type="number" name="number" inputProps={{min:1950}} label="Année d’obtention du BAC" defaultValue={iddocData.iddocup.an} inputRef={DoctorantAnebac}/>
+            <TextField required variant="outlined"  label="Série du BAC" defaultValue={iddocData.iddocup.seb} inputRef={DoctorantSeribac}/>
+            <TextField required variant="outlined" type="number" name="number" label="N° du BAC" defaultValue={iddocData.iddocup.nb} inputRef={DoctorantNumbac}/>
             </div> 
             <div>      
-        <TextField required variant="outlined" select   label="Fiche de reinscription en" defaultValue={""} inputRef={DoctorantCatdoc} onChange={handleChangeTypedoc} >
+        <TextField required variant="outlined" select   label="Fiche de reinscription en" defaultValue={iddocData.iddocup.cd} inputRef={DoctorantCatdoc} onChange={handleChangeTypedoc} >
           {currencies2.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>
           ))}
         </TextField>                
-            <TextField required variant="outlined" select   label="Dernier diplome obtenu" defaultValue={""} inputRef={DoctorantDerdip} onChange={handleChangeDerdip} >
+            <TextField required variant="outlined" select   label="Dernier diplome obtenu" defaultValue={iddocData.iddocup.dd} inputRef={DoctorantDerdip} onChange={handleChangeDerdip} >
           {currencies3.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>
           ))}
         </TextField>  
-            {derdip==="au"? <TextField  variant="outlined" label="(Préciser)" inputRef={DoctorantPrecii}/>:null}
+            {(derdip==="au" || iddocData.iddocup.dd==="au")? <TextField  variant="outlined" label="(Préciser)"  defaultValue={iddocData.iddocup.prr} inputRef={DoctorantPrecii}/>:null}
             </div>
             <div>
-            <TextField required variant="outlined" label="Spécialité dernier diplôme obtenu" inputRef={DoctorantSpederdip}/>
-            <TextField required variant="outlined" label="Date de son obtention"  type="date" inputRef={DoctorantDatederdip}
+            <TextField required variant="outlined" label="Spécialité dernier diplôme obtenu" defaultValue={iddocData.iddocup.sdd} inputRef={DoctorantSpederdip}/>
+            <TextField required variant="outlined" label="Date de son obtention"  type="date" defaultValue={iddocData.iddocup.dad} inputRef={DoctorantDatederdip}
               InputLabelProps={{
                shrink: true
                }}
             />
             </div>           
             <div>
-            <TextField required variant="outlined" label="Date 1ère Inscription Doctorat"  type="date" inputRef={DoctorantDatepremdoc}
+            <TextField required variant="outlined" label="Date 1ère Inscription Doctorat"  type="date" defaultValue={iddocData.iddocup.dap} inputRef={DoctorantDatepremdoc}
               InputLabelProps={{
                shrink: true
                }}
               />
-            <TextField required variant="outlined" label="Spécialité du Doctorat" inputRef={DoctorantSpedoc}/>
-            <TextField required variant="outlined" label="Laboratoire de rattachement" inputRef={DoctorantLaborata}/>
+            <TextField required variant="outlined" label="Spécialité du Doctorat"  defaultValue={iddocData.iddocup.sd} inputRef={DoctorantSpedoc}/>
+            <TextField required variant="outlined" label="Laboratoire de rattachement" defaultValue={iddocData.iddocup.lr} inputRef={DoctorantLaborata}/>
             </div>
             <div>
-            <TextField required variant="outlined" label="Intitulé de la thèse" inputRef={DoctorantIntithe}/>
-            <TextField required variant="outlined" label="Date prévue de soutenance"  type="date" inputRef={DoctorantDatesout}
+            <TextField required variant="outlined" label="Intitulé de la thèse" defaultValue={iddocData.iddocup.inti} inputRef={DoctorantIntithe}/>
+            <TextField required variant="outlined" label="Date prévue de soutenance" defaultValue={iddocData.iddocup.ds} type="date" inputRef={DoctorantDatesout}
               InputLabelProps={{
                shrink: true
                }}
             />
             </div>         
             <div>
-            <TextField required variant="outlined" label="Nom de compte" inputRef={DoctorantName}/>
+            <TextField required variant="outlined" label="Nom de compte" defaultValue={iddocData.iddocup.ndc} inputRef={DoctorantName}/>
             <VisibilityPasswordTextField
               variant="outlined"
               margin="normal"
@@ -556,6 +556,7 @@ function ModifDoc(props) {
               fullWidth              
               label="Mot de passe"
               autoComplete="off"
+              defaultValue={iddocData.iddocup.mdp}
               inputRef={DoctorantPassword}
               onVisibilityChange={setIsPasswordVisible}
               isVisible={isPasswordVisible}

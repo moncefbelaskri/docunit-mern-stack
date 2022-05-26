@@ -10,7 +10,7 @@ const indx = require("../middleware/indx");
 const jwt = require('jsonwebtoken');
 
 /* sec api */
-
+ 
 router.post('/regsec', async (req, res) => {
 
   
@@ -402,7 +402,7 @@ router.get("/secens" , async (req, res) => {
 
 
 
-/* update doc for sec api */
+/* update ens for sec api */
 
 router.put('/update/ens/:id', async (req, res) => {
   try {
@@ -445,7 +445,158 @@ router.put('/update/ens/:id', async (req, res) => {
 }
 });
 
+/* update doc for sec api */
 
+router.put('/update/doc/:id', async (req, res) => {
+  try {
 
+    let {username} = req.body;
+
+      // checking if the doc is already in the database
+    const ExUsernameDoc = await Doctorant.findOne({ _id :{$ne : req.params.id} ,username: username });
+
+    if (ExUsernameDoc)
+    {
+      return res.status(400).json({ msg: "doctorant existe déjà." });
+    }
+
+  const UpdateDoc = new Doctorant({
+      _id: req.params.id,
+      nom: req.body.nom,
+      prenom: req.body.prenom,
+      username,
+      password: req.body.password,
+      dateN: req.body.dateN,
+      lieuN: req.body.lieuN,
+      adresse: req.body.adresse,
+      numtel: req.body.numtel,
+      mail: req.body.mail,
+      etapro: req.body.etapro,
+      preci: req.body.preci,
+      anebac: req.body.anebac,
+      seribac: req.body.seribac,
+      numbac: req.body.numbac,
+      dept: req.body.dept,
+      catdoc: req.body.catdoc,
+      derdip: req.body.derdip,
+      precii: req.body.precii,
+      spederdip: req.body.spederdip,
+      datederdip: req.body.datederdip,
+      datepremdoc: req.body.datepremdoc,
+      spedoc: req.body.spedoc,
+      laborata: req.body.laborata,
+      intithe: req.body.intithe,
+      datesout: req.body.datesout,
+      role:'doc',
+      dirnom: req.body.dirnom,
+      dirprenom: req.body.dirprenom,
+      codirnom: req.body.codirnom,
+      codirprenom: req.body.codirprenom,
+  });
+  await Doctorant.updateOne({ _id : req.params.id}, UpdateDoc).then(
+    () => {
+      res.status(201).json({
+        message: 'Doc updated successfully!'
+      });
+    }
+  ).catch(
+    (error) => {
+      res.status(400).json({
+        error: error.message
+      });
+    }
+  );
+} catch (err) {
+  res.status(500).json({ error: err.message });
+}
+});
+
+/* update dir for sec api */
+
+router.put('/update/dir/:id', async (req, res) => {
+  try {
+
+    let {dirnom, dirprenom} = req.body;
+
+      // checking if the doc is already in the database
+      const ExDirnom = await Dirt.findOne({ dirnom: dirnom });
+      const ExDirprenom = await Dirt.findOne({ dirprenom: dirprenom });
+
+      if ( ExDirnom && ExDirprenom )
+      {       
+        return res.status(400).json({ msg1: "directeur existe déjà." });
+    }
+
+  const UpdateDir = new Dirt({
+      _id: req.params.id,
+      dirnom,
+    dirprenom,
+    dirgrade: req.body.dirgrade,
+    diretabori: req.body.diretabori,
+    dirlaborata: req.body.dirlaborata,
+    dirnumtel: req.body.dirnumtel,
+    dirmail: req.body.dirmail,
+  });
+  await Dirt.updateOne({ _id : req.params.id}, UpdateDir).then(
+    () => {
+      res.status(201).json({
+        message: 'Dir updated successfully!'
+      });
+    }
+  ).catch(
+    (error) => {
+      res.status(400).json({
+        error: error.message
+      });
+    }
+  );
+} catch (err) {
+  res.status(500).json({ error: err.message });
+}
+});
+
+/* update dir for sec api */
+
+router.put('/update/codir/:id', async (req, res) => {
+  try {
+
+    let {codirnom, codirprenom} = req.body;
+
+      // checking if the doc is already in the database
+      const ExCoDirnom = await CoDirt.findOne({ codirnom: codirnom });
+      const ExCoDirprenom = await CoDirt.findOne({ codirprenom: codirprenom });
+
+      if ( ExCoDirnom && ExCoDirprenom )
+      {       
+        return res.status(400).json({ msg1: "codirecteur existe déjà." });
+    }
+
+  const UpdateCoDir = new CoDirt({
+      _id: req.params.id,
+      codirnom,
+      codirprenom,
+      codirgrade: req.body.codirgrade,
+      codiretabori: req.body.codiretabori,
+      codirlaborata: req.body.codirlaborata,
+      codirnumtel: req.body.codirnumtel,
+      codirmail: req.body.codirmail,
+  });
+  await CoDirt.updateOne({ _id : req.params.id}, UpdateCoDir).then(
+    () => {
+      res.status(201).json({
+        message: 'CoDir updated successfully!'
+      });
+    }
+  ).catch(
+    (error) => {
+      res.status(400).json({
+        error: error.message
+      });
+    }
+  );
+} catch (err) {
+  res.status(500).json({ error: err.message });
+}
+});
 
 module.exports = router;

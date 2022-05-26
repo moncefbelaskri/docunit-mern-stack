@@ -22,7 +22,9 @@ function App() {
   const [iddirData, setiddirData] = useState({
     iddirup: undefined,
   });
-
+  const [iddocData, setiddocData] = useState({
+    iddocup: undefined,
+  });
   useEffect(() => {
     const checkLoggedIn = async () => {
       let token = localStorage.getItem("auth-token");
@@ -52,7 +54,7 @@ function App() {
   }, []);
   return (
     <BrowserRouter>
-    <UserContext.Provider value={{ userData, setUserData, iddirData, setiddirData}}>
+    <UserContext.Provider value={{ userData, setUserData, iddirData, setiddirData, iddocData, setiddocData}}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />

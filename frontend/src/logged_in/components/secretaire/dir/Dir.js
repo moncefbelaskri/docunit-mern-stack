@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import DirContent from "./DirContent";
 import AddDir from "./AddDir";
 import ModifDir from "./ModifDir";
+import ViewDir from "./ViewDir";
 
 
 function Dir(props) {
@@ -14,6 +15,7 @@ function Dir(props) {
   } = props;
   const [isAddDirPaperOpen, setIsAddDirPaperOpen] = useState(false);
   const [isModifDirPaperOpen, setIsModifDirPaperOpen] = useState(false);
+  const [isViewDirPaperOpen, setIsViewDirPaperOpen] = useState(false);
 
   const openAddDirModal = useCallback(() => {
     setIsAddDirPaperOpen(true);
@@ -31,6 +33,14 @@ function Dir(props) {
     setIsModifDirPaperOpen(false);
   }, [setIsModifDirPaperOpen]);
 
+  const openViewDirModal = useCallback(() => {
+    setIsViewDirPaperOpen(true);
+  }, [setIsViewDirPaperOpen]);
+
+  const closeViewDirModal = useCallback(() => {
+    setIsViewDirPaperOpen(false);
+  }, [setIsViewDirPaperOpen]);
+
   useEffect(() => {
     selectDirs();
   }, [selectDirs]);
@@ -47,9 +57,16 @@ function Dir(props) {
       pushMessageToSnackbar={pushMessageToSnackbar}
     />
   }
+  if (isViewDirPaperOpen) {
+    return <ViewDir
+      onClose={closeViewDirModal}
+      pushMessageToSnackbar={pushMessageToSnackbar}
+    />
+  }
   return <DirContent
     openAddDirModal={openAddDirModal}
     openModifDirModal={openModifDirModal}
+    openViewDirModal={openViewDirModal}
     dirs={dirs}
     setDirs={setDirs}
     pushMessageToSnackbar={pushMessageToSnackbar}

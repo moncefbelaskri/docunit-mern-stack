@@ -53,7 +53,7 @@ const doctorantSchema = new mongoose.Schema({
         required : true,
     },
     seribac: {
-        type: Number,
+        type: String,
         required : true,
     },
     numbac: {

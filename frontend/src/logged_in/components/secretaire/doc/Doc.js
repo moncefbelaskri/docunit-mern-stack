@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import DocContent from "./DocContent";
 import AddDoc from "./AddDoc";
 import ModifDoc from "./ModifDoc";
+import ViewDoc from "./ViewDoc";
 
 function Doc(props) {
   const {
@@ -13,6 +14,7 @@ function Doc(props) {
   } = props;
   const [isAddDocPaperOpen, setIsAddDocPaperOpen] = useState(false);
   const [isModifDocPaperOpen, setIsModifDocPaperOpen] = useState(false);
+  const [isViewDocPaperOpen, setIsViewDocPaperOpen] = useState(false);
 
   const openAddDocModal = useCallback(() => {
     setIsAddDocPaperOpen(true);
@@ -30,6 +32,14 @@ function Doc(props) {
     setIsModifDocPaperOpen(false);
   }, [setIsModifDocPaperOpen]);
 
+  const openViewDocModal = useCallback(() => {
+    setIsViewDocPaperOpen(true);
+  }, [setIsViewDocPaperOpen]);
+
+  const closeViewDocModal = useCallback(() => {
+    setIsViewDocPaperOpen(false);
+  }, [setIsViewDocPaperOpen]);
+
   useEffect(() => {
     selectDocs();
   }, [selectDocs]);
@@ -46,9 +56,16 @@ function Doc(props) {
       pushMessageToSnackbar={pushMessageToSnackbar}
     />
   }
+  if (isViewDocPaperOpen) {
+    return <ViewDoc
+      onClose={closeViewDocModal}
+      pushMessageToSnackbar={pushMessageToSnackbar}
+    />
+  }
   return <DocContent
     openAddDocModal={openAddDocModal}
     openModifDocModal={openModifDocModal}
+    openViewDocModal={openViewDocModal}
     docs={docs}
     setDocs={setDocs}
     pushMessageToSnackbar={pushMessageToSnackbar} 

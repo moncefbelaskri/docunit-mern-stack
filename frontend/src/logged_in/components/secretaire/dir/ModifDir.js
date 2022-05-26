@@ -64,7 +64,7 @@ function ModifDir(props) {
 setTimeout(() => {
   
   pushMessageToSnackbar({
-      text: "ajouté avec succès",
+      text: "modifié avec succès",
   });
   window.location.reload(false);
   }, 10);

@@ -73,7 +73,6 @@ function AddDoc(props) {
   const DoctorantAnebac = useRef();
   const DoctorantSeribac = useRef();
   const DoctorantNumbac = useRef();
-  const DoctorantDept = useRef();
   const DoctorantCatdoc = useRef();
   const DoctorantDerdip = useRef();
   const DoctorantSpederdip = useRef();
@@ -194,7 +193,7 @@ function AddDoc(props) {
                 anebac: DoctorantAnebac.current.value,
                 seribac: DoctorantSeribac.current.value,
                 numbac: DoctorantNumbac.current.value,
-                dept: DoctorantDept.current.value,
+                dept: userData.user.dept,
                 catdoc:DoctorantCatdoc.current.value,
                 derdip: DoctorantDerdip.current.value,
                 spederdip: DoctorantSpederdip.current.value,
@@ -242,7 +241,7 @@ function AddDoc(props) {
       anebac: DoctorantAnebac.current.value,
       seribac: DoctorantSeribac.current.value,
       numbac: DoctorantNumbac.current.value,
-      dept: DoctorantDept.current.value,
+      dept: userData.user.dept,
       catdoc:DoctorantCatdoc.current.value,
       derdip: DoctorantDerdip.current.value,
       precii: DoctorantPrecii.current.value,
@@ -290,7 +289,7 @@ function AddDoc(props) {
           anebac: DoctorantAnebac.current.value,
           seribac: DoctorantSeribac.current.value,
           numbac: DoctorantNumbac.current.value,
-          dept: DoctorantDept.current.value,
+          dept: userData.user.dept,
           catdoc:DoctorantCatdoc.current.value,
           derdip: DoctorantDerdip.current.value,
           spederdip: DoctorantSpederdip.current.value,
@@ -370,7 +369,7 @@ function AddDoc(props) {
   
                {
   
-                console.log("b");
+                console.log("codirecteur existe déjà.");
   
               }
   
@@ -387,7 +386,7 @@ function AddDoc(props) {
       
         }
         }  
-  ,[ setIsLoading,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantDept,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantDatesout,DoctorantName,DoctorantPassword
+  ,[ setIsLoading,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantDatesout,DoctorantName,DoctorantPassword
     ,DirtNom,DirtPrenom,DirtGrade,DirtEtabori,DirtLaborata,DirtNumtel,DirtMail,CoDirtNom,CoDirtPrenom,CoDirtGrade,CoDirtEtabori,CoDirtLaborata,CoDirtNumtel,CoDirtMail]);
 
   const handleUpload = useCallback(async () => {
@@ -403,7 +402,6 @@ function AddDoc(props) {
     DoctorantAnebac.current.value === "" ||
     DoctorantSeribac.current.value === "" ||
     DoctorantNumbac.current.value === "" ||
-    DoctorantDept.current.value === "" ||
     DoctorantCatdoc.current.value === "" ||
     DoctorantDerdip.current.value === "" ||
     DoctorantSpederdip.current.value === "" ||
@@ -502,8 +500,8 @@ function AddDoc(props) {
         {etapro==="sal"? <TextField  variant="outlined" label="(Préciser)" inputRef={DoctorantPreci}/>:null}
             </div>
             <div>
-            <TextField required variant="outlined" type="number" name="number" label="Année d’obtention du BAC" inputRef={DoctorantAnebac}/>
-            <TextField required variant="outlined" type="number" name="number" label="Série du BAC " inputRef={DoctorantSeribac}/>
+            <TextField required variant="outlined" type="number" name="number" inputProps={{min:1950}} label="Année d’obtention du BAC" inputRef={DoctorantAnebac}/>
+            <TextField required variant="outlined"  label="Série du BAC " inputRef={DoctorantSeribac}/>
             <TextField required variant="outlined" type="number" name="number" label="N° du BAC " inputRef={DoctorantNumbac}/>
             </div> 
             <div>      
