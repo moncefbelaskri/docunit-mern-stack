@@ -52,7 +52,7 @@ function App(props) {
             <div>
               <div className="question-align">
                 <h3 className="question-style">
-                Comment se connecter au site ?
+                Comment faire la reinscription au doctorat ?
                 </h3>
                 
                 <BsChevronDown
@@ -65,7 +65,7 @@ function App(props) {
                 className={active ? `answer answer-divider ` : `answer`}
                 
               >
-                <p>Pour les enseignants et les doctorants, au début de l'année universitaire la secrétaire de votre département va vous envoyer vos identifiants sur votre boite mail.
+                <p>Connectez vous grâce aux identifiants fournis par l'administration, vous allez être diriger vers une page qui contient entre autre un bouton reinscription, cliquez dessus et vous aurez la possibilité de renseigner votre état ainsi que votre pourcentage d'avancement pour l'année en cours.
                 </p>
               </div>
 

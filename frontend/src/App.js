@@ -6,18 +6,21 @@ import GlobalStyles from "./GlobalStyles";
 import Pace from "./shared/components/Pace";
 import UserContext from "./shared/components/UserContext";
 const axios = require('axios');
-const AdjComponent = lazy(() => import("./logged_in/components/adjoint/Main"));
-const DirtComponent = lazy(() => import("./logged_in/components/directhese/Main"));
-const DoctComponent = lazy(() => import("./logged_in/components/doctorant/Main"));
 const Notfoundpage = lazy(() => import("./logged_out/components/notfound/Notfoundpage"));
 const LoggedOutComponent = lazy(() => import("./logged_out/components/Main"));
-const SecComponent = lazy(() => import("./logged_in/components/secretaire/Security"));
+const SecusecComponent = lazy(() => import("./logged_in/components/secretaire/Security"));
+const SecudocComponent = lazy(() => import("./logged_in/components/doctorant/Security"));
+const SecudirComponent = lazy(() => import("./logged_in/components/directhese/Security"));
+const SecuadjComponent = lazy(() => import("./logged_in/components/adjoint/Security"));
 
 
 function App() {
   const [userData, setUserData] = useState({
     token: undefined,
     user: undefined,
+  });
+  const [iddirData, setiddirData] = useState({
+    iddirup: undefined,
   });
 
   useEffect(() => {
@@ -41,13 +44,15 @@ function App() {
           token,
           user : userRes.data,
         });
+        
       }
     };
     checkLoggedIn();
+  
   }, []);
   return (
     <BrowserRouter>
-    <UserContext.Provider value={{ userData, setUserData }}>
+    <UserContext.Provider value={{ userData, setUserData, iddirData, setiddirData}}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />
@@ -55,30 +60,29 @@ function App() {
           <Pace color={theme.palette.primary.dark} />
           <Suspense fallback={<Fragment />}>
             <Switch>
-            <Route exact path="/" >
-              <LoggedOutComponent />
-            </Route>
+              <Route exact path="/" >
+                <LoggedOutComponent />
+              </Route>
             
-            <Route path="/sec" >
-              <SecComponent />
-            </Route>
+              <Route path="/sec" >
+                <SecusecComponent />
+              </Route>
             
-         <Route path="/adj" >
-              <AdjComponent />
+              <Route path="/adj" >
+                <SecuadjComponent />
               </Route>
 
-               <Route path="/dirt" >
-                <DirtComponent />
-                </Route> 
+              <Route path="/dirt" >
+                <SecudirComponent />
+              </Route> 
 
-               <Route path="/doct" >
-               <DoctComponent />
-               </Route>
-
-
-            <Route>
-              <Notfoundpage />
-            </Route>
+              <Route path="/doct" >
+                <SecudocComponent />
+              </Route>
+              
+              <Route>
+                <Notfoundpage />
+              </Route>
 
             </Switch>
           </Suspense>

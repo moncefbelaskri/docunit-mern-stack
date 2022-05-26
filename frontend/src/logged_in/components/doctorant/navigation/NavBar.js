@@ -104,7 +104,6 @@ function NavBar(props) {
   const {
     classes,
     selectedTab,
-    theme
   } = props;
   const links = useRef([]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -166,6 +165,7 @@ function NavBar(props) {
               >
             <img
              src={`${process.env.PUBLIC_URL}/images/faviconD-512x512.png`}
+             alt="logo DocUniT"
              width="32" height="31"
          /> 
          </Link>  

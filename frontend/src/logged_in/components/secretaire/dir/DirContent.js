@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback , useContext } from "react";
 import PropTypes from "prop-types";
 import {Divider,
   Toolbar,
@@ -18,7 +18,9 @@ import EnhancedTableHead from "../../../../shared/components/EnhancedTableHead";
 import stableSort from "../../../../shared/functions/stableSort";
 import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
+import UserContext from "../../../../shared/components/UserContext";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
+import SettingsIcon from '@mui/icons-material/Settings';
 const axios = require('axios');
 
 const styles = (theme) => ({
@@ -49,23 +51,23 @@ const styles = (theme) => ({
 });
 const rows = [
   {
-    id: "ensnom",
+    id: "nom",
     label: "Nom",
   },
   {
-    id: "ensprenom",
+    id: "prénom",
     label: "Prénom",
   },
   {
-    id: "ensusername",
+    id: "ndc",
     label: "Nom de compte",
   },
   {
-    id: "enspassword",
+    id: "mdp",
     label: "Mot de passe",
   }, 
   {
-    id: "ensmail",
+    id: "email",
     label: "Email",
   }, 
   {
@@ -81,14 +83,17 @@ function DirContent(props) {
     setDirs,
     dirs,
     openAddDirModal,
+    openModifDirModal,
     classes,
   } = props;
+  const { setiddirData } = useContext(UserContext);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState(null);
   const [isDeleteDirDialogOpen, setIsDeleteDirDialogOpen] = useState(false);
   const [deleteDirDialogRow, setDeleteDirDialogRow] = useState(null);
   const [isDeleteDirLoading, setIsDeleteDirLoading] = useState(false);
+  
   const handleRequestSort = useCallback(
     (__, property) => {
       const _orderBy = property;
@@ -140,6 +145,12 @@ function DirContent(props) {
     },
     [setPage]
   );
+  const updateDir = useCallback((row) => {
+    openModifDirModal();
+    setiddirData({
+      iddirup: row,
+    });
+  }, [setIsDeleteDirDialogOpen]);
 
   const handleDeleteDirDialogClose = useCallback(() => {
     setIsDeleteDirDialogOpen(false);
@@ -147,6 +158,7 @@ function DirContent(props) {
 
   const handleDeleteDirDialogOpen = useCallback(
     (row) => {
+
       setIsDeleteDirDialogOpen(true);
       setDeleteDirDialogRow(row);
     },
@@ -214,7 +226,16 @@ function DirContent(props) {
                                               {row.email}
                                           </TableCell>                                   
                                           <TableCell component="th" scope="row">
-                                              <Box display="flex" justifyContent="flex-end">                                             
+                                              <Box display="flex" justifyContent="flex-end">  
+                                                  <IconButton
+                                                      className={classes.iconButton}
+                                                      onClick={() => {
+                                                        updateDir(row);
+                                                      }}
+                                                      aria-label="Delete"
+                                                      size="large">
+                                                      <SettingsIcon className={classes.blackIcon} />
+                                                  </IconButton>                                               
                                                   <IconButton
                                                       className={classes.iconButton}
                                                       onClick={() => {
@@ -266,6 +287,7 @@ function DirContent(props) {
 
 DirContent.propTypes = {
   openAddDirModal: PropTypes.func.isRequired,
+  openModifDirModal: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   dirs: PropTypes.arrayOf(PropTypes.object).isRequired,
   setDirs: PropTypes.func.isRequired,

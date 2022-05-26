@@ -2,6 +2,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import DocContent from "./DocContent";
 import AddDoc from "./AddDoc";
+import ModifDoc from "./ModifDoc";
+
 function Doc(props) {
   const {
     selectDocs,
@@ -10,6 +12,7 @@ function Doc(props) {
     setDocs,
   } = props;
   const [isAddDocPaperOpen, setIsAddDocPaperOpen] = useState(false);
+  const [isModifDocPaperOpen, setIsModifDocPaperOpen] = useState(false);
 
   const openAddDocModal = useCallback(() => {
     setIsAddDocPaperOpen(true);
@@ -18,6 +21,14 @@ function Doc(props) {
   const closeAddDocModal = useCallback(() => {
     setIsAddDocPaperOpen(false);
   }, [setIsAddDocPaperOpen]);
+
+  const openModifDocModal = useCallback(() => {
+    setIsModifDocPaperOpen(true);
+  }, [setIsModifDocPaperOpen]);
+
+  const closeModifDocModal = useCallback(() => {
+    setIsModifDocPaperOpen(false);
+  }, [setIsModifDocPaperOpen]);
 
   useEffect(() => {
     selectDocs();
@@ -29,8 +40,15 @@ function Doc(props) {
       pushMessageToSnackbar={pushMessageToSnackbar}
     />
   }
+  if (isModifDocPaperOpen) {
+    return <ModifDoc
+      onClose={closeModifDocModal}
+      pushMessageToSnackbar={pushMessageToSnackbar}
+    />
+  }
   return <DocContent
     openAddDocModal={openAddDocModal}
+    openModifDocModal={openModifDocModal}
     docs={docs}
     setDocs={setDocs}
     pushMessageToSnackbar={pushMessageToSnackbar} 

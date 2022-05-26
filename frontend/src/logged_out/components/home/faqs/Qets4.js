@@ -52,7 +52,7 @@ function App(props) {
             <div>
               <div className="question-align">
                 <h3 className="question-style">
-                Comment se connecter au site ?
+                Comment consulter sa fiche d'inscription et de réinscription?
                 </h3>
                 
                 <BsChevronDown
@@ -65,7 +65,7 @@ function App(props) {
                 className={active ? `answer answer-divider ` : `answer`}
                 
               >
-                <p>Pour les enseignants et les doctorants, au début de l'année universitaire la secrétaire de votre département va vous envoyer vos identifiants sur votre boite mail.
+                <p>Connectez vous grâce aux identifiants fournis par l'administration, vous allez être diriger vers une page qui contient vos informations personnelles et vous aurez la possibilité de consulter votre fiche d'inscription et de reinscription.
                 </p>
               </div>
 

@@ -48,6 +48,7 @@ function NavBarerror(props) {
               >
             <img
              src={`${process.env.PUBLIC_URL}/images/faviconD-512x512.png`}
+             alt="logo DocUniT"
              width="32" height="31"
          /> 
          </Link>  

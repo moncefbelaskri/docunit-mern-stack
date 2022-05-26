@@ -20,7 +20,7 @@ const styles = (theme) => ({
 });
 
 function Main(props) {
-  const { userData, setUserData } = useContext(UserContext);
+  const {setUserData } = useContext(UserContext);
   useEffect(() => {
   const logout = async () => {
     setUserData({

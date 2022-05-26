@@ -10,7 +10,6 @@ import VisibilityPasswordTextField from "../../../../shared/components/Visibilit
 import ActionPaper from "../../../../shared/components/ActionPaper";
 import ButtonCircularProgress from "../../../../shared/components/ButtonCircularProgress";
 import UserContext from "../../../../shared/components/UserContext";
-
 const axios = require('axios');
 
 const styles = () => ({
@@ -54,14 +53,14 @@ const currencies3 = [
     label: 'Autre',
   },
 ];
-function AddDoc(props) {
+function ModifDoc(props) {
   
   const {
     pushMessageToSnackbar,
     onClose,
   } = props;
   const { userData } = useContext(UserContext);
-
+  
   const DoctorantNom = useRef();
   const DoctorantPrenom = useRef();
   const DoctorantDateN = useRef();
@@ -476,7 +475,7 @@ function AddDoc(props) {
           <ListItem  disableGutters className="listItemLeftPadding">
             <ListItemText>
             <div>
-            <TextField required variant="outlined" label="Nom" inputRef={DoctorantNom}/>            
+            <TextField required variant="outlined" label="Nom" defaultValue={"moncef"}  inputRef={DoctorantNom}/>            
             <TextField required variant="outlined" label="Prénom" inputRef={DoctorantPrenom} />
             </div>
             <div>
@@ -646,9 +645,9 @@ function AddDoc(props) {
 }
 
 
-AddDoc.propTypes = {
+ModifDoc.propTypes = {
   pushMessageToSnackbar: PropTypes.func,
   onClose: PropTypes.func,
 };
 
-export default withRouter(withStyles(styles)(AddDoc));
+export default withRouter(withStyles(styles)(ModifDoc));

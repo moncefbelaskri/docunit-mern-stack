@@ -105,10 +105,9 @@ function NavBar(props) {
   const {
     classes,
     selectedTab,
-    theme
   } = props;
   const links = useRef([]);
-  const { userData, setUserData } = useContext(UserContext);
+  const {setUserData } = useContext(UserContext);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const openMobileDrawer = useCallback(() => {
     setIsMobileOpen(true);
@@ -128,7 +127,7 @@ function NavBar(props) {
 
   const menuItems = [
     {
-      link: "/sec/doc",
+      link: "/sec",
       name: "Doctorant",
       onClick: closeMobileDrawer,
       icon: {
@@ -193,6 +192,7 @@ function NavBar(props) {
               >
             <img
              src={`${process.env.PUBLIC_URL}/images/faviconD-512x512.png`}
+             alt="logo DocUniT"
              width="32" height="31"
          /> 
          </Link>  

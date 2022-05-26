@@ -5,7 +5,7 @@ import { Grid, Typography, Card, Button, Hidden, Box } from "@mui/material";
 import withStyles from "@mui/styles/withStyles";
 import DocUniTBorder from "../../../shared/components/DocUniTBorder";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Pdf from "./Présentation doctorat.pdf";
+import Pdf from "./présentationdoctorat.pdf";
 const styles = (theme) => ({
   extraLargeButtonLabel: {
     fontSize: theme.typography.body1.fontSize,

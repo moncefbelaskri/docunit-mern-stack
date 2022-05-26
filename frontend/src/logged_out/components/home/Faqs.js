@@ -3,6 +3,8 @@ import {Typography } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import Qets1 from "./faqs/Qets1";
 import Qets2 from "./faqs/Qets2";
+import Qets3 from "./faqs/Qets3";
+import Qets4 from "./faqs/Qets4";
 
 
 const styles = (theme) => ({
@@ -38,6 +40,10 @@ function Faqs(props) {
         <Qets1/>
         <br />
         <Qets2/>
+        <br />
+        <Qets3/>
+        <br />
+        <Qets4/>
         </div>
       </div>
   );

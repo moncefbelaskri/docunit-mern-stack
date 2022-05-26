@@ -19,6 +19,7 @@ import stableSort from "../../../../shared/functions/stableSort";
 import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
+import SettingsIcon from '@mui/icons-material/Settings';
 import axios from "axios";
 
 const styles =(theme)=> ({
@@ -53,19 +54,19 @@ const rows = [
     label: "Nom",
   },
   {
-    id: "prenom",
+    id: "prénom",
     label: "Prénom",
   },
   {
-    id: "username",
+    id: "ndc",
     label: "Nom de compte",
   },
   {
-    id: "password",
+    id: "mdp",
     label: "Mot de passe",
   }, 
   {
-    id: "mail",
+    id: "email",
     label: "Email",
   }, 
   {
@@ -82,6 +83,7 @@ function DocContent(props) {
     setDocs,
     docs,
     openAddDocModal,
+    openModifDocModal,
     classes, 
   } = props;
   const [page, setPage] = useState(0);
@@ -218,6 +220,13 @@ function DocContent(props) {
                                           </TableCell>                                   
                                           <TableCell component="th" scope="row">
                                               <Box display="flex" justifyContent="flex-end">
+                                                <IconButton
+                                                      className={classes.iconButton}
+                                                      onClick={openModifDocModal}
+                                                      aria-label="Delete"
+                                                      size="large">
+                                                      <SettingsIcon className={classes.blackIcon} />
+                                                  </IconButton>    
                                                   <IconButton
                                                       className={classes.iconButton}
                                                       onClick={() => {
@@ -269,6 +278,7 @@ function DocContent(props) {
 
 DocContent.propTypes = {
   openAddDocModal: PropTypes.func.isRequired,
+  openModifDocModal: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   docs: PropTypes.arrayOf(PropTypes.object).isRequired,
   setDocs: PropTypes.func.isRequired,

@@ -1,5 +1,4 @@
-import React, { memo, useCallback, useState, useContext , Fragment, useEffect , useReducer } from "react";
-import  { Redirect } from 'react-router-dom';
+import React, { memo, useCallback, useState, useContext , Fragment, useEffect} from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import withStyles from '@mui/styles/withStyles';
@@ -33,7 +32,6 @@ const styles = (theme) => ({
   const [dirs, setDirs] = useState([]);
   const [pushMessageToSnackbar, setPushMessageToSnackbar] = useState(null);
 
-  const [ignored, forceUpdate] = useReducer(x => x + 1,useReducer);
 
   
 
@@ -75,6 +73,7 @@ const styles = (theme) => ({
         if(userData.user.dept === randomdoc.dept){
         const target = {
           id: i,
+          _id : randomdoc._id,
           nom: randomdoc.nom,
           prénom:  randomdoc.prenom,
           ndc:  randomdoc.username,
@@ -100,6 +99,7 @@ const styles = (theme) => ({
           if(userData.user.dept === randomens.ensdept){
           const targett = {
             id: i,
+            _id : randomens._id,
             nom: randomens.ensnom,
             prénom:  randomens.ensprenom,
             ndc:  randomens.ensusername,

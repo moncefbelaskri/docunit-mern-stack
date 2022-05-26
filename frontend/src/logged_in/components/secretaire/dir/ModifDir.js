@@ -17,12 +17,12 @@ const styles = () => ({
   },
 });
 
-function AddDir(props) {
-
+function ModifDir(props) {
   const {
     pushMessageToSnackbar,
     onClose,
   } = props;
+  const { iddirData } = useContext(UserContext);
   const { userData } = useContext(UserContext);
   const EnsNom = useRef();
   const EnsPrenom = useRef();
@@ -35,7 +35,7 @@ function AddDir(props) {
   const formuens = useCallback( async () => {
     
         setIsLoading(true);
-        await axios.post("http://localhost:5000/users/register_ens",
+        await axios.put("http://localhost:5000/users/update/ens/" + iddirData.iddirup._id,
       {
        ensnom: EnsNom.current.value,
        ensprenom: EnsPrenom.current.value,
@@ -91,8 +91,8 @@ setTimeout(() => {
   }
   
   }, [setIsLoading , onClose, pushMessageToSnackbar]);
-
   return (
+
     <Fragment>
       <ActionPaper
         helpPadding
@@ -119,17 +119,18 @@ setTimeout(() => {
           <ListItem  disableGutters className="listItemLeftPadding">
             <ListItemText>
             <div>
-            <TextField required variant="outlined" label="Nom" inputRef={EnsNom}/>
-            <TextField required variant="outlined" label="Prénom" inputRef={EnsPrenom}/>   
-            <TextField  required variant="outlined" label="Email" name="email" type="email" inputRef={EnsMail}/>                 
+            <TextField required variant="outlined" label="Nom" defaultValue={iddirData.iddirup.nom} inputRef={EnsNom}/>
+            <TextField required variant="outlined" label="Prénom" defaultValue={iddirData.iddirup.prénom} inputRef={EnsPrenom}/>   
+            <TextField  required variant="outlined" label="Email" name="email" type="email" defaultValue={iddirData.iddirup.email}  inputRef={EnsMail}/>                 
             </div> 
             <div>
-            <TextField required variant="outlined" label="Nom de compte" inputRef={EnsName}/>
+            <TextField required variant="outlined" label="Nom de compte"  defaultValue={iddirData.iddirup.ndc}  inputRef={EnsName}/>
             <VisibilityPasswordTextField
               variant="outlined"
               margin="normal"
               required
               label="Mot de passe"
+              defaultValue={iddirData.iddirup.mdp} 
               inputRef={EnsPassword}
               onVisibilityChange={setIsPasswordVisible}
               isVisible={isPasswordVisible}
@@ -155,7 +156,7 @@ setTimeout(() => {
               color="secondary"
               disabled={isLoading}
             >
-              Valider {isLoading && <ButtonCircularProgress />}
+              mettre à jour {isLoading && <ButtonCircularProgress />}
             </Button>
           </Fragment>
         }
@@ -165,9 +166,9 @@ setTimeout(() => {
 }
 
 
-AddDir.propTypes = {
+ModifDir.propTypes = {
   pushMessageToSnackbar: PropTypes.func,
   onClose: PropTypes.func,
 };
 
-export default withRouter(withStyles(styles)(AddDir));
+export default withRouter(withStyles(styles)(ModifDir));

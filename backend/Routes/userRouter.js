@@ -331,12 +331,38 @@ router.post("/tokenIsValid", async (req, res) => {
   }
 });
 
+ /* get sec api */
+
 router.get("/", auth , async (req, res) => {
   const user = await Sec.findById(req.user);
   res.json({
     id: user._id,
     dept : user.dept,
   });
+});
+
+ /* get doc api */
+
+ router.get("/getdoc" , async (req, res) => {
+  try {
+    id = req.header("x-update");
+    const getDoc = await Doctorant.findOne({ _id : id});
+    return res.json(getDoc);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* get ens api */
+
+router.get("/getens" , async (req, res) => {
+  try {
+    id = req.header("x-update");
+    const getEns = await Enseignant.findOne({ _id : id});
+    return res.json(getEns);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 /* delete doc api */
@@ -350,6 +376,7 @@ router.delete("/deletedoc", indx , async (req, res) => {
   }
 });
 
+
 router.delete("/deleteens", indx , async (req, res) => {
   try {
     const deletedEns = await Enseignant.findOneAndDelete({ensusername : req.docun});
@@ -361,17 +388,62 @@ router.delete("/deleteens", indx , async (req, res) => {
 
 /* get doc for sec api */
 router.get("/secdoc" , async (req, res) => {
-  const doc = await Doctorant.find({},{ _id : false ,nom : true, prenom : true, username : true , password : true , mail : true , dept : true})
+  const doc = await Doctorant.find()
   return res.json(doc);
 });
 
 /* get ens for sec api */
 
 router.get("/secens" , async (req, res) => {
-  const ens = await Enseignant.find({},{ _id : false ,ensnom : true, ensprenom : true, ensusername : true , enspassword : true , ensmail : true , ensdept : true })
+  const ens = await Enseignant.find()
   return res.json(ens);
 });
 
+
+
+
+/* update doc for sec api */
+
+router.put('/update/ens/:id', async (req, res) => {
+  try {
+
+    let {ensusername} = req.body;
+
+      // checking if the ens is already in the database
+    const ExUsernameEns = await Enseignant.findOne({ _id :{$ne : req.params.id} ,ensusername: ensusername });
+
+    if (ExUsernameEns)
+    {
+      return res.status(400).json({ msg: "enseignant existe déjà." });
+    }
+
+  const UpdateEns = new Enseignant({
+    _id: req.params.id,
+    ensnom: req.body.ensnom,
+    ensprenom: req.body.ensprenom,
+    ensmail: req.body.ensmail,
+    ensusername,
+    enspassword: req.body.enspassword,
+    ensdept : req.body.ensdept,
+    role: 'ens',
+  });
+  await Enseignant.updateOne({ _id : req.params.id}, UpdateEns).then(
+    () => {
+      res.status(201).json({
+        message: 'Ens updated successfully!'
+      });
+    }
+  ).catch(
+    (error) => {
+      res.status(400).json({
+        error: error.message
+      });
+    }
+  );
+} catch (err) {
+  res.status(500).json({ error: err.message });
+}
+});
 
 
 

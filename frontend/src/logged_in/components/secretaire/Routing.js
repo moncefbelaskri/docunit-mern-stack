@@ -4,7 +4,6 @@ import { Switch } from "react-router-dom";
 import withStyles from '@mui/styles/withStyles';
 import Doc from "./doc/Doc";
 import Dir from "./dir/Dir";
-import Main from "./Main"
 import PropsRoute from "../../../shared/components/PropsRoute";
 import useLocationBlocker from "../../../shared/functions/useLocationBlocker";
 const styles = (theme) => ({
@@ -68,7 +67,7 @@ function Routing(props) {
           selectDirs={selectDirs}
         />    
         <PropsRoute
-          path="/sec"
+          path=""
           component={Doc}          
           pushMessageToSnackbar={pushMessageToSnackbar}
           docs={docs}

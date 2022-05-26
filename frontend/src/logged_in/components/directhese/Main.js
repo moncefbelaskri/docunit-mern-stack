@@ -1,11 +1,10 @@
-import React, { memo, useCallback, useState, Fragment,useEffect } from "react";
+import React, { memo, useCallback, useState, Fragment} from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import withStyles from '@mui/styles/withStyles';
 import Routing from "./Routing";
 import NavBar from "./navigation/NavBar";
 import ConsecutiveSnackbarMessages from "../../../shared/components/ConsecutiveSnackbarMessages";
-import Doctorants from "../data/Doctorants";
 import smoothScrollTop from "../../../shared/functions/smoothScrollTop";
 
 
@@ -32,24 +31,7 @@ function Main(props) {
   const [pushMessageToSnackbar, setPushMessageToSnackbar] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
 
-  const fetchRandomDirt = useCallback(() => {
-    const dirt = [];
-    /* for (let i = 0; i < 35; i += 1) {
-      const randomdoc = Doctorants[Math.floor(Math.random() * Doctorants.length)];
-      const target = {
-        id: i,
-        nom: randomdoc.nom,
-        prénom:  randomdoc.prénom,
-        intit: randomdoc.intit,
-        etav:randomdoc.etav,
-        datesou: randomdoc.datesou,
-        isActivated: Math.round(Math.random()) ? true : false,
-      };
-      dirt.push(target);
-    }
-    */
-    setDirt(dirt);
-  }, [setDirt]);
+  
 
   const getPushMessageFromChild = useCallback(
     (pushMessage) => {
@@ -65,12 +47,7 @@ function Main(props) {
     setIsMobileDrawerOpen(false);
   }, [setIsMobileDrawerOpen]);
  
-  useEffect(() => {
-    fetchRandomDirt();
-  }, [
-    fetchRandomDirt,
-    
-  ]);
+
   const selectDirt = useCallback(() => {
     smoothScrollTop();
     document.title = "Directeur de These";

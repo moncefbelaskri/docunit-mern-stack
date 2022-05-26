@@ -2,7 +2,6 @@ import React,{useState, useCallback} from "react";
 import PropTypes from "prop-types";
 import { Divider,Paper, Typography,Toolbar,Button,Box,Card } from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
-import classNames from "classnames";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import TextField from '@mui/material/TextField';
@@ -41,7 +40,7 @@ const styles =(theme)=> ({
   });
 
 function DoctContent(props) {
-    const{pushMessageToSnackbar,theme,classes}=props;
+    const{pushMessageToSnackbar,classes}=props;
     const [isEtavDialogOpen, setIsEtavDialogOpen] = useState(
       false
     );
