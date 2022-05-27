@@ -25,6 +25,12 @@ function App() {
   const [iddocData, setiddocData] = useState({
     iddocup: undefined,
   });
+  const [iddtData, setiddtData] = useState({
+    iddtup: undefined,
+  });
+  const [idcdtData, setidcdtData] = useState({
+    idcdtup: undefined,
+  });
   useEffect(() => {
     const checkLoggedIn = async () => {
       let token = localStorage.getItem("auth-token");
@@ -54,7 +60,7 @@ function App() {
   }, []);
   return (
     <BrowserRouter>
-    <UserContext.Provider value={{ userData, setUserData, iddirData, setiddirData, iddocData, setiddocData}}>
+    <UserContext.Provider value={{ userData, setUserData, iddirData, setiddirData, iddocData, setiddocData, iddtData, setiddtData, idcdtData, setidcdtData}}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />

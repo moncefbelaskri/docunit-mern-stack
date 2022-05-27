@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useRef, useCallback, useContext } from "react";
+import React, { Fragment, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { Typography, List, ListItem, ListItemText, Button, Box} from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
@@ -23,7 +23,29 @@ function ViewDoc(props) {
     onClose,
   } = props;
   const { iddocData } = useContext(UserContext);
+  const { iddtData } = useContext(UserContext);
+  const { idcdtData } = useContext(UserContext);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  var dirdatalist = [];
+  var codirdatalist = [];
+
+
+  for(let i=0; i < iddtData.iddtup.length; i++)
+  {
+    if(iddocData.iddocup.dn  === iddtData.iddtup[i].dnn && iddocData.iddocup.dp === iddtData.iddtup[i].dpp)
+    {
+      dirdatalist = iddtData.iddtup[i];
+    }   
+  }
+  for(let j=0; j < idcdtData.idcdtup.length; j++)
+  {
+    if(iddocData.iddocup.cdn  === idcdtData.idcdtup[j].cdnn && iddocData.iddocup.cdp === idcdtData.idcdtup[j].cdpp)
+    {
+      codirdatalist = idcdtData.idcdtup[j];
+    }   
+  }
+  
 
   return (
     <Fragment>
@@ -116,17 +138,17 @@ function ViewDoc(props) {
           <ListItem  disableGutters className="listItemLeftPadding">
             <ListItemText>
             <div>
-            <TextField required variant="outlined" label="Nom" inputProps={{ readOnly: true }}/>
-            <TextField required variant="outlined" label="Prénom" inputProps={{ readOnly: true }}/>
+            <TextField required variant="outlined" label="Nom" inputProps={{ readOnly: true }} defaultValue={ dirdatalist.dnn}/>
+            <TextField required variant="outlined" label="Prénom" inputProps={{ readOnly: true }} defaultValue={dirdatalist.dpp}/>
             </div>
             <div>
-            <TextField required variant="outlined" label="Grade" inputProps={{ readOnly: true }}/>
-            <TextField required variant="outlined" label="Etablissement d'origine" inputProps={{ readOnly: true }}/>
-            <TextField required variant="outlined" label="Laboratoire de rattachement" inputProps={{ readOnly: true }}/>
+            <TextField required variant="outlined" label="Grade" inputProps={{ readOnly: true }} defaultValue={dirdatalist.dg}/>
+            <TextField required variant="outlined" label="Etablissement d'origine" inputProps={{ readOnly: true }} defaultValue={dirdatalist.de}/>
+            <TextField required variant="outlined" label="Laboratoire de rattachement" inputProps={{ readOnly: true }} defaultValue={dirdatalist.dl}/>
             </div>
             <div>
-            <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputProps={{ readOnly: true }}/>
-            <TextField  required variant="outlined" label="Email" name="email di" type="email" inputProps={{ readOnly: true }}/>
+            <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputProps={{ readOnly: true }} defaultValue={dirdatalist.dnm}/>
+            <TextField  required variant="outlined" label="Email" name="email" type="email" inputProps={{ readOnly: true }} defaultValue={dirdatalist.dml}/>
             </div>
             </ListItemText>
           </ListItem>          
@@ -143,17 +165,17 @@ function ViewDoc(props) {
           <ListItem  disableGutters className="listItemLeftPadding">
             <ListItemText>
             <div>
-            <TextField required variant="outlined" label="Nom" inputProps={{ readOnly: true }}/>
-            <TextField required variant="outlined" label="Prénom" inputProps={{ readOnly: true }}/>
+            <TextField required variant="outlined" label="Nom" inputProps={{ readOnly: true }} defaultValue={codirdatalist.cdnn}/>
+            <TextField required variant="outlined" label="Prénom" inputProps={{ readOnly: true }} defaultValue={codirdatalist.cdpp}/>
             </div>
             <div>
-            <TextField required variant="outlined" label="Grade" inputProps={{ readOnly: true }}/>
-            <TextField required variant="outlined" label="Etablissement d'origine" inputProps={{ readOnly: true }}/>
-            <TextField required variant="outlined" label="Laboratoire de rattachement" inputProps={{ readOnly: true }}/>
+            <TextField required variant="outlined" label="Grade" inputProps={{ readOnly: true }} defaultValue={codirdatalist.cdg}/>
+            <TextField required variant="outlined" label="Etablissement d'origine" inputProps={{ readOnly: true }} defaultValue={codirdatalist.cde}/>
+            <TextField required variant="outlined" label="Laboratoire de rattachement" inputProps={{ readOnly: true }} defaultValue={codirdatalist.cdl}/>
             </div>            
             <div>
-            <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputProps={{ readOnly: true }}/>
-            <TextField  required variant="outlined" label="Email" name="email" type="email" inputProps={{ readOnly: true }}/>
+            <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputProps={{ readOnly: true }} defaultValue={codirdatalist.cdnm}/>
+            <TextField  required variant="outlined" label="Email" name="email" type="email" inputProps={{ readOnly: true }} defaultValue={codirdatalist.cdml}/>
             </div>
             </ListItemText>
           </ListItem>          

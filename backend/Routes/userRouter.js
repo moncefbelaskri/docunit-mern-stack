@@ -392,6 +392,18 @@ router.get("/secdoc" , async (req, res) => {
   return res.json(doc);
 });
 
+/* get dir for sec api */
+router.get("/secdir" , async (req, res) => {
+  const dir = await Dirt.find()
+  return res.json(dir);
+});
+
+/* get codir for sec api */
+router.get("/seccodir" , async (req, res) => {
+  const codir = await CoDirt.find()
+  return res.json(codir);
+});
+
 /* get ens for sec api */
 
 router.get("/secens" , async (req, res) => {
@@ -519,8 +531,8 @@ router.put('/update/dir/:id', async (req, res) => {
     let {dirnom, dirprenom} = req.body;
 
       // checking if the doc is already in the database
-      const ExDirnom = await Dirt.findOne({ dirnom: dirnom });
-      const ExDirprenom = await Dirt.findOne({ dirprenom: dirprenom });
+      const ExDirnom = await Dirt.findOne( { _id :{$ne : req.params.id} ,dirnom: dirnom } );
+      const ExDirprenom = await Dirt.findOne({ _id :{$ne : req.params.id} ,dirprenom: dirprenom });
 
       if ( ExDirnom && ExDirprenom )
       {       
@@ -563,8 +575,8 @@ router.put('/update/codir/:id', async (req, res) => {
     let {codirnom, codirprenom} = req.body;
 
       // checking if the doc is already in the database
-      const ExCoDirnom = await CoDirt.findOne({ codirnom: codirnom });
-      const ExCoDirprenom = await CoDirt.findOne({ codirprenom: codirprenom });
+      const ExCoDirnom = await CoDirt.findOne({ _id :{$ne : req.params.id} ,codirnom: codirnom });
+      const ExCoDirprenom = await CoDirt.findOne({ _id :{$ne : req.params.id} ,codirprenom: codirprenom });
 
       if ( ExCoDirnom && ExCoDirprenom )
       {       

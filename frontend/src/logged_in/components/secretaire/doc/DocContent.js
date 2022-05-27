@@ -158,11 +158,15 @@ function DocContent(props) {
     });
   }, []);
 
+
   const viewDoc = useCallback((row) => {
     openViewDocModal();
+    
     setiddocData({
       iddocup: row,
     });
+    
+    
   }, []);
 
   const handleDeleteDocDialogClose = useCallback(() => {

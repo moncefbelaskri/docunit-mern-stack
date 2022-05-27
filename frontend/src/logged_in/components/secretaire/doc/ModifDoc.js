@@ -61,7 +61,28 @@ function ModifDoc(props) {
     onClose,
   } = props;
   const { iddocData } = useContext(UserContext);
+  const { iddtData } = useContext(UserContext);
+  const { idcdtData } = useContext(UserContext);
   const { userData } = useContext(UserContext);
+
+  var dirdatalist = [];
+  var codirdatalist = [];
+
+
+  for(let i=0; i < iddtData.iddtup.length; i++)
+  {
+    if(iddocData.iddocup.dn  === iddtData.iddtup[i].dnn && iddocData.iddocup.dp === iddtData.iddtup[i].dpp)
+    {
+      dirdatalist = iddtData.iddtup[i];
+    }   
+  }
+  for(let j=0; j < idcdtData.idcdtup.length; j++)
+  {
+    if(iddocData.iddocup.cdn  === idcdtData.idcdtup[j].cdnn && iddocData.iddocup.cdp === idcdtData.idcdtup[j].cdpp)
+    {
+      codirdatalist = idcdtData.idcdtup[j];
+    }   
+  }
 
   const DoctorantNom = useRef();
   const DoctorantPrenom = useRef();
@@ -324,7 +345,7 @@ function ModifDoc(props) {
       });
         }     
       if(existed !== "yes") {
-        await axios.put("http://localhost:5000/users/update/dir/" + iddocData.iddocup._id,
+        await axios.put("http://localhost:5000/users/update/dir/" + dirdatalist._idd,
          {
           dirnom: DirtNom.current.value,
           dirprenom: DirtPrenom.current.value,
@@ -350,7 +371,7 @@ function ModifDoc(props) {
 
     });
         
-    await axios.put("http://localhost:5000/users/update/codir/" + iddocData.iddocup._id,
+    await axios.put("http://localhost:5000/users/update/codir/" + codirdatalist._iddd,
           {
            codirnom: CoDirtNom.current.value,
            codirprenom: CoDirtPrenom.current.value,
@@ -498,7 +519,8 @@ function ModifDoc(props) {
             </MenuItem>
           ))}
         </TextField>
-        {(etapro==="sal" || iddocData.iddocup.ep==="sal")? <TextField  variant="outlined" label="(Préciser)" defaultValue={iddocData.iddocup.pr} inputRef={DoctorantPreci}/>:null}
+        { iddocData.iddocup.ep==="sal" ? etapro==="sal"? <TextField  variant="outlined" label="(Préciser)" defaultValue={iddocData.iddocup.pr} inputRef={DoctorantPreci}/>:null :null}
+        { iddocData.iddocup.ep!=="sal" ? etapro==="sal"? <TextField  variant="outlined" label="(Préciser)"  inputRef={DoctorantPreci}/>:null :null}
             </div>
             <div>
             <TextField required variant="outlined" type="number" name="number" inputProps={{min:1950}} label="Année d’obtention du BAC" defaultValue={iddocData.iddocup.an} inputRef={DoctorantAnebac}/>
@@ -519,8 +541,9 @@ function ModifDoc(props) {
               {option.label}
             </MenuItem>
           ))}
-        </TextField>  
-            {(derdip==="au" || iddocData.iddocup.dd==="au")? <TextField  variant="outlined" label="(Préciser)"  defaultValue={iddocData.iddocup.prr} inputRef={DoctorantPrecii}/>:null}
+        </TextField> 
+        { iddocData.iddocup.dd==="au" ? derdip==="au"? <TextField  variant="outlined" label="(Préciser)"  defaultValue={iddocData.iddocup.prr} inputRef={DoctorantPrecii}/>:null :null}
+        { iddocData.iddocup.dd!=="au" ? derdip==="au"? <TextField  variant="outlined" label="(Préciser)" inputRef={DoctorantPrecii}/>:null :null}
             </div>
             <div>
             <TextField required variant="outlined" label="Spécialité dernier diplôme obtenu" defaultValue={iddocData.iddocup.sdd} inputRef={DoctorantSpederdip}/>
@@ -576,17 +599,17 @@ function ModifDoc(props) {
           <ListItem  disableGutters className="listItemLeftPadding">
             <ListItemText>
             <div>
-            <TextField required variant="outlined" label="Nom" inputRef={DirtNom}/>
-            <TextField required variant="outlined" label="Prénom" inputRef={DirtPrenom}/>
+            <TextField required variant="outlined" label="Nom" defaultValue={ dirdatalist.dnn} inputRef={DirtNom}/>
+            <TextField required variant="outlined" label="Prénom" defaultValue={dirdatalist.dpp} inputRef={DirtPrenom}/>
             </div>
             <div>
-            <TextField required variant="outlined" label="Grade" inputRef={DirtGrade}/>
-            <TextField required variant="outlined" label="Etablissement d'origine" inputRef={DirtEtabori}/>
-            <TextField required variant="outlined" label="Laboratoire de rattachement" inputRef={DirtLaborata}/>
+            <TextField required variant="outlined" label="Grade" defaultValue={dirdatalist.dg} inputRef={DirtGrade}/>
+            <TextField required variant="outlined" label="Etablissement d'origine" defaultValue={dirdatalist.de} inputRef={DirtEtabori}/>
+            <TextField required variant="outlined" label="Laboratoire de rattachement" defaultValue={dirdatalist.dl} inputRef={DirtLaborata} />
             </div>
             <div>
-            <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputRef={DirtNumtel}/>
-            <TextField  required variant="outlined" label="Email" name="email di" type="email" inputRef={DirtMail}/>
+            <TextField required variant="outlined" label="N° de téléphone " name="phone" defaultValue={dirdatalist.dnm} inputRef={DirtNumtel}/>
+            <TextField  required variant="outlined" label="Email" name="email di" type="email" defaultValue={dirdatalist.dml} inputRef={DirtMail}/>
             </div>
             </ListItemText>
           </ListItem>          
@@ -603,17 +626,17 @@ function ModifDoc(props) {
           <ListItem  disableGutters className="listItemLeftPadding">
             <ListItemText>
             <div>
-            <TextField required variant="outlined" label="Nom" inputRef={CoDirtNom}/>
-            <TextField required variant="outlined" label="Prénom" inputRef={CoDirtPrenom}/>
+            <TextField required variant="outlined" label="Nom" defaultValue={codirdatalist.cdnn} inputRef={CoDirtNom}/>
+            <TextField required variant="outlined" label="Prénom" defaultValue={codirdatalist.cdpp} inputRef={CoDirtPrenom}/>
             </div>
             <div>
-            <TextField required variant="outlined" label="Grade" inputRef={CoDirtGrade}/>
-            <TextField required variant="outlined" label="Etablissement d'origine" inputRef={CoDirtEtabori}/>
-            <TextField required variant="outlined" label="Laboratoire de rattachement" inputRef={CoDirtLaborata}/>
+            <TextField required variant="outlined" label="Grade" defaultValue={codirdatalist.cdg} inputRef={CoDirtGrade}/>
+            <TextField required variant="outlined" label="Etablissement d'origine" defaultValue={codirdatalist.cde} inputRef={CoDirtEtabori}/>
+            <TextField required variant="outlined" label="Laboratoire de rattachement" defaultValue={codirdatalist.cdl} inputRef={CoDirtLaborata}/>
             </div>            
             <div>
-            <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputRef={CoDirtNumtel}/>
-            <TextField  required variant="outlined" label="Email" name="email" type="email" inputRef={CoDirtMail}/>
+            <TextField required variant="outlined" label="N° de téléphone " name="phone" defaultValue={codirdatalist.cdnm} inputRef={CoDirtNumtel}/>
+            <TextField  required variant="outlined" label="Email" name="email" type="email" defaultValue={codirdatalist.cdml} inputRef={CoDirtMail}/>
             </div>
             </ListItemText>
           </ListItem>          
@@ -636,7 +659,7 @@ function ModifDoc(props) {
               color="secondary"
               disabled={isLoading}
             >
-              Valider {isLoading && <ButtonCircularProgress />}
+              METTRE A JOUR {isLoading && <ButtonCircularProgress />}
             </Button>
           </Fragment>
         }
