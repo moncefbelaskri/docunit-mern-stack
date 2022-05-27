@@ -265,7 +265,17 @@ router.post("/login",  async (req, res) => {
        token,
        user: {
         id: docuser._id,
+
+        nom : docuser.nom,
+
+        prenom : docuser.prenom,
+
+        intithe : docuser.intithe,
+
+        datesout : docuser.datesout,
+
         role : docuser.role,
+
         dept : docuser.dept,
       },
           });
@@ -287,7 +297,13 @@ router.post("/login",  async (req, res) => {
        token,
        user: {
         id: ensuser._id,
+
+        ensnom : ensuser.ensnom,
+
+        ensprenom : ensuser.ensprenom,
+
         role : ensuser.role,
+
         dept : ensuser.ensdept,
       },
           });
@@ -313,23 +329,48 @@ router.post("/login",  async (req, res) => {
 
 /* token api */
 
+
+
 router.post("/tokenIsValid", async (req, res) => {
+
   try {
+
     const token = req.header("x-auth-token");
+
     if (!token) return res.json(false);
 
+
+
     const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+
     if (!verified) return res.json(false);
 
-    const user = await Sec.findById(verified.id);
 
-    if (!user) return res.json(false);
+
+    const userSec = await Sec.findById(verified.id);
+
+    const userDoc = await Doctorant.findById(verified.id);
+
+    const userEns = await Enseignant.findById(verified.id);
+
+    if (!userSec && !userDoc && !userEns ) {
+
+      return res.json(false);
+
+    }
+
+
 
     return res.json(true);
+
   } catch (err) {
+
     res.status(500).json({ error: err.message });
+
   }
+
 });
+
 
  /* get sec api */
 
@@ -609,6 +650,62 @@ router.put('/update/codir/:id', async (req, res) => {
 } catch (err) {
   res.status(500).json({ error: err.message });
 }
+});
+
+
+
+/* get doc api */
+
+
+
+router.get("/doc", auth , async (req, res) => {
+
+  const user = await Doctorant.findById(req.user);
+
+  res.json({
+
+    id: user._id,
+
+    nom : user.nom,
+
+    prenom : user.prenom,
+
+    intithe : user.intithe,
+
+    datesout : user.datesout,
+
+    role : user.role,
+
+    dept : user.dept,
+
+  });
+
+});
+
+
+
+ /* get ens api */
+
+
+
+ router.get("/ens", auth , async (req, res) => {
+
+  const user = await Enseignant.findById(req.user);
+
+  res.json({
+
+    id: user._id,
+
+    ensnom : user.ensnom,
+
+    ensprenom : user.ensprenom,
+
+    role : user.role,
+
+    dept : user.ensdept,
+
+  });
+
 });
 
 module.exports = router;

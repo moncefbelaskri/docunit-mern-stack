@@ -1,4 +1,4 @@
-import React,{useState, useCallback} from "react";
+import React,{useState, useCallback, useContext} from "react";
 import PropTypes from "prop-types";
 import { Divider,Paper, Typography,Toolbar,Button,Box,Card } from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
@@ -6,6 +6,7 @@ import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import TextField from '@mui/material/TextField';
 import CardContent from '@mui/material/CardContent';
+import UserContext from "../../../../shared/components/UserContext";
 
 const styles =(theme)=> ({
   Area:{
@@ -41,6 +42,7 @@ const styles =(theme)=> ({
 
 function DoctContent(props) {
     const{pushMessageToSnackbar,classes}=props;
+    const { userData } = useContext(UserContext);
     const [isEtavDialogOpen, setIsEtavDialogOpen] = useState(
       false
     );
@@ -69,6 +71,8 @@ function DoctContent(props) {
       },
       [setIsEtavDialogOpen]
     );
+
+
   return (
     <Paper >
     <Toolbar className={classes.toolbar}>
@@ -98,12 +102,19 @@ function DoctContent(props) {
     <Box>
       <Card variant="outlined">
         <CardContent>
-         <Typography variant="h6" content="h2">Nom </Typography>
-         <Typography variant="h6" content="h2">Prénom </Typography>
-         <Typography variant="h6" content="h2">Intitulé de la thèse </Typography>
-         <Typography variant="h6" content="h2">Etat d'avancement </Typography>
-         <Typography variant="h6" content="h2">Pourcentage d'avancement </Typography>
-         <Typography variant="h6" content="h2">Date de soutenance </Typography>
+
+         <Typography variant="h6" content="h2">Nom : {userData.user.nom} </Typography>
+
+         <Typography variant="h6" content="h2">Prénom : {userData.user.prenom}</Typography>
+
+         <Typography variant="h6" content="h2">Intitulé de la thèse : {userData.user.intithe}</Typography>
+
+         <Typography variant="h6" content="h2">Directeur de thèse : </Typography>
+
+         <Typography variant="h6" content="h2">Co-Directeur de thèse : </Typography>
+
+         <Typography variant="h6" content="h2">Date de soutenance : {userData.user.datesout}</Typography>
+
         </CardContent>
       </Card>
     </Box>

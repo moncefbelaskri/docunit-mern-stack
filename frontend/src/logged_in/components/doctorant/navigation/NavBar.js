@@ -1,4 +1,4 @@
-import React,{useRef, useCallback, useState} from "react";
+import React,{useRef, useCallback, useState, useContext} from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Hidden,Drawer,List, ListItem,
@@ -10,7 +10,7 @@ import NavigationDrawer from "../../../../shared/components/NavigationDrawer";
 import AddIcon from '@mui/icons-material/Add';
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import MenuIcon from "@mui/icons-material/Menu";
-
+import UserContext from "../../../../shared/components/UserContext";
 
 const styles = (theme) => ({
   appBar: {
@@ -107,6 +107,22 @@ function NavBar(props) {
   } = props;
   const links = useRef([]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const {setUserData } = useContext(UserContext);
+
+  const logout = useCallback(() => {
+
+    setUserData({
+
+      token: undefined,
+
+      user: undefined,
+
+    });
+
+    localStorage.setItem("auth-token", "");
+
+  }, [setUserData]);
+
   const openMobileDrawer = useCallback(() => {
     setIsMobileOpen(true);
   }, [setIsMobileOpen]);
@@ -132,6 +148,7 @@ function NavBar(props) {
     },
     {link: "/",
     name: "Logout",
+    onclick:logout,
     icon: {
       desktop: (
         <PowerSettingsNewIcon className="text-white" />
