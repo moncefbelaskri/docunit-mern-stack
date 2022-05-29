@@ -32,9 +32,6 @@ const styles = (theme) => ({
   const [dirs, setDirs] = useState([]);
   const [pushMessageToSnackbar, setPushMessageToSnackbar] = useState(null);
 
-  const { setiddtData } = useContext(UserContext);
-  const { setidcdtData } = useContext(UserContext);
-
   
 
   const selectDocs = useCallback(() => {
@@ -102,8 +99,10 @@ const styles = (theme) => ({
           ds:   randomdoc.datesout,
           dn:   randomdoc.dirnom,
           dp:   randomdoc.dirprenom,
+          dg:   randomdoc.dirgrade,
           cdn:  randomdoc.codirnom,
-          cdp:  randomdoc.codirprenom
+          cdp:  randomdoc.codirprenom,
+          cdg:  randomdoc.dirgrade,
         };
         docs.push(target);
       } 
@@ -113,59 +112,6 @@ const styles = (theme) => ({
     .catch(function (error) {
       console.log(error);
     });
-    
-    await axios.get("http://localhost:5000/users/secdir").then(function (response) {
-      const dirlist = response.data;
-      const di = [];
-      for (let x = 0; x < dirlist.length; x += 1) {
-        const randomdir = dirlist[x];
-        const targett = {
-          id: x,
-          _idd : randomdir._id,
-          dnn:   randomdir.dirnom,
-          dpp:   randomdir.dirprenom,
-          dg:    randomdir.dirgrade,
-          de:    randomdir.diretabori,
-          dl:    randomdir.dirlaborata,
-          dnm:   randomdir.dirnumtel,
-          dml:   randomdir.dirmail,
-        };
-        di.push(targett);
-      }
-      setiddtData({
-        iddtup: di,
-      });
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-
-    await axios.get("http://localhost:5000/users/seccodir").then(function (response) {
-      const codirlist = response.data;
-      const dii = [];
-      for (let y = 0; y < codirlist.length; y += 1) {
-        const randomcodir = codirlist[y];
-        const targettt = {
-          id: y,
-          _iddd : randomcodir._id,
-          cdnn:   randomcodir.codirnom,
-          cdpp:   randomcodir.codirprenom,
-          cdg:    randomcodir.codirgrade,
-          cde:    randomcodir.codiretabori,
-          cdl:    randomcodir.codirlaborata,
-          cdnm:   randomcodir.codirnumtel,
-          cdml:   randomcodir.codirmail,
-        };
-        dii.push(targettt);
-      }
-      setidcdtData({
-        idcdtup: dii,
-      });
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-
 
       };
       const fetchRandomDirs = async() => {
@@ -176,16 +122,20 @@ const styles = (theme) => ({
           const randomens = enslist[i];
           if(userData.user.dept === randomens.ensdept){
           const targett = {
-            id: i,
+            id: i, 
             _id : randomens._id,
             nom: randomens.ensnom,
             prénom:  randomens.ensprenom,
+            eg: randomens.ensgrade,
+            eeb: randomens.ensetabori,
+            elr: randomens.enslaborata,
+            en: randomens.ensnumtel,
             ndc:  randomens.ensusername,
             mdp:  randomens.enspassword,
             email: randomens.ensmail,
           };
           dirs.push(targett);
-         }
+         } 
         }
         setDirs(dirs);
       })

@@ -26,6 +26,10 @@ function AddDir(props) {
   const { userData } = useContext(UserContext);
   const EnsNom = useRef();
   const EnsPrenom = useRef();
+  const EnsGrade = useRef();
+  const EnsEtabori = useRef();
+  const EnsLaborata = useRef();
+  const EnsNumtel = useRef();
   const EnsMail = useRef();
   const EnsName = useRef();
   const EnsPassword = useRef();
@@ -39,6 +43,10 @@ function AddDir(props) {
       {
        ensnom: EnsNom.current.value,
        ensprenom: EnsPrenom.current.value,
+       ensgrade: EnsGrade.current.value,
+       ensetabori: EnsEtabori.current.value,
+       enslaborata: EnsLaborata.current.value,
+       ensnumtel: EnsNumtel.current.value,  
        ensmail: EnsMail.current.value,
        ensusername: EnsName.current.value,
        enspassword: EnsPassword.current.value,
@@ -70,13 +78,17 @@ setTimeout(() => {
   }, 10);
 
 }          
-      },[ setIsLoading,pushMessageToSnackbar,onClose,EnsNom,EnsPrenom,EnsMail,EnsName,EnsPassword]);
+      },[ setIsLoading,pushMessageToSnackbar,onClose,EnsNom,EnsPrenom,EnsGrade,EnsEtabori,EnsLaborata,EnsNumtel,EnsMail,EnsName,EnsPassword]);
    
     
   const handleUpload = useCallback(async () => {
     setIsLoading(true);
     if(EnsNom.current.value === "" ||
     EnsPrenom.current.value === "" ||
+    EnsGrade.current.value === "" ||
+    EnsEtabori.current.value === "" ||
+    EnsLaborata.current.value === "" ||
+    EnsNumtel.current.value === "" ||
     EnsName.current.value === "" ||
     EnsPassword.current.value === "" ||
     EnsMail.current.value === ""
@@ -121,8 +133,17 @@ setTimeout(() => {
             <div>
             <TextField required variant="outlined" label="Nom" inputRef={EnsNom}/>
             <TextField required variant="outlined" label="Prénom" inputRef={EnsPrenom}/>   
-            <TextField  required variant="outlined" label="Email" name="email" type="email" inputRef={EnsMail}/>                 
+                             
             </div> 
+            <div>
+            <TextField required variant="outlined" label="Grade" inputRef={EnsGrade}/>
+            <TextField required variant="outlined" label="Etablissement d'origine" inputRef={EnsEtabori}/>
+            <TextField required variant="outlined" label="Laboratoire de rattachement" inputRef={EnsLaborata}/>
+            </div> 
+            <div>
+            <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputRef={EnsNumtel}/>
+            <TextField  required variant="outlined" label="Email" name="email" type="email" inputRef={EnsMail}/>
+            </div>   
             <div>
             <TextField required variant="outlined" label="Nom de compte" inputRef={EnsName}/>
             <VisibilityPasswordTextField

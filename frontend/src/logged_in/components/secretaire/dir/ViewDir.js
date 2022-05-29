@@ -45,10 +45,19 @@ function ViewDir(props) {
           <ListItem  disableGutters className="listItemLeftPadding">
             <ListItemText>
             <div>
-            <TextField required variant="outlined" label="Nom" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.nom} />
-            <TextField required variant="outlined" label="Prénom" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.prénom} />   
-            <TextField  required variant="outlined" label="Email" inputProps={{ readOnly: true }} name="email" type="email" defaultValue={iddirData.iddirup.email}/>                 
+            <TextField required variant="outlined" label="Nom" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.nom}/>
+            <TextField required variant="outlined" label="Prénom" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.prénom}/>   
+                             
             </div> 
+            <div>
+            <TextField required variant="outlined" label="Grade" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.eg}/>
+            <TextField required variant="outlined" label="Etablissement d'origine" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.eeb}/>
+            <TextField required variant="outlined" label="Laboratoire de rattachement" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.elr}/>
+            </div> 
+            <div>
+            <TextField required variant="outlined" label="N° de téléphone " name="phone" inputProps={{ readOnly: true }}  defaultValue={iddirData.iddirup.en}/>
+            <TextField  required variant="outlined" label="Email" name="email" type="email" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.email}/>
+            </div>   
             <div>
             <TextField required variant="outlined" label="Nom de compte"  inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.ndc}/>
             <VisibilityPasswordTextField

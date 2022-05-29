@@ -99,11 +99,6 @@ const doctorantSchema = new mongoose.Schema({
         type: String,
         required : true,
     },
-    datesout: {
-        type: String,
-        required : true,
-    },
-    
     role: {
         type : String,
         required : true,
@@ -111,22 +106,32 @@ const doctorantSchema = new mongoose.Schema({
     dirnom: {
         type: String,
         required : true,
-        ref: 'Dirt',
+        ref: 'Enseignant',
     },
     dirprenom: {
         type: String,
         required : true,
-        ref: 'Dirt',
+        ref: 'Enseignant',
     }, 
+    dirgrade: {
+        type: String,
+        required : true,
+        ref: 'Enseignant',
+    },
     codirnom: {
         type: String,
         required : true,
-        ref: 'CoDirt',
+        ref: 'Enseignant',
     },
     codirprenom: {
         type: String,
         required : true,
-        ref: 'CoDirt',
+        ref: 'Enseignant',
+    },
+    codirgrade: {
+        type: String,
+        required : true,
+        ref: 'Enseignant',
     },
 });
 

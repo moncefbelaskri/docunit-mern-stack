@@ -25,12 +25,7 @@ function App() {
   const [iddocData, setiddocData] = useState({
     iddocup: undefined,
   });
-  const [iddtData, setiddtData] = useState({
-    iddtup: undefined,
-  });
-  const [idcdtData, setidcdtData] = useState({
-    idcdtup: undefined,
-  });
+
   useEffect(() => {
 
     const checkLoggedIn = async () => {
@@ -126,7 +121,7 @@ function App() {
   }, []);
   return (
     <BrowserRouter>
-    <UserContext.Provider value={{ userData, setUserData, iddirData, setiddirData, iddocData, setiddocData, iddtData, setiddtData, idcdtData, setidcdtData}}>
+    <UserContext.Provider value={{ userData, setUserData, iddirData, setiddirData, iddocData, setiddocData}}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />
