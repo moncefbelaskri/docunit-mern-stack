@@ -20,7 +20,7 @@ function ConfirmationDialog(props) {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} disabled={loading}>
-          Close
+          Fermer
         </Button>
         <Button
           color="secondary"
@@ -28,7 +28,7 @@ function ConfirmationDialog(props) {
           variant="contained"
           disabled={loading}
         >
-          Yes {loading && <ButtonCircularProgress />}
+          Confirmer {loading && <ButtonCircularProgress />}
         </Button>
       </DialogActions>
     </Dialog>

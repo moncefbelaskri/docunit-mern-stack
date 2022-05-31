@@ -7,7 +7,7 @@ import { AppBar, Toolbar, Typography, Hidden,Drawer,List, ListItem,
 import withStyles from '@mui/styles/withStyles';
 import Refresh from "./Refresh";
 import NavigationDrawer from "../../../../shared/components/NavigationDrawer";
-import {FaUserGraduate} from 'react-icons/fa';
+import PersonIcon from '@mui/icons-material/Person';
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import MenuIcon from "@mui/icons-material/Menu";
 import UserContext from "../../../../shared/components/UserContext";
@@ -137,13 +137,13 @@ function NavBar(props) {
       onClick: closeMobileDrawer,
       icon: {
         desktop: (
-          <FaUserGraduate
+          <PersonIcon
             className={
               selectedTab === "Doct" ? classes.textPrimary : "text-white"
             }           
           />
         ),
-        mobile: <FaUserGraduate className="text-white" />,
+        mobile: <PersonIcon className="text-white" />,
       },
     },
     {link: "/",

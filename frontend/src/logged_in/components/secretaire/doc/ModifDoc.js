@@ -97,8 +97,8 @@ function ModifDoc(props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [,setTypedoc] = React.useState('');
-  const [etapro, setEtapro] = React.useState('');
-  const [derdip, setDerdip] = React.useState('');
+  const [etapro, setEtapro] = React.useState(iddocData.iddocup.ep);
+  const [derdip, setDerdip] = React.useState(iddocData.iddocup.dd);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   
   const handleChangeTypedoc = (event) => {   
@@ -415,9 +415,8 @@ function ModifDoc(props) {
             </MenuItem>
           ))}
         </TextField>
-        { iddocData.iddocup.ep==="sal" ? etapro==="sal"? <TextField  variant="outlined" label="(Préciser)" defaultValue={iddocData.iddocup.pr} inputRef={DoctorantPreci}/>:null :null}
-
-        { iddocData.iddocup.ep!=="sal" ? etapro==="sal"? <TextField  variant="outlined" label="(Préciser)"  inputRef={DoctorantPreci}/>:null :null}        </div>
+        {etapro==="sal"? <TextField  variant="outlined" label="(Préciser)" defaultValue={iddocData.iddocup.pr} inputRef={DoctorantPreci}/>:null}
+          </div>
             <div>
             <TextField required variant="outlined" type="number" name="number" inputProps={{min:1950}} label="Année d’obtention du BAC" defaultValue={iddocData.iddocup.an} inputRef={DoctorantAnebac}/>
             <TextField required variant="outlined"  label="Série du BAC "  defaultValue={iddocData.iddocup.seb} inputRef={DoctorantSeribac}/>
@@ -438,9 +437,8 @@ function ModifDoc(props) {
             </MenuItem>
           ))}
         </TextField>  
-        { iddocData.iddocup.dd==="au" ? derdip==="au"? <TextField  variant="outlined" label="(Préciser)"  defaultValue={iddocData.iddocup.prr} inputRef={DoctorantPrecii}/>:null :null}
-
-        { iddocData.iddocup.dd!=="au" ? derdip==="au"? <TextField  variant="outlined" label="(Préciser)" inputRef={DoctorantPrecii}/>:null :null}           </div>
+        {derdip==="au"? <TextField  variant="outlined" label="(Préciser)" defaultValue={iddocData.iddocup.prr} inputRef={DoctorantPrecii}/>:null}
+            </div>
             <div>
             <TextField required variant="outlined" label="Spécialité dernier diplôme obtenu" defaultValue={iddocData.iddocup.sdd} inputRef={DoctorantSpederdip}/>
             <TextField required variant="outlined" label="Date de son obtention"  type="date" defaultValue={iddocData.iddocup.dad} inputRef={DoctorantDatederdip}

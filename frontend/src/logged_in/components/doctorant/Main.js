@@ -29,24 +29,7 @@ function Main(props) {
   const [pushMessageToSnackbar, setPushMessageToSnackbar] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
 
-  const fetchRandomDoct = useCallback(() => {
-    const doct = [];
-   /* for (let i = 0; i < 35; i += 1) {
-      const randomdoc = Doctorants[Math.floor(Math.random() * Doctorants.length)];
-      const target = {
-        id: i,
-        nom: randomdoc.nom,
-        prénom:  randomdoc.prénom,
-        intit: randomdoc.intit,
-        etav:randomdoc.etav,
-        datesou: randomdoc.datesou,
-        isActivated: Math.round(Math.random()) ? true : false,
-      };
-      doct.push(target);
-    }
-    */
-    setDoct(doct);
-  }, [setDoct]);
+  
 
   const getPushMessageFromChild = useCallback(
     (pushMessage) => {
@@ -62,12 +45,6 @@ function Main(props) {
     setIsMobileDrawerOpen(false);
   }, [setIsMobileDrawerOpen]);
  
-  useEffect(() => {
-    fetchRandomDoct();
-  }, [
-    fetchRandomDoct,
-    
-  ]);
   const selectDoct = useCallback(() => {
     smoothScrollTop();
     document.title = "Doctorant";
