@@ -22,37 +22,109 @@ function App() {
   const [iddirData, setiddirData] = useState({
     iddirup: undefined,
   });
+  const [iddocData, setiddocData] = useState({
+    iddocup: undefined,
+  });
+  const [idavncData, setidavncData] = useState({
+    idavncup: undefined,
+  });
 
   useEffect(() => {
+
     const checkLoggedIn = async () => {
-      let token = localStorage.getItem("auth-token");
+
+       let role =  localStorage.getItem("auth-role");
+
+       let token = localStorage.getItem("auth-token");
+
       if (token === null) {
+
         localStorage.setItem("auth-token", "");
+
         token = "";
 
+
+
       }
+
       const tokenRes = await axios.post(
+
         "http://localhost:5000/users/tokenIsValid",
+
         null,
+
         { headers: { "x-auth-token": token } }
+
       );
+
       if (tokenRes.data) {
+
+        if(role === "sec") {
+
         const userRes = await axios.get("http://localhost:5000/users/", {
+
           headers: { "x-auth-token": token },
+
         });
+
         setUserData({
+
           token,
+
           user : userRes.data,
+
         });
-        
+
       }
+
+      else if(role === "doc"){
+
+        const userRes = await axios.get("http://localhost:5000/users/doc", {
+
+          headers: { "x-auth-token": token },
+
+        });
+
+        setUserData({
+
+          token,
+
+          user : userRes.data,
+
+        });
+
+      }
+
+      else if(role === "ens"){
+
+        const userRes = await axios.get("http://localhost:5000/users/ens", {
+
+          headers: { "x-auth-token": token },
+
+        });
+
+        setUserData({
+
+          token,
+
+          user : userRes.data,
+
+        });
+
+      }
+
+      }
+
     };
+
     checkLoggedIn();
-  
+
+ 
+
   }, []);
   return (
     <BrowserRouter>
-    <UserContext.Provider value={{ userData, setUserData, iddirData, setiddirData}}>
+    <UserContext.Provider value={{ userData, setUserData, iddirData, setiddirData, iddocData, setiddocData, idavncData, setidavncData}}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />

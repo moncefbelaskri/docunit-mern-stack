@@ -32,7 +32,6 @@ const styles = (theme) => ({
   const [dirs, setDirs] = useState([]);
   const [pushMessageToSnackbar, setPushMessageToSnackbar] = useState(null);
 
-
   
 
   const selectDocs = useCallback(() => {
@@ -66,7 +65,7 @@ const styles = (theme) => ({
     const fetchRandomDocs = async() => {
     
       await axios.get("http://localhost:5000/users/secdoc").then(function (response) {
-      const doclist = response.data;
+      const doclist = response.data.doc;
       const docs = [];
       for (let i = 0; i < doclist.length; i += 1) {
         const randomdoc = doclist[i];
@@ -78,7 +77,32 @@ const styles = (theme) => ({
           prénom:  randomdoc.prenom,
           ndc:  randomdoc.username,
           mdp:  randomdoc.password,
+          da:   randomdoc.dateN,
+          li:   randomdoc.lieuN,
+          ad:   randomdoc.adresse,
+          nt:   randomdoc.numtel,     
           email : randomdoc.mail,
+          ep:   randomdoc.etapro,
+          pr:   randomdoc.preci,
+          an:   randomdoc.anebac,
+          seb:   randomdoc.seribac,
+          nb:   randomdoc.numbac,
+          cd:   randomdoc.catdoc,
+          dd:   randomdoc.derdip,
+          prr:  randomdoc.precii,
+          sdd:  randomdoc.spederdip,
+          dad:  randomdoc.datederdip,
+          dap:  randomdoc.datepremdoc,
+          sd:   randomdoc.spedoc,
+          lr:   randomdoc.laborata,
+          inti: randomdoc.intithe,
+          ds:   randomdoc.datesout,
+          dn:   randomdoc.dirnom,
+          dp:   randomdoc.dirprenom,
+          dg:   randomdoc.dirgrade,
+          cdn:  randomdoc.codirnom,
+          cdp:  randomdoc.codirprenom,
+          cdg:  randomdoc.dirgrade,
         };
         docs.push(target);
       } 
@@ -88,7 +112,7 @@ const styles = (theme) => ({
     .catch(function (error) {
       console.log(error);
     });
-    
+
       };
       const fetchRandomDirs = async() => {
         await axios.get("http://localhost:5000/users/secens").then(function (response) {
@@ -98,16 +122,20 @@ const styles = (theme) => ({
           const randomens = enslist[i];
           if(userData.user.dept === randomens.ensdept){
           const targett = {
-            id: i,
+            id: i, 
             _id : randomens._id,
             nom: randomens.ensnom,
             prénom:  randomens.ensprenom,
+            eg: randomens.ensgrade,
+            eeb: randomens.ensetabori,
+            elr: randomens.enslaborata,
+            en: randomens.ensnumtel,
             ndc:  randomens.ensusername,
             mdp:  randomens.enspassword,
             email: randomens.ensmail,
           };
           dirs.push(targett);
-         }
+         } 
         }
         setDirs(dirs);
       })

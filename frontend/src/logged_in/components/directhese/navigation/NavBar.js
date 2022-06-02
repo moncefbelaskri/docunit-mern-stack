@@ -10,8 +10,8 @@ import NavigationDrawer from "../../../../shared/components/NavigationDrawer";
 import AddIcon from '@mui/icons-material/Add';
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import MenuIcon from "@mui/icons-material/Menu";
-
-
+import { RiListSettingsLine } from "react-icons/ri";
+import { MdOutlineLogout } from "react-icons/md";
 const styles = (theme) => ({
   appBar: {
     boxShadow: theme.shadows[6],
@@ -121,22 +121,22 @@ function NavBar(props) {
       onClick: closeMobileDrawer,
       icon: {
         desktop: (
-          <AddIcon
+          <RiListSettingsLine
             className={
               selectedTab === "Dirt" ? classes.textPrimary : "text-white"
             }           
           />
         ),
-        mobile: <AddIcon className="text-white" />,
+        mobile: <RiListSettingsLine className="text-white" />,
       },
     },
     {link: "/",
     name: "Logout",
     icon: {
       desktop: (
-        <PowerSettingsNewIcon className="text-white" />
+        <MdOutlineLogout className="text-white" />
       ),
-      mobile: <PowerSettingsNewIcon className="text-white" />,
+      mobile: <MdOutlineLogout className="text-white" />,
     },
   }
   ];

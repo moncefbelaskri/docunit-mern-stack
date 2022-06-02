@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import PropTypes from "prop-types";
 import {Divider,
   Toolbar,
@@ -18,8 +18,11 @@ import EnhancedTableHead from "../../../../shared/components/EnhancedTableHead";
 import stableSort from "../../../../shared/functions/stableSort";
 import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
+import UserContext from "../../../../shared/components/UserContext";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
 import SettingsIcon from '@mui/icons-material/Settings';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+
 import axios from "axios";
 
 const styles =(theme)=> ({
@@ -84,8 +87,10 @@ function DocContent(props) {
     docs,
     openAddDocModal,
     openModifDocModal,
+    openViewDocModal,
     classes, 
   } = props;
+  const { setiddocData } = useContext(UserContext);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState(null);
@@ -145,6 +150,24 @@ function DocContent(props) {
     },
     [setPage]
   );
+
+  const updateDoc = useCallback((row) => {
+    openModifDocModal();
+    setiddocData({
+      iddocup: row,
+    });
+  }, []);
+
+
+  const viewDoc = useCallback((row) => {
+    openViewDocModal();
+    
+    setiddocData({
+      iddocup: row,
+    });
+    
+    
+  }, []);
 
   const handleDeleteDocDialogClose = useCallback(() => {
     setIsDeleteDocDialogOpen(false);
@@ -220,13 +243,24 @@ function DocContent(props) {
                                           </TableCell>                                   
                                           <TableCell component="th" scope="row">
                                               <Box display="flex" justifyContent="flex-end">
-                                                <IconButton
+                                                  <IconButton
                                                       className={classes.iconButton}
-                                                      onClick={openModifDocModal}
+                                                      onClick={() => {
+                                                        viewDoc(row);
+                                                      }}
+                                                      aria-label="Delete"
+                                                      size="large">
+                                                      <RemoveRedEyeIcon className={classes.blackIcon} />
+                                                  </IconButton>
+                                                  <IconButton
+                                                      className={classes.iconButton}
+                                                      onClick={() => {
+                                                        updateDoc(row);
+                                                      }}
                                                       aria-label="Delete"
                                                       size="large">
                                                       <SettingsIcon className={classes.blackIcon} />
-                                                  </IconButton>    
+                                                  </IconButton>      
                                                   <IconButton
                                                       className={classes.iconButton}
                                                       onClick={() => {

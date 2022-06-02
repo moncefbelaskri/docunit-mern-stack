@@ -57,7 +57,7 @@ function LoginDialog(props) {
         setTimeout(() => {
           setIsLoading(false);
           localStorage.setItem('auth-token', response.data.token);
-          
+          localStorage.setItem('auth-role', response.data.user.role);
           if(response.data.user.role === "sec")
           history.push("/sec");
           else if(response.data.user.role === "doc")

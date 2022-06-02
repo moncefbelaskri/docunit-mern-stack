@@ -73,7 +73,6 @@ function AddDoc(props) {
   const DoctorantAnebac = useRef();
   const DoctorantSeribac = useRef();
   const DoctorantNumbac = useRef();
-  const DoctorantDept = useRef();
   const DoctorantCatdoc = useRef();
   const DoctorantDerdip = useRef();
   const DoctorantSpederdip = useRef();
@@ -82,27 +81,17 @@ function AddDoc(props) {
   const DoctorantSpedoc = useRef();
   const DoctorantLaborata = useRef();
   const DoctorantIntithe = useRef();
-  const DoctorantDatesout = useRef();
   const DoctorantPreci = useRef();
   const DoctorantPrecii = useRef();
   const DoctorantName = useRef();
   const DoctorantPassword = useRef();
+  const DoctorantdirNom = useRef();
+  const DoctorantdirPrenom = useRef();
+  const DoctorantdirGrade = useRef();
+  const DoctorantcodirNom = useRef();
+  const DoctorantcodirPrenom = useRef();
+  const DoctorantcodirGrade = useRef();
 
-  const DirtNom = useRef();
-  const DirtPrenom = useRef();
-  const DirtGrade = useRef();
-  const DirtEtabori = useRef();
-  const DirtLaborata = useRef();
-  const DirtNumtel = useRef();
-  const DirtMail = useRef();
-
-  const CoDirtNom = useRef();
-  const CoDirtPrenom = useRef();
-  const CoDirtGrade = useRef();
-  const CoDirtEtabori = useRef();
-  const CoDirtLaborata = useRef();
-  const CoDirtNumtel = useRef();
-  const CoDirtMail = useRef();
  
   const [isLoading, setIsLoading] = useState(false);
 
@@ -110,7 +99,6 @@ function AddDoc(props) {
   const [etapro, setEtapro] = React.useState('');
   const [derdip, setDerdip] = React.useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  var existed = null;
   
   const handleChangeTypedoc = (event) => {   
     setTypedoc(event.target.value);
@@ -133,6 +121,8 @@ function AddDoc(props) {
            {
             nom: DoctorantNom.current.value,
             prenom: DoctorantPrenom.current.value,
+            username: DoctorantName.current.value,
+            password: DoctorantPassword.current.value,
             dateN: DoctorantDateN.current.value,
             lieuN: DoctorantLieuN.current.value,
             adresse: DoctorantAdresse.current.value,
@@ -153,18 +143,27 @@ function AddDoc(props) {
             spedoc: DoctorantSpedoc.current.value,
             laborata: DoctorantLaborata.current.value,
             intithe: DoctorantIntithe.current.value,
-            datesout: DoctorantDatesout.current.value,       
-            username: DoctorantName.current.value,
-            password: DoctorantPassword.current.value,
-            dirnom: DirtNom.current.value,
-            dirprenom: DirtPrenom.current.value,
-            codirnom: CoDirtNom.current.value,
-            codirprenom: CoDirtPrenom.current.value,
+            dirnom: DoctorantdirNom.current.value,
+          dirprenom: DoctorantdirPrenom.current.value,
+          dirgrade:  DoctorantdirGrade.current.value,
+          codirnom: DoctorantcodirNom.current.value,
+          codirprenom: DoctorantcodirPrenom.current.value,
+          codirgrade: DoctorantcodirGrade.current.value,
 
           }
            ,{headers: {"Content-Type": "application/json",}})
            .then((response) => {
             // Success 🎉
+                     
+      setIsLoading(true);
+  
+      setTimeout(() => {
+       
+       pushMessageToSnackbar({
+           text: "ajouté avec succès",
+       });
+       window.location.reload(false);
+       }, 10);
         }).catch((error) => {
           if(error.response.data.msg === "doctorant existe déjà.")
                {
@@ -172,7 +171,6 @@ function AddDoc(props) {
                 pushMessageToSnackbar({
                   text: "doctorant existe déjà",
                 });
-                existed = "yes";
                 setIsLoading(false);
                 }
       });
@@ -184,6 +182,8 @@ function AddDoc(props) {
                {
                 nom: DoctorantNom.current.value,
                 prenom: DoctorantPrenom.current.value,
+                username: DoctorantName.current.value,
+            password: DoctorantPassword.current.value,
                 dateN: DoctorantDateN.current.value,
                 lieuN: DoctorantLieuN.current.value,
                 adresse: DoctorantAdresse.current.value,
@@ -194,7 +194,7 @@ function AddDoc(props) {
                 anebac: DoctorantAnebac.current.value,
                 seribac: DoctorantSeribac.current.value,
                 numbac: DoctorantNumbac.current.value,
-                dept: DoctorantDept.current.value,
+                dept: userData.user.dept,
                 catdoc:DoctorantCatdoc.current.value,
                 derdip: DoctorantDerdip.current.value,
                 spederdip: DoctorantSpederdip.current.value,
@@ -202,19 +202,28 @@ function AddDoc(props) {
                 datepremdoc: DoctorantDatepremdoc.current.value,
                 spedoc: DoctorantSpedoc.current.value,
                 laborata: DoctorantLaborata.current.value,
-                intithe: DoctorantIntithe.current.value,
-                datesout: DoctorantDatesout.current.value,       
-                username: DoctorantName.current.value,
-                password: DoctorantPassword.current.value,
-                dirnom: DirtNom.current.value,
-              dirprenom: DirtPrenom.current.value,
-              codirnom: CoDirtNom.current.value,
-              codirprenom: CoDirtPrenom.current.value,
+                intithe: DoctorantIntithe.current.value,         
+                dirnom: DoctorantdirNom.current.value,
+          dirprenom: DoctorantdirPrenom.current.value,
+          dirgrade:  DoctorantdirGrade.current.value,
+          codirnom: DoctorantcodirNom.current.value,
+          codirprenom: DoctorantcodirPrenom.current.value,
+          codirgrade: DoctorantcodirGrade.current.value,
         
               }
                ,{headers: {"Content-Type": "application/json",},})
                .then((response) => {
                 // Success 🎉
+                         
+      setIsLoading(true);
+  
+      setTimeout(() => {
+       
+       pushMessageToSnackbar({
+           text: "ajouté avec succès",
+       });
+       window.location.reload(false);
+       }, 10);
             }).catch((error) => {
               if(error.response.data.msg === "doctorant existe déjà.")
                    {
@@ -222,7 +231,6 @@ function AddDoc(props) {
                     pushMessageToSnackbar({
                       text: "doctorant existe déjà",
                     });
-                    existed = "yes";
                     setIsLoading(false);
                   }
           });
@@ -233,6 +241,8 @@ function AddDoc(props) {
             {  
               nom: DoctorantNom.current.value,
       prenom: DoctorantPrenom.current.value,
+      username: DoctorantName.current.value,
+            password: DoctorantPassword.current.value,
       dateN: DoctorantDateN.current.value,
       lieuN: DoctorantLieuN.current.value,
       adresse: DoctorantAdresse.current.value,
@@ -242,7 +252,7 @@ function AddDoc(props) {
       anebac: DoctorantAnebac.current.value,
       seribac: DoctorantSeribac.current.value,
       numbac: DoctorantNumbac.current.value,
-      dept: DoctorantDept.current.value,
+      dept: userData.user.dept,
       catdoc:DoctorantCatdoc.current.value,
       derdip: DoctorantDerdip.current.value,
       precii: DoctorantPrecii.current.value,
@@ -252,17 +262,26 @@ function AddDoc(props) {
       spedoc: DoctorantSpedoc.current.value,
       laborata: DoctorantLaborata.current.value,
       intithe: DoctorantIntithe.current.value,
-      datesout: DoctorantDatesout.current.value,       
-      username: DoctorantName.current.value,
-      password: DoctorantPassword.current.value,
-      dirnom: DirtNom.current.value,
-      dirprenom: DirtPrenom.current.value,
-      codirnom: CoDirtNom.current.value,
-      codirprenom: CoDirtPrenom.current.value,
+      dirnom: DoctorantdirNom.current.value,
+      dirprenom: DoctorantdirPrenom.current.value,
+      dirgrade:  DoctorantdirGrade.current.value,
+      codirnom: DoctorantcodirNom.current.value,
+      codirprenom: DoctorantcodirPrenom.current.value,
+      codirgrade: DoctorantcodirGrade.current.value,
          } 
                ,{headers: {"Content-Type": "application/json",},})
                .then((response) => {
                 // Success 🎉
+                         
+      setIsLoading(true);
+  
+      setTimeout(() => {
+       
+       pushMessageToSnackbar({
+           text: "ajouté avec succès",
+       });
+       window.location.reload(false);
+       }, 10);
             }).catch((error) => {
               if(error.response.data.msg === "doctorant existe déjà.")
                    {
@@ -270,7 +289,6 @@ function AddDoc(props) {
                       pushMessageToSnackbar({
                        text: "doctorant existe déjà",
                           });
-                          existed = "yes";
                           setIsLoading(false);
                   }
           });
@@ -281,6 +299,8 @@ function AddDoc(props) {
           {
             nom: DoctorantNom.current.value,
           prenom: DoctorantPrenom.current.value,
+          username: DoctorantName.current.value,
+          password: DoctorantPassword.current.value,
           dateN: DoctorantDateN.current.value,
           lieuN: DoctorantLieuN.current.value,
           adresse: DoctorantAdresse.current.value,
@@ -290,7 +310,7 @@ function AddDoc(props) {
           anebac: DoctorantAnebac.current.value,
           seribac: DoctorantSeribac.current.value,
           numbac: DoctorantNumbac.current.value,
-          dept: DoctorantDept.current.value,
+          dept: userData.user.dept,
           catdoc:DoctorantCatdoc.current.value,
           derdip: DoctorantDerdip.current.value,
           spederdip: DoctorantSpederdip.current.value,
@@ -299,18 +319,28 @@ function AddDoc(props) {
           spedoc: DoctorantSpedoc.current.value,
           laborata: DoctorantLaborata.current.value,
           intithe: DoctorantIntithe.current.value,
-          datesout: DoctorantDatesout.current.value,       
-          username: DoctorantName.current.value,
-          password: DoctorantPassword.current.value,
-          dirnom: DirtNom.current.value,
-          dirprenom: DirtPrenom.current.value,
-          codirnom: CoDirtNom.current.value,
-          codirprenom: CoDirtPrenom.current.value,
+          dirnom: DoctorantdirNom.current.value,
+          dirprenom: DoctorantdirPrenom.current.value,
+          dirgrade:  DoctorantdirGrade.current.value,
+          codirnom: DoctorantcodirNom.current.value,
+          codirprenom: DoctorantcodirPrenom.current.value,
+          codirgrade: DoctorantcodirGrade.current.value,
           }
           ,
           {headers: {"Content-Type": "application/json",},})
           .then((response) => { 
             // Success 🎉
+               
+      setIsLoading(true);
+  
+     setTimeout(() => {
+      
+      pushMessageToSnackbar({
+          text: "ajouté avec succès",
+      });
+      window.location.reload(false);
+      }, 10);
+    
         }).catch((error) => {
           if(error.response.data.msg === "doctorant existe déjà.")
                {
@@ -318,77 +348,14 @@ function AddDoc(props) {
                 pushMessageToSnackbar({
                   text: "doctorant existe déjà",
                 });
-                existed = "yes";
                 setIsLoading(false);
               }
       });
         }     
-      if(existed !== "yes") {
-        await axios.post("http://localhost:5000/users/register_dir",
-         {
-          dirnom: DirtNom.current.value,
-          dirprenom: DirtPrenom.current.value,
-          dirgrade: DirtGrade.current.value,
-          diretabori: DirtEtabori.current.value,
-          dirlaborata: DirtLaborata.current.value,
-          dirnumtel: DirtNumtel.current.value,
-          dirmail: DirtMail.current.value,
     
-         },{ headers: {"Content-Type": "application/json",} }).then((response) => {
-
-          // Success 🎉
-
-      }).catch((error) => {
-
-        if(error.response.data.msg1 === "directeur existe déjà.")
-
-             {
-
-              console.log("directeur existe déjà.");
-
-            }
-
-    });
-        
-         await axios.post("http://localhost:5000/users/register_codir",
-          {
-           codirnom: CoDirtNom.current.value,
-           codirprenom: CoDirtPrenom.current.value,
-           codirgrade: CoDirtGrade.current.value,
-           codiretabori: CoDirtEtabori.current.value,
-           codirlaborata: CoDirtLaborata.current.value,
-           codirnumtel: CoDirtNumtel.current.value,
-           codirmail: CoDirtMail.current.value,
-     
-          },{ headers: {"Content-Type": "application/json",} }).then((response) => {
-
-            // Success 🎉
-  
-        }).catch((error) => {
-  
-          if(error.response.data.msg2 === "codir existe déjà.")
-  
-               {
-  
-                console.log("b");
-  
-              }
-  
-      });
-      setIsLoading(true);
-  
-      setTimeout(() => {
-        
-        pushMessageToSnackbar({
-            text: "ajouté avec succès",
-        });
-        window.location.reload(false);
-        }, 10);
-      
-        }
-        }  
-  ,[ setIsLoading,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantDept,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantDatesout,DoctorantName,DoctorantPassword
-    ,DirtNom,DirtPrenom,DirtGrade,DirtEtabori,DirtLaborata,DirtNumtel,DirtMail,CoDirtNom,CoDirtPrenom,CoDirtGrade,CoDirtEtabori,CoDirtLaborata,CoDirtNumtel,CoDirtMail]);
+      }
+  ,[ setIsLoading,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantName,DoctorantPassword
+    ,DoctorantdirNom,DoctorantdirPrenom,DoctorantdirGrade,DoctorantcodirNom,DoctorantcodirPrenom,DoctorantcodirGrade]);
 
   const handleUpload = useCallback(async () => {
     setIsLoading(true);
@@ -403,7 +370,6 @@ function AddDoc(props) {
     DoctorantAnebac.current.value === "" ||
     DoctorantSeribac.current.value === "" ||
     DoctorantNumbac.current.value === "" ||
-    DoctorantDept.current.value === "" ||
     DoctorantCatdoc.current.value === "" ||
     DoctorantDerdip.current.value === "" ||
     DoctorantSpederdip.current.value === "" ||
@@ -411,26 +377,15 @@ function AddDoc(props) {
     DoctorantDatepremdoc.current.value === "" ||
     DoctorantSpedoc.current.value === "" ||
     DoctorantIntithe.current.value === "" ||
-    DoctorantDatesout.current.value === "" ||
     DoctorantLaborata.current.value === "" ||   
     DoctorantName.current.value === "" ||
     DoctorantPassword.current.value === ""  ||
-
-    DirtNom.current.value === "" ||
-    DirtPrenom.current.value === "" ||
-    DirtGrade.current.value === "" ||
-    DirtEtabori.current.value === "" ||
-    DirtLaborata.current.value === "" ||
-    DirtNumtel.current.value === "" ||
-    DirtMail.current.value === "" ||
-
-    CoDirtNom.current.value === "" ||
-    CoDirtPrenom.current.value === "" ||
-    CoDirtGrade.current.value === "" ||
-    CoDirtEtabori.current.value === "" ||
-    CoDirtLaborata.current.value === "" ||
-    CoDirtNumtel.current.value === "" ||
-    CoDirtMail.current.value === "" 
+    DoctorantdirNom.current.value === ""  ||
+    DoctorantdirPrenom.current.value === ""  ||
+    DoctorantdirGrade.current.value === ""  ||
+    DoctorantcodirNom.current.value === ""  ||
+    DoctorantcodirPrenom.current.value === ""  ||
+    DoctorantcodirGrade.current.value === ""  
     ) {     
       setIsLoading(false);     
     }
@@ -445,7 +400,7 @@ function AddDoc(props) {
     else{
 
     formudoc();
-    
+      
   }
   }, [setIsLoading , onClose, pushMessageToSnackbar]);
 
@@ -502,8 +457,8 @@ function AddDoc(props) {
         {etapro==="sal"? <TextField  variant="outlined" label="(Préciser)" inputRef={DoctorantPreci}/>:null}
             </div>
             <div>
-            <TextField required variant="outlined" type="number" name="number" label="Année d’obtention du BAC" inputRef={DoctorantAnebac}/>
-            <TextField required variant="outlined" type="number" name="number" label="Série du BAC " inputRef={DoctorantSeribac}/>
+            <TextField required variant="outlined" type="number" name="number" inputProps={{min:1950}} label="Année d’obtention du BAC" inputRef={DoctorantAnebac}/>
+            <TextField required variant="outlined"  label="Série du BAC " inputRef={DoctorantSeribac}/>
             <TextField required variant="outlined" type="number" name="number" label="N° du BAC " inputRef={DoctorantNumbac}/>
             </div> 
             <div>      
@@ -538,16 +493,11 @@ function AddDoc(props) {
                }}
               />
             <TextField required variant="outlined" label="Spécialité du Doctorat" inputRef={DoctorantSpedoc}/>
-            <TextField required variant="outlined" label="Laboratoire de rattachement" inputRef={DoctorantLaborata}/>
             </div>
             <div>
+            <TextField required variant="outlined" label="Laboratoire de rattachement" inputRef={DoctorantLaborata}/>
             <TextField required variant="outlined" label="Intitulé de la thèse" inputRef={DoctorantIntithe}/>
-            <TextField required variant="outlined" label="Date prévue de soutenance"  type="date" inputRef={DoctorantDatesout}
-              InputLabelProps={{
-               shrink: true
-               }}
-            />
-            </div>         
+            </div>        
             <div>
             <TextField required variant="outlined" label="Nom de compte" inputRef={DoctorantName}/>
             <VisibilityPasswordTextField
@@ -576,17 +526,9 @@ function AddDoc(props) {
           <ListItem  disableGutters className="listItemLeftPadding">
             <ListItemText>
             <div>
-            <TextField required variant="outlined" label="Nom" inputRef={DirtNom}/>
-            <TextField required variant="outlined" label="Prénom" inputRef={DirtPrenom}/>
-            </div>
-            <div>
-            <TextField required variant="outlined" label="Grade" inputRef={DirtGrade}/>
-            <TextField required variant="outlined" label="Etablissement d'origine" inputRef={DirtEtabori}/>
-            <TextField required variant="outlined" label="Laboratoire de rattachement" inputRef={DirtLaborata}/>
-            </div>
-            <div>
-            <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputRef={DirtNumtel}/>
-            <TextField  required variant="outlined" label="Email" name="email di" type="email" inputRef={DirtMail}/>
+            <TextField required variant="outlined" label="Nom" inputRef={DoctorantdirNom}/>
+            <TextField required variant="outlined" label="Prénom" inputRef={DoctorantdirPrenom}/>
+            <TextField required variant="outlined" label="Grade" inputRef={DoctorantdirGrade}/>
             </div>
             </ListItemText>
           </ListItem>          
@@ -603,17 +545,9 @@ function AddDoc(props) {
           <ListItem  disableGutters className="listItemLeftPadding">
             <ListItemText>
             <div>
-            <TextField required variant="outlined" label="Nom" inputRef={CoDirtNom}/>
-            <TextField required variant="outlined" label="Prénom" inputRef={CoDirtPrenom}/>
-            </div>
-            <div>
-            <TextField required variant="outlined" label="Grade" inputRef={CoDirtGrade}/>
-            <TextField required variant="outlined" label="Etablissement d'origine" inputRef={CoDirtEtabori}/>
-            <TextField required variant="outlined" label="Laboratoire de rattachement" inputRef={CoDirtLaborata}/>
-            </div>            
-            <div>
-            <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputRef={CoDirtNumtel}/>
-            <TextField  required variant="outlined" label="Email" name="email" type="email" inputRef={CoDirtMail}/>
+            <TextField required variant="outlined" label="Nom" inputRef={DoctorantcodirNom}/>
+            <TextField required variant="outlined" label="Prénom" inputRef={DoctorantcodirPrenom}/>
+            <TextField required variant="outlined" label="Grade" inputRef={DoctorantcodirGrade}/>
             </div>
             </ListItemText>
           </ListItem>          

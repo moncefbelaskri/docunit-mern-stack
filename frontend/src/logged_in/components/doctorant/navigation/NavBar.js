@@ -1,4 +1,4 @@
-import React,{useRef, useCallback, useState} from "react";
+import React,{useRef, useCallback, useState, useContext} from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Hidden,Drawer,List, ListItem,
@@ -7,11 +7,12 @@ import { AppBar, Toolbar, Typography, Hidden,Drawer,List, ListItem,
 import withStyles from '@mui/styles/withStyles';
 import Refresh from "./Refresh";
 import NavigationDrawer from "../../../../shared/components/NavigationDrawer";
-import AddIcon from '@mui/icons-material/Add';
+import PersonIcon from '@mui/icons-material/Person';
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import MenuIcon from "@mui/icons-material/Menu";
-
-
+import UserContext from "../../../../shared/components/UserContext";
+import { MdOutlineLogout } from "react-icons/md";
+import { FaClipboardList } from "react-icons/md";
 const styles = (theme) => ({
   appBar: {
     boxShadow: theme.shadows[6],
@@ -107,6 +108,22 @@ function NavBar(props) {
   } = props;
   const links = useRef([]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const {setUserData } = useContext(UserContext);
+
+  const logout = useCallback(() => {
+
+    setUserData({
+
+      token: undefined,
+
+      user: undefined,
+
+    });
+
+    localStorage.setItem("auth-token", "");
+
+  }, [setUserData]);
+
   const openMobileDrawer = useCallback(() => {
     setIsMobileOpen(true);
   }, [setIsMobileOpen]);
@@ -121,22 +138,23 @@ function NavBar(props) {
       onClick: closeMobileDrawer,
       icon: {
         desktop: (
-          <AddIcon
+          <PersonIcon
             className={
               selectedTab === "Doct" ? classes.textPrimary : "text-white"
             }           
           />
         ),
-        mobile: <AddIcon className="text-white" />,
+        mobile: <PersonIcon className="text-white" />,
       },
     },
     {link: "/",
     name: "Logout",
+    onclick:logout,
     icon: {
       desktop: (
-        <PowerSettingsNewIcon className="text-white" />
+        <MdOutlineLogout className="text-white" />
       ),
-      mobile: <PowerSettingsNewIcon className="text-white" />,
+      mobile: <MdOutlineLogout className="text-white" />,
     },
   }
   ];

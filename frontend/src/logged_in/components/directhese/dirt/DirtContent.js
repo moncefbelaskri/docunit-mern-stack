@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback,useRef} from "react";
 import PropTypes from "prop-types";
 import {Divider,
   Toolbar,
@@ -16,6 +16,8 @@ import PlayCirlceOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import EnhancedTableHead from "../../../../shared/components/EnhancedTableHead";
 import stableSort from "../../../../shared/functions/stableSort";
+import Switch from '@mui/material/Switch';
+import LinearProgress from '@mui/material/LinearProgress';
 import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
 import MovingIcon from '@mui/icons-material/Moving';
@@ -25,6 +27,15 @@ import TextField from '@mui/material/TextField';
 
 
 const styles = (theme) => ({
+  cent:{
+    paddingLeft: '90px',
+  },
+  centt:{
+    paddingLeft: '60px',
+  },
+  centtt:{
+    paddingLeft: '0px',
+  },
   Area:{
     border:0,
     color: 'black',
@@ -69,15 +80,15 @@ const rows = [
   },
   {
     id: "intit",
-    label: "Intitulé Thèse",
+    label: "Intitulé de la Thèse",
   },
   {
     id: "etav",
     label: "Pourcentage d'avancement",
   },
   {
-    id: "datesou",
-    label: "Date Soutenance",
+    id: "aneactu",
+    label: "Année courante",
   },
   {
     id: "action",
@@ -85,12 +96,24 @@ const rows = [
   },
 ];
 const rowsPerPage = 25;
+function valueLabelFormat(value) {
+  const units = ['%'];
+  let unitIndex = 0;
+  let scaledValue = value;
+  return `${scaledValue} ${units[unitIndex]}`;
+}
 
+
+
+function calculateValue(value) {
+  return value;
+}
 function DirtContent(props) {
   const {
     pushMessageToSnackbar,
     setDirt,
     dirt,
+    onFormSubmit,
     classes,
   } = props;
   const [page, setPage] = useState(0);
@@ -99,9 +122,14 @@ function DirtContent(props) {
   const [isEtavDialogOpen, setIsEtavDialogOpen] = useState(
     false
   );
+  const [value, setValue] = React.useState(0);
   const [EtavDialogRow, setEtavDialogRow] = useState(null);
   const [isEtavLoading, setIsEtavLoading] = useState(false);
+  const [checked, setChecked] = React.useState(true);
 
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
   const handleRequestSort = useCallback(
     (__, property) => {
       const _orderBy = property;
@@ -114,7 +142,10 @@ function DirtContent(props) {
     },
     [setOrder, setOrderBy, order, orderBy]
   );
-
+  
+  const Avancementpct = useRef();
+  const Avancementdatesout = useRef();
+  const Avancementetav = useRef();
  
   const handleChangePage = useCallback(
     (_, page) => {
@@ -155,12 +186,13 @@ function DirtContent(props) {
       row.isActivated = !row.isActivated;
       _dirt[index] = row;
       if (row.isActivated) {
+
         pushMessageToSnackbar({
-          text: "Doctorant activé",
+          text: "Doctorant desactivé",
         });
       } else {
         pushMessageToSnackbar({
-          text: "Doctorant desactivé",
+          text: "Doctorant activé",
         });
       }
       setDirt(_dirt);
@@ -178,8 +210,62 @@ function DirtContent(props) {
           open={isEtavDialogOpen}
           title="Avancement global du doctorant"
           content={EtavDialogRow ? (
-            <Box><div><TextField  sx={{ m: 1, width: 300 }} id="outlined-required" label="Pourcentage d'avancement" /></div>
-            <div><TextareaAutosize className={classes.Area} aria-label="Etatav" minRows={5} maxRows={5}  placeholder="Etat d'avancement"/></div></Box>
+            <form onSubmit={onFormSubmit}>
+            <Box>
+
+              <div>
+
+            <Typography id="non-linear-slider" gutterBottom>
+
+            Pourcentage d'avancement : {valueLabelFormat(calculateValue(value))}
+
+            </Typography>
+
+            <input
+          type="range"
+
+          className={classes.rang}
+
+           value={value}
+
+           min="0"
+           max="100"
+
+           onChange={({ target: { value: radius } }) => {
+            setValue(radius);
+          }}
+
+           //defaultValue={idavncData.idavncup.pct}
+           ref={Avancementpct}
+           
+           />
+
+            </div>
+            <br/>
+            <div>
+            <Typography>
+            Date prévue de soutenance
+            </Typography>
+            <br/>
+              <input className={classes.date} type="date" required /*defaultValue={idavncData.idavncup.ds}*/  ref={Avancementdatesout}/>
+            </div>
+            <br/>
+            <div>
+            <Typography>
+            Etat d'avancement
+            </Typography>  
+            <br/>
+              <TextareaAutosize className={classes.Area} aria-label="Etatav" required /*defaultValue={idavncData.idavncup.eav}*/ minRows={7} maxRows={7}   ref={Avancementetav}/>
+            </div>
+            <br/>
+             <div> 
+             <HighlightedInformation className={classes.Highlight}>
+            <b>Vérifiez bien vos informations avant de confirmer.</b>
+            </HighlightedInformation>
+             </div>
+            
+          </Box>
+          </form>
           ) : null}
           onClose={handleEtavDialogClose}
           onConfirm={Etav}
@@ -198,21 +284,21 @@ function DirtContent(props) {
                               {stableSort(dirt, getSorting(order, orderBy))
                                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                   .map((row, index) => (
-                                      <TableRow hover tabIndex={-1} key={index}>                                   
+                                      <TableRow hover tabIndex={-1} key={index} >                                   
                                           <TableCell component="th" scope="row">
                                               {row.nom}
                                           </TableCell>
                                           <TableCell component="th" scope="row">
                                               {row.prénom}
                                           </TableCell>
-                                          <TableCell component="th" scope="row">
+                                          <TableCell component="th" scope="row" className={classes.centtt}>
                                               {row.intit}
                                           </TableCell>
-                                          <TableCell component="th" scope="row">
+                                          <TableCell component="th" scope="row" className={classes.cent}>
                                               {row.etav}
                                           </TableCell>
-                                          <TableCell component="th" scope="row">
-                                              {row.datesou}
+                                          <TableCell component="th" scope="row" className={classes.centt}>
+                                              {row.aneactu}
                                           </TableCell>                                                                            
                                           <TableCell component="th" scope="row">
                                               <Box display="flex" justifyContent="flex-end">
@@ -226,27 +312,27 @@ function DirtContent(props) {
                                                       <MovingIcon className={classes.blackIcon} />
                                                   </IconButton>
                                                   {row.isActivated ? (
-                                                      <IconButton
-                                                          className={classes.iconButton}
-                                                          onClick={() => {
+                                                    <Switch
+                                                    color="secondary"
+                                                    checked={checked}
+                                                    onChange={handleChange}
+                                                    onClick={() => {
                                                               toggleDirt(row);
                                                           } }
-                                                          aria-label="Pause"
-                                                          size="large">
-                                                          <PauseCircleOutlineIcon
-                                                              className={classes.blackIcon} />
-                                                      </IconButton>
+                                                    inputProps={{ 'aria-label': 'Resume' }}
+                                                    size="large"
+                                                     />
                                                   ) : (
-                                                      <IconButton
-                                                          className={classes.iconButton}
-                                                          color="primary"
-                                                          onClick={() => {
+                                                    <Switch
+                                                    color="secondary"
+                                                    checked={checked}
+                                                    onChange={handleChange}
+                                                    onClick={() => {
                                                               toggleDirt(row);
                                                           } }
-                                                          aria-label="Resume"
-                                                          size="large">
-                                                          <PlayCirlceOutlineIcon />
-                                                      </IconButton>
+                                                    inputProps={{ 'aria-label': 'Resume' }}
+                                                    size="large"
+                                                     />
                                                   )}                                               
                                               </Box>
                                           </TableCell>

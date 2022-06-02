@@ -21,6 +21,8 @@ import HighlightedInformation from "../../../../shared/components/HighlightedInf
 import UserContext from "../../../../shared/components/UserContext";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
 import SettingsIcon from '@mui/icons-material/Settings';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+
 const axios = require('axios');
 
 const styles = (theme) => ({
@@ -84,6 +86,7 @@ function DirContent(props) {
     dirs,
     openAddDirModal,
     openModifDirModal,
+    openViewDirModal,
     classes,
   } = props;
   const { setiddirData } = useContext(UserContext);
@@ -150,7 +153,14 @@ function DirContent(props) {
     setiddirData({
       iddirup: row,
     });
-  }, [setIsDeleteDirDialogOpen]);
+  }, []);
+
+  const viewDir = useCallback((row) => {
+    openViewDirModal();
+    setiddirData({
+      iddirup: row,
+    });
+  }, []);
 
   const handleDeleteDirDialogClose = useCallback(() => {
     setIsDeleteDirDialogOpen(false);
@@ -227,6 +237,15 @@ function DirContent(props) {
                                           </TableCell>                                   
                                           <TableCell component="th" scope="row">
                                               <Box display="flex" justifyContent="flex-end">  
+                                                  <IconButton
+                                                      className={classes.iconButton}
+                                                      onClick={() => {
+                                                        viewDir(row);
+                                                      }}
+                                                      aria-label="Delete"
+                                                      size="large">
+                                                      <RemoveRedEyeIcon className={classes.blackIcon} />
+                                                  </IconButton>
                                                   <IconButton
                                                       className={classes.iconButton}
                                                       onClick={() => {

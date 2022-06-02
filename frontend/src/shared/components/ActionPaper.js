@@ -68,7 +68,6 @@ ActionPaper.propTypes = {
   actions: PropTypes.element,
   helpPadding: PropTypes.bool,
   fullWidthActions: PropTypes.bool,
-  onFormSubmit: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(ActionPaper);
