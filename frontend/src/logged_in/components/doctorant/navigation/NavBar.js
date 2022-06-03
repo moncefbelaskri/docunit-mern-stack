@@ -8,10 +8,9 @@ import withStyles from '@mui/styles/withStyles';
 import Refresh from "./Refresh";
 import NavigationDrawer from "../../../../shared/components/NavigationDrawer";
 import PersonIcon from '@mui/icons-material/Person';
-import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import MenuIcon from "@mui/icons-material/Menu";
 import UserContext from "../../../../shared/components/UserContext";
-
+import { MdOutlineLogout } from "react-icons/md";
 const styles = (theme) => ({
   appBar: {
     boxShadow: theme.shadows[6],
@@ -151,9 +150,9 @@ function NavBar(props) {
     onclick:logout,
     icon: {
       desktop: (
-        <PowerSettingsNewIcon className="text-white" />
+        <MdOutlineLogout className="text-white" />
       ),
-      mobile: <PowerSettingsNewIcon className="text-white" />,
+      mobile: <MdOutlineLogout className="text-white" />,
     },
   }
   ];

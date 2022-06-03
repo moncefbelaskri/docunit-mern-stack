@@ -134,7 +134,7 @@ function Headsection(props) {
                           href = {Pdf}
                           target="_blank"
                         >
-                          Télecharger le PDF
+                          Consulter le PDF
                         </Button>
                       </div>
                     </Box>

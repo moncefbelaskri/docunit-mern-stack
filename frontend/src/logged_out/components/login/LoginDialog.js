@@ -63,7 +63,7 @@ function LoginDialog(props) {
           else if(response.data.user.role === "doc")
           history.push("/doct");
           else if(response.data.user.role === "ens")
-          history.push("/dirt");
+          history.push("/ens");
         }, 1000);
         
       })

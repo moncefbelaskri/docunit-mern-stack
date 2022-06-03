@@ -25,9 +25,7 @@ function App() {
   const [iddocData, setiddocData] = useState({
     iddocup: undefined,
   });
-  const [idavncData, setidavncData] = useState({
-    idavncup: undefined,
-  });
+ 
 
   useEffect(() => {
 
@@ -124,7 +122,7 @@ function App() {
   }, []);
   return (
     <BrowserRouter>
-    <UserContext.Provider value={{ userData, setUserData, iddirData, setiddirData, iddocData, setiddocData, idavncData, setidavncData}}>
+    <UserContext.Provider value={{ userData, setUserData, iddirData, setiddirData, iddocData, setiddocData}}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />
@@ -144,7 +142,7 @@ function App() {
                 <SecuadjComponent />
               </Route>
 
-              <Route path="/dirt" >
+              <Route path="/ens" >
                 <SecudirComponent />
               </Route> 
 

@@ -38,14 +38,17 @@ const avancementSchema = new mongoose.Schema({
     aneactu: {
 
         type: Number,
-
-        max:5,
         
         required : true,
 
     },
 
+    status: {
 
+        type: String,
+        
+        required : true,
+    },
 
 });
 

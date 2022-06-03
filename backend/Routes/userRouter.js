@@ -377,7 +377,9 @@ router.delete("/deleteens", indx , async (req, res) => {
 /* get doc for sec api */
 router.get("/secdoc" , async (req, res) => {
   const doc = await Doctorant.find()
-  return res.json(doc);
+  const avnc = await Avancement.find();
+  return res.json({doc,avnc});
+  
 });
 
 /* get ens for sec api */
@@ -534,22 +536,15 @@ router.get("/doc", auth , async (req, res) => {
 /* doc avnc api */
 router.post('/docavnc', async (req, res) => {
   try{
-
-  let { usernamedoc } = req.body;
-  let { aneactu } = req.body;
-
-    
-  // checking if the doc is already in the database
-
-const ExDocUsername = await Avancement.findOne({ _id :{$ne : req.params.id} ,usernamedoc: usernamedoc });
-const ExDocAneactu = await Avancement.findOne({ _id :{$ne : req.params.id} ,aneactu: aneactu });
-if (ExDocUsername &&  ExDocAneactu)
-{
-  return res.status(400).json({ msg: "avancement déjà validé" });
-}
+    let {aneactu} = req.body;
+      // checking if the doc is already in the database
+    if (aneactu > 5)
+    {
+      return res.status(400).json({ msg: "inscription impossible" });
+    }
 
   const avnc = new Avancement(
-    { usernamedoc,
+    { usernamedoc : req.body.usernamedoc,
       pctav: req.body.pctav,
       datesout: req.body.datesout,
       etav : req.body.etav,
@@ -564,30 +559,29 @@ if (ExDocUsername &&  ExDocAneactu)
 
 
 
-   router.put('/update/doc/:id', async (req, res) => {
+   router.put('/update/avncdoc/:username', async (req, res) => {
     try {
-      let { usernamedoc } = req.body;
+
       let { aneactu } = req.body;
-    
         
       // checking if the doc is already in the database
     
-    const ExDocUsername = await Avancement.findOne({ usernamedoc: usernamedoc });
-    const ExDocAneactu = await Avancement.findOne({ aneactu: aneactu });
-    if (ExDocUsername &&  ExDocAneactu)
+    const ExDoc = await Avancement.findOne({ usernamedoc: req.params.username , aneactu: aneactu });
+    if (ExDoc)
     {
       return res.status(400).json({ msg: "avancement déjà validé" });
     }
-    const UpdateAvnc = new Avancement(
-      { 
-        _id: req.params.id,
-        usernamedoc,
-        pctav: req.body.pctav,
-        datesout: req.body.datesout,
-        etav : req.body.etav,
-        aneactu,
-      });
-      await Avancement.updateOne({ _id : req.params.id}, UpdateAvnc).then(
+    if (aneactu > 5)
+    {
+      return res.status(400).json({ msg: "inscription impossible" });
+    }
+      await Avancement.updateOne({ usernamedoc : req.params.username },
+        { $set: {
+          pctav: req.body.pctav,
+          datesout: req.body.datesout,
+          etav : req.body.etav,
+          aneactu,
+        }}).then(
         () => {
           res.status(201).json({
             message: 'Avnc updated successfully!'
@@ -607,6 +601,45 @@ if (ExDocUsername &&  ExDocAneactu)
     }
   );
 
+  router.post("/AvncDocEX" , async (req, res) => {
+    try {
+      const username = req.header("x-avnc");
+      const getAvncDoc = await Avancement.findOne({ usernamedoc : username});
+      if(!getAvncDoc){ return res.json(false); }
+      return res.json(true);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  router.put('/update/avancdoc/:username', async (req, res) => {
+    try {
+
+      
+      await Avancement.updateOne({ usernamedoc : req.params.username },
+        { $set: {
+          pctav: req.body.pctav,
+          datesout: req.body.datesout,
+          etav : req.body.etav,
+        }}).then(
+        () => {
+          res.status(201).json({
+            message: 'Avanc updated successfully!'
+          });
+        }
+      ).catch(
+        (error) => {
+          res.status(400).json({
+            error: error.message
+          });
+        }
+      );
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+
+    }
+  );
 
 
 module.exports = router;

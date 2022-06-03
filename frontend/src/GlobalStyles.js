@@ -18,7 +18,18 @@ const styles = theme => ({
     ".listItemLeftPadding": {
       paddingTop: `${theme.spacing(1.75)} !important`,
       paddingBottom: `${theme.spacing(1.75)} !important`,
-      paddingLeft: `${theme.spacing(4)} !important`,
+      paddingLeft: `${theme.spacing(6)} !important`,
+      [theme.breakpoints.down('md')]: {
+        paddingLeft: `${theme.spacing(4)} !important`
+      },
+      "@media (max-width:  420px)": {
+        paddingLeft: `${theme.spacing(1)} !important`
+      }
+    },
+    ".listItemLeftPaddingg": {
+      paddingTop: `${theme.spacing(1.75)} !important`,
+      paddingBottom: `${theme.spacing(1.75)} !important`,
+      paddingLeft: `${theme.spacing(28)} !important`,
       [theme.breakpoints.down('md')]: {
         paddingLeft: `${theme.spacing(4)} !important`
       },

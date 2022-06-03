@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState, Fragment, useContext, useEffect} from "react";
+import React, { memo, useCallback, useState, Fragment, useEffect, useContext} from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import withStyles from '@mui/styles/withStyles';
@@ -6,7 +6,7 @@ import Routing from "./Routing";
 import NavBar from "./navigation/NavBar";
 import ConsecutiveSnackbarMessages from "../../../shared/components/ConsecutiveSnackbarMessages";
 import smoothScrollTop from "../../../shared/functions/smoothScrollTop";
-import UserContext from "../../../shared/components/UserContext";
+import UserContext from "../../../shared/components/UserContext"; 
 
 const axios = require('axios');
 
@@ -33,7 +33,7 @@ function Main(props) {
   const [pushMessageToSnackbar, setPushMessageToSnackbar] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
   const { userData } = useContext(UserContext);
-  
+
 
   const getPushMessageFromChild = useCallback(
     (pushMessage) => {
@@ -52,7 +52,7 @@ function Main(props) {
 
   const selectDirt = useCallback(() => {
     smoothScrollTop();
-    document.title = "Directeur de These";
+    document.title = "Enseignant";
     setSelectedTab("Dirt");
   }, [setSelectedTab]);
 
@@ -60,64 +60,49 @@ function Main(props) {
 
     const fetchRandomDocList = async() => {
 
-   
-
       await axios.get("http://localhost:5000/users/secdoc").then(function (response) {
 
-      const doclist = response.data;
-
+      const doclist1 = response.data.doc;
+      const doclist2 = response.data.avnc;
       const docs = [];
-
-      for (let i = 0; i < doclist.length; i += 1) {
-
-        const randomdoc = doclist[i];
-
-        console.log(randomdoc.dirprenom);
-
-        if((userData.user.dept === randomdoc.dept) && ((userData.user.ensnom === randomdoc.dirnom))){
-
-        const target = {
-
+      for (let i = 0; i < doclist1.length; i += 1) {
+        const randomdoc = doclist1;
+        if(userData.user.dept === randomdoc[i].dept)
+        {
+          if(((userData.user.ensnom === randomdoc[i].dirnom) && (userData.user.ensprenom === randomdoc[i].dirprenom))
+          ||((userData.user.ensnom === randomdoc[i].codirnom) && (userData.user.ensprenom === randomdoc[i].codirprenom)))
+          {
+        for (let j = 0; j < doclist2.length; j += 1) {     
+        const randomdoc2 = doclist2; 
+        if(doclist1[i].username === doclist2[j].usernamedoc)
+        {const target = {
           id: i,
-
-          _id : randomdoc._id,
-
-          nom: randomdoc.nom,
-
-          prénom:  randomdoc.prenom,
-
-          intit:  randomdoc.intithe,
-
-          etav: null,
-
-          datesou : randomdoc.datesout,
-
+          _id : randomdoc[i]._id,
+          nom: randomdoc[i].nom,
+          prénom:  randomdoc[i].prenom,
+          intit:  randomdoc[i].intithe,
+          etav: randomdoc2[j].pctav,
+          aneactu : randomdoc2[j].aneactu,
+          etatavan: randomdoc2[j].etav,
+          datesout: randomdoc2[j].datesout,
+          username: randomdoc2[j].usernamedoc,
         };
-
         docs.push(target);
-
+        }
       }
-
+    }
+  }
       }
-
       setDocs(docs);
-
+      
     })
-
     .catch(function (error) {
-
       console.log(error);
-
     });
 
-   
-
       };
-
       fetchRandomDocList();
-
   }, []);
-
 
   return (
     <Fragment>

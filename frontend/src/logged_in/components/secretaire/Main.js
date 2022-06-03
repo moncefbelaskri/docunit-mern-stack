@@ -65,7 +65,7 @@ const styles = (theme) => ({
     const fetchRandomDocs = async() => {
     
       await axios.get("http://localhost:5000/users/secdoc").then(function (response) {
-      const doclist = response.data;
+      const doclist = response.data.doc;
       const docs = [];
       for (let i = 0; i < doclist.length; i += 1) {
         const randomdoc = doclist[i];

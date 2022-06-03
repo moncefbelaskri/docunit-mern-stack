@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback,useRef} from "react";
 import PropTypes from "prop-types";
 import {Divider,
   Toolbar,
@@ -12,26 +12,49 @@ import {Divider,
   IconButton,
   Box, } from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
-import PlayCirlceOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import EnhancedTableHead from "../../../../shared/components/EnhancedTableHead";
 import stableSort from "../../../../shared/functions/stableSort";
+import Switch from '@mui/material/Switch';
 import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
-import MovingIcon from '@mui/icons-material/Moving';
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
-import TextField from '@mui/material/TextField';
+import SettingsIcon from '@mui/icons-material/Settings';
 
+const axios = require('axios');
 
 const styles = (theme) => ({
+  Highlight:{
+    textAlign: 'center',
+    marginLeft:theme.spacing(-1),
+    padding: '3',
+    width:390,
+  },
   Area:{
-    border:0,
+    marginLeft:theme.spacing(1),
     color: 'black',
     padding: '0 22px',
-    resize: 'none',
     fontSize: '17px',
-    width:320,
+    width:355,
+  },
+  date:{
+    marginLeft:theme.spacing(1),
+    padding: '0 22px',
+    height:40,
+    width:355,
+  },
+  rang:{
+    marginLeft:theme.spacing(1),
+    width:355,
+  },
+  cent:{
+    paddingLeft: '90px',
+  },
+  centt:{
+    paddingLeft: '60px',
+  },
+  centtt:{
+    paddingLeft: '0px',
   },
   tableWrapper: {
     overflowX: "auto",
@@ -69,15 +92,15 @@ const rows = [
   },
   {
     id: "intit",
-    label: "Intitulé Thèse",
+    label: "Intitulé de la Thèse",
   },
   {
     id: "etav",
     label: "Pourcentage d'avancement",
   },
   {
-    id: "datesou",
-    label: "Date Soutenance",
+    id: "aneactu",
+    label: "Année courante",
   },
   {
     id: "action",
@@ -85,12 +108,24 @@ const rows = [
   },
 ];
 const rowsPerPage = 25;
+function valueLabelFormat(value) {
+  const units = ['%'];
+  let unitIndex = 0;
+  let scaledValue = value;
+  return `${scaledValue} ${units[unitIndex]}`;
+}
 
+
+
+function calculateValue(value) {
+  return value;
+}
 function DirtContent(props) {
   const {
     pushMessageToSnackbar,
     setDirt,
     dirt,
+    onFormSubmit,
     classes,
   } = props;
   const [page, setPage] = useState(0);
@@ -99,9 +134,19 @@ function DirtContent(props) {
   const [isEtavDialogOpen, setIsEtavDialogOpen] = useState(
     false
   );
+  const [value, setValue] = React.useState(0);
   const [EtavDialogRow, setEtavDialogRow] = useState(null);
   const [isEtavLoading, setIsEtavLoading] = useState(false);
+  const [checked, setChecked] = React.useState(true);
 
+  const [Date, setDate] = useState();
+  const [Etat, setEtat] = useState();
+ 
+
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
   const handleRequestSort = useCallback(
     (__, property) => {
       const _orderBy = property;
@@ -114,7 +159,10 @@ function DirtContent(props) {
     },
     [setOrder, setOrderBy, order, orderBy]
   );
-
+  
+  const Avancementpct = useRef();
+  const Avancementdatesout = useRef();
+  const Avancementetav = useRef();
  
   const handleChangePage = useCallback(
     (_, page) => {
@@ -122,20 +170,7 @@ function DirtContent(props) {
     },
     [setPage]
   );
-  const Etav = useCallback(() => {
-    setIsEtavLoading(true);
-    setTimeout(() => {
-      setIsEtavDialogOpen(false);
-      setIsEtavLoading(false);
-      pushMessageToSnackbar({
-        text: "Avancement validé",
-      });
-    }, 1500);
-  }, [
-    setIsEtavDialogOpen,
-    setIsEtavLoading,
-    pushMessageToSnackbar,
-  ]);
+
   const handleEtavDialogClose = useCallback(() => {
     setIsEtavDialogOpen(false);
   }, [setIsEtavDialogOpen]);
@@ -144,10 +179,12 @@ function DirtContent(props) {
     (row) => {
       setIsEtavDialogOpen(true);
       setEtavDialogRow(row);
+      setValue(row.etav);
+      setDate(row.datesout);
+      setEtat(row.etatavan);
     },
     [setIsEtavDialogOpen, setEtavDialogRow]
   );
-
   const toggleDirt = useCallback(
     (row) => {
       const _dirt = [...dirt];
@@ -155,18 +192,46 @@ function DirtContent(props) {
       row.isActivated = !row.isActivated;
       _dirt[index] = row;
       if (row.isActivated) {
+
         pushMessageToSnackbar({
-          text: "Doctorant activé",
+          text: "Doctorant desactivé",
         });
       } else {
         pushMessageToSnackbar({
-          text: "Doctorant desactivé",
+          text: "Doctorant activé",
         });
       }
       setDirt(_dirt);
     },
     [pushMessageToSnackbar, dirt, setDirt]
   );
+
+
+  const updateAvnc = useCallback(async(row) => {
+
+    setIsEtavDialogOpen(true);
+      setIsEtavLoading(true);
+      await axios.put("http://localhost:5000/users/update/avancdoc/"+row.username,
+      {
+        pctav: Avancementpct.current.value,
+        datesout: Avancementdatesout.current.value,
+        etav: Avancementetav.current.value,
+    },{headers: {"Content-Type": "application/json",}})
+    .then((response) => {
+      setIsEtavDialogOpen(true);
+      setIsEtavLoading(true);
+      setTimeout(() => {
+        setIsEtavDialogOpen(false);
+        setIsEtavLoading(false);
+        pushMessageToSnackbar({
+          text: "Avancement validé",
+        });
+      }, 1500);
+    }).catch((error) => {
+     
+  });
+  }, [setIsEtavDialogOpen,setIsEtavLoading,pushMessageToSnackbar,Avancementpct,Avancementdatesout,Avancementetav]);
+
 
   return (
     <Paper>
@@ -178,11 +243,64 @@ function DirtContent(props) {
           open={isEtavDialogOpen}
           title="Avancement global du doctorant"
           content={EtavDialogRow ? (
-            <Box><div><TextField  sx={{ m: 1, width: 300 }} id="outlined-required" label="Pourcentage d'avancement" /></div>
-            <div><TextareaAutosize className={classes.Area} aria-label="Etatav" minRows={5} maxRows={5}  placeholder="Etat d'avancement"/></div></Box>
+            <form onSubmit={onFormSubmit}>
+            <Box>
+
+              <div>
+
+            <Typography id="non-linear-slider" gutterBottom>
+
+            Pourcentage d'avancement : {valueLabelFormat(calculateValue(value))}
+
+            </Typography>
+
+            <input
+          type="range"
+
+          className={classes.rang}
+
+           value={value}
+
+           min="0"
+           max="100"
+
+           onChange={({ target: { value: radius } }) => {
+            setValue(radius);
+          }}
+
+           ref={Avancementpct}
+           
+           />
+
+            </div>
+            <br/>
+            <div>
+            <Typography>
+            Date prévue de soutenance
+            </Typography>
+            <br/>
+              <input className={classes.date} type="date" required  defaultValue={Date} ref={Avancementdatesout}/>
+            </div>
+            <br/>
+            <div>
+            <Typography>
+            Etat d'avancement
+            </Typography>  
+            <br/>
+              <TextareaAutosize className={classes.Area} aria-label="Etatav" required defaultValue={Etat} minRows={7} maxRows={7}   ref={Avancementetav}/>
+            </div>
+            <br/>
+             <div> 
+             <HighlightedInformation className={classes.Highlight}>
+            <b>Vérifiez bien vos informations avant de confirmer.</b>
+            </HighlightedInformation>
+             </div>
+            
+          </Box>
+          </form>
           ) : null}
           onClose={handleEtavDialogClose}
-          onConfirm={Etav}
+          onConfirm={updateAvnc}
           loading={isEtavLoading} />
       <Box width="100%">
               <div className={classes.tableWrapper}>
@@ -198,7 +316,7 @@ function DirtContent(props) {
                               {stableSort(dirt, getSorting(order, orderBy))
                                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                   .map((row, index) => (
-                                      <TableRow hover tabIndex={-1} key={index}>                                   
+                                      <TableRow hover tabIndex={-1} key={index} >                                   
                                           <TableCell component="th" scope="row">
                                               {row.nom}
                                           </TableCell>
@@ -208,11 +326,11 @@ function DirtContent(props) {
                                           <TableCell component="th" scope="row">
                                               {row.intit}
                                           </TableCell>
-                                          <TableCell component="th" scope="row">
-                                              {row.etav}
+                                          <TableCell component="th" scope="row" >
+                                              {row.etav}%
                                           </TableCell>
-                                          <TableCell component="th" scope="row">
-                                              {row.datesou}
+                                          <TableCell component="th" scope="row" >
+                                              {row.aneactu}
                                           </TableCell>                                                                            
                                           <TableCell component="th" scope="row">
                                               <Box display="flex" justifyContent="flex-end">
@@ -223,30 +341,30 @@ function DirtContent(props) {
                                                       } }                                                     
                                                       aria-label="Voir Avancement"
                                                       size="large">
-                                                      <MovingIcon className={classes.blackIcon} />
+                                                      <SettingsIcon className={classes.blackIcon} />
                                                   </IconButton>
                                                   {row.isActivated ? (
-                                                      <IconButton
-                                                          className={classes.iconButton}
-                                                          onClick={() => {
+                                                    <Switch
+                                                    color="secondary"
+                                                    checked={checked}
+                                                    onChange={handleChange}
+                                                    onClick={() => {
                                                               toggleDirt(row);
                                                           } }
-                                                          aria-label="Pause"
-                                                          size="large">
-                                                          <PauseCircleOutlineIcon
-                                                              className={classes.blackIcon} />
-                                                      </IconButton>
+                                                    inputProps={{ 'aria-label': 'Resume' }}
+                                                    size="large"
+                                                     />
                                                   ) : (
-                                                      <IconButton
-                                                          className={classes.iconButton}
-                                                          color="primary"
-                                                          onClick={() => {
+                                                    <Switch
+                                                    color="secondary"
+                                                    checked={checked}
+                                                    onChange={handleChange}
+                                                    onClick={() => {
                                                               toggleDirt(row);
                                                           } }
-                                                          aria-label="Resume"
-                                                          size="large">
-                                                          <PlayCirlceOutlineIcon />
-                                                      </IconButton>
+                                                    inputProps={{ 'aria-label': 'Resume' }}
+                                                    size="large"
+                                                     />
                                                   )}                                               
                                               </Box>
                                           </TableCell>
