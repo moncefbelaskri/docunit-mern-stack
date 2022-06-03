@@ -323,7 +323,7 @@ function DirtContent(props) {
                                           <TableCell component="th" scope="row">
                                               {row.prénom}
                                           </TableCell>
-                                          <TableCell component="th" scope="row">
+                                          <TableCell component="th" scope="row" className={classes.centtt}>
                                               {row.intit}
                                           </TableCell>
                                           <TableCell component="th" scope="row" >

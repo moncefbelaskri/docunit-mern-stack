@@ -5,6 +5,10 @@ import withStyles from '@mui/styles/withStyles';
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
 import Bordered from "../../../../shared/components/Bordered";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
 import TextField from '@mui/material/TextField';
 import UserContext from "../../../../shared/components/UserContext"; 
 import Stepper from '@mui/material/Stepper';
@@ -37,6 +41,12 @@ const styles =(theme)=> ({
     padding: '0 22px',
     height:40,
     width:355,
+  },
+  Highlight:{
+    textAlign: 'center',
+    marginLeft:theme.spacing(-1),
+    padding: '3',
+    width:390,
   },
   rang:{
     marginLeft:theme.spacing(1),

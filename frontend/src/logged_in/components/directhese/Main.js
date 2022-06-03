@@ -65,6 +65,7 @@ function Main(props) {
       const doclist1 = response.data.doc;
       const doclist2 = response.data.avnc;
       const docs = [];
+<<<<<<< HEAD
       for (let i = 0; i < doclist1.length; i += 1) {
         const randomdoc = doclist1;
         if(userData.user.dept === randomdoc[i].dept)
@@ -76,11 +77,19 @@ function Main(props) {
         const randomdoc2 = doclist2; 
         if(doclist1[i].username === doclist2[j].usernamedoc)
         {const target = {
+=======
+
+      for (let i = 0; i < doclist2.length; i += 1) {
+        const randomdoc = doclist1;
+        const randomdoc2 = doclist2;
+        const target = {
+>>>>>>> 8ea7290c672073e9646e8ca074fb735ea8e240e0
           id: i,
           _id : randomdoc[i]._id,
           nom: randomdoc[i].nom,
           prénom:  randomdoc[i].prenom,
           intit:  randomdoc[i].intithe,
+<<<<<<< HEAD
           etav: randomdoc2[j].pctav,
           aneactu : randomdoc2[j].aneactu,
           etatavan: randomdoc2[j].etav,
@@ -95,6 +104,15 @@ function Main(props) {
       }
       setDocs(docs);
       
+=======
+          etav: randomdoc2[i].pctav + "%",
+          aneactu : randomdoc2[i].aneactu,
+        };
+        docs.push(target);
+   
+      }
+      setDocs(docs);
+>>>>>>> 8ea7290c672073e9646e8ca074fb735ea8e240e0
     })
     .catch(function (error) {
       console.log(error);

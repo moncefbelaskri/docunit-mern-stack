@@ -379,7 +379,10 @@ router.get("/secdoc" , async (req, res) => {
   const doc = await Doctorant.find()
   const avnc = await Avancement.find();
   return res.json({doc,avnc});
+<<<<<<< HEAD
   
+=======
+>>>>>>> 8ea7290c672073e9646e8ca074fb735ea8e240e0
 });
 
 /* get ens for sec api */
@@ -548,7 +551,7 @@ router.post('/docavnc', async (req, res) => {
       pctav: req.body.pctav,
       datesout: req.body.datesout,
       etav : req.body.etav,
-      aneactu,
+      aneactu :req.body.aneactu,
     });
     
       const savedAvnc = await avnc.save();
