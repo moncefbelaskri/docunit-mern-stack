@@ -60,6 +60,8 @@ function LoginDialog(props) {
           localStorage.setItem('auth-role', response.data.user.role);
           if(response.data.user.role === "sec")
           history.push("/sec");
+          else if(response.data.user.role === "adj")
+          history.push("/adj");
           else if(response.data.user.role === "doc")
           history.push("/doct");
           else if(response.data.user.role === "ens")

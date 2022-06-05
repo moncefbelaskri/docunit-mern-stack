@@ -137,15 +137,13 @@ function DirtContent(props) {
   const [value, setValue] = React.useState(0);
   const [EtavDialogRow, setEtavDialogRow] = useState(null);
   const [isEtavLoading, setIsEtavLoading] = useState(false);
-  const [checked, setChecked] = React.useState(true);
-
+  const [setChecked] = React.useState();
+  
   const [Date, setDate] = useState();
   const [Etat, setEtat] = useState();
- 
-
-
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
+  const [Usern, setUsern] = useState();
+  const handleChange = (row) => {
+    setChecked(row.status);
   };
   const handleRequestSort = useCallback(
     (__, property) => {
@@ -163,7 +161,6 @@ function DirtContent(props) {
   const Avancementpct = useRef();
   const Avancementdatesout = useRef();
   const Avancementetav = useRef();
- 
   const handleChangePage = useCallback(
     (_, page) => {
       setPage(page);
@@ -177,11 +174,14 @@ function DirtContent(props) {
 
   const handleEtavDialogOpen = useCallback(
     (row) => {
+
+      setUsern(row.username);
       setIsEtavDialogOpen(true);
       setEtavDialogRow(row);
       setValue(row.etav);
       setDate(row.datesout);
       setEtat(row.etatavan);
+      
     },
     [setIsEtavDialogOpen, setEtavDialogRow]
   );
@@ -189,17 +189,30 @@ function DirtContent(props) {
     (row) => {
       const _dirt = [...dirt];
       const index = _dirt.findIndex((element) => element.id === row.id);
-      row.isActivated = !row.isActivated;
+      row.status = !row.status;
       _dirt[index] = row;
-      if (row.isActivated) {
-
-        pushMessageToSnackbar({
-          text: "Doctorant desactivé",
-        });
-      } else {
+      if (row.status) {
+         axios.put("http://localhost:5000/users/update/avancstatus/"+ row.username,
+        {
+          status: true,
+      },{headers: {"Content-Type": "application/json",}})
+      .then((response) => {
         pushMessageToSnackbar({
           text: "Doctorant activé",
         });
+      }).catch((error) => {});
+
+      } else {
+        axios.put("http://localhost:5000/users/update/avancstatus/"+ row.username,
+        {
+          status: false,
+      },{headers: {"Content-Type": "application/json",}})
+      .then((response) => {
+        pushMessageToSnackbar({
+          text: "Doctorant desactivé",
+        });
+      }).catch((error) => {});
+
       }
       setDirt(_dirt);
     },
@@ -207,17 +220,18 @@ function DirtContent(props) {
   );
 
 
-  const updateAvnc = useCallback(async(row) => {
-
+  const updateAvnc = useCallback( async() => {
+    
     setIsEtavDialogOpen(true);
       setIsEtavLoading(true);
-      await axios.put("http://localhost:5000/users/update/avancdoc/"+row.username,
+      await axios.put("http://localhost:5000/users/update/avancdoc/"+ Usern,
       {
         pctav: Avancementpct.current.value,
         datesout: Avancementdatesout.current.value,
         etav: Avancementetav.current.value,
     },{headers: {"Content-Type": "application/json",}})
     .then((response) => {
+      setValue(Avancementpct.current.value);
       setIsEtavDialogOpen(true);
       setIsEtavLoading(true);
       setTimeout(() => {
@@ -226,11 +240,13 @@ function DirtContent(props) {
         pushMessageToSnackbar({
           text: "Avancement validé",
         });
+
+        
       }, 1500);
     }).catch((error) => {
      
   });
-  }, [setIsEtavDialogOpen,setIsEtavLoading,pushMessageToSnackbar,Avancementpct,Avancementdatesout,Avancementetav]);
+  }, [setIsEtavDialogOpen,setUsern,Usern,setValue,setIsEtavLoading,pushMessageToSnackbar,Avancementpct,Avancementdatesout,Avancementetav]);
 
 
   return (
@@ -290,17 +306,13 @@ function DirtContent(props) {
               <TextareaAutosize className={classes.Area} aria-label="Etatav" required defaultValue={Etat} minRows={7} maxRows={7}   ref={Avancementetav}/>
             </div>
             <br/>
-             <div> 
-             <HighlightedInformation className={classes.Highlight}>
-            <b>Vérifiez bien vos informations avant de confirmer.</b>
-            </HighlightedInformation>
-             </div>
-            
           </Box>
           </form>
           ) : null}
           onClose={handleEtavDialogClose}
-          onConfirm={updateAvnc}
+          onConfirm={() => {
+            updateAvnc();
+          } }
           loading={isEtavLoading} />
       <Box width="100%">
               <div className={classes.tableWrapper}>
@@ -327,7 +339,8 @@ function DirtContent(props) {
                                               {row.intit}
                                           </TableCell>
                                           <TableCell component="th" scope="row" >
-                                              {row.etav}%
+                                          { row.etav } %
+                                              
                                           </TableCell>
                                           <TableCell component="th" scope="row" >
                                               {row.aneactu}
@@ -343,13 +356,14 @@ function DirtContent(props) {
                                                       size="large">
                                                       <SettingsIcon className={classes.blackIcon} />
                                                   </IconButton>
-                                                  {row.isActivated ? (
+                                                  {row.status ? (
                                                     <Switch
                                                     color="secondary"
-                                                    checked={checked}
-                                                    onChange={handleChange}
+                                                    checked={true}
+                                                    onChange={handleChange} 
                                                     onClick={() => {
                                                               toggleDirt(row);
+                                                             
                                                           } }
                                                     inputProps={{ 'aria-label': 'Resume' }}
                                                     size="large"
@@ -357,10 +371,11 @@ function DirtContent(props) {
                                                   ) : (
                                                     <Switch
                                                     color="secondary"
-                                                    checked={checked}
-                                                    onChange={handleChange}
+                                                    checked={false}
+                                                    onChange={handleChange} 
                                                     onClick={() => {
                                                               toggleDirt(row);
+                                                           
                                                           } }
                                                     inputProps={{ 'aria-label': 'Resume' }}
                                                     size="large"

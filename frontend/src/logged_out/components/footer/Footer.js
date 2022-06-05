@@ -7,14 +7,15 @@ import {
   Box,
   IconButton,
   Hidden,
+  TextField,
 } from "@mui/material";
 import withStyles from "@mui/styles/withStyles";
 import PhoneIcon from "@mui/icons-material/Phone";
 import MailIcon from "@mui/icons-material/Mail";
-
-
 import DocUniTBorder from "../../../shared/components/DocUniTBorder";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import ColoredButton from "../../../shared/components/ColoredButton";
+
 
 const styles = (theme) => ({
   footerInner: {
@@ -69,11 +70,8 @@ const styles = (theme) => ({
       color: theme.palette.primary.light,
     },
   },
-  blackBg: {
-    
-    color: '#FFFFFF',
-    opacity: 1,
-    backgroundColor: theme.palette.common.black,
+  whiteBg: {
+    backgroundColor: theme.palette.common.white,
   },
 });
 
@@ -163,106 +161,97 @@ function Footer(props) {
   const isWidthUpMd = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
-      <footer className="lg-p-top">
-        <DocUniTBorder
-          upperColor="#FFFFFF"
-          lowerColor={theme.palette.common.darkBlack}
-          animationNegativeDelay={4}
-        />
-        <div className={classes.footerInner} >
-          <Grid   container spacing={isWidthUpMd ? 10 : 5 } > 
-          <Hidden lgDown>
-<Grid item xs={12} md={6} lg={4}>
-<Typography variant="h6" paragraph className="text-black">
-CONTACTS
-</Typography>
-<Typography style={{ color: "#222831" }} paragraph>
-Pour plus d'informations,
-</Typography>
-<Box display="flex">
-<div>
-{infos.map((info, index) => (
-<Box display="flex" mb={1} key={index}>
-<Box mr={2}>
-<IconButton
-className={classes.infoIcon}
-tabIndex={-1}
-disabled
-size="large"
->
-{info.icon}
-</IconButton>
-</Box>
-<Box
-display="flex"
-flexDirection="column"
-justifyContent="center"
->
-<Typography variant="h6" className="text-black">
-{info.description}
-</Typography>
-</Box>
-</Box>
-))}
-</div>
-</Box>
-</Grid>
-</Hidden>
-
-<Grid item xs={12} md={6} lg={4}>
-<Typography variant="h6" paragraph className="text-black">
-A PROPOS
-</Typography>
-<Typography style={{ color: "#222831" }} paragraph>
-Gestion en ligne du processus d'inscription Post Concours au Doctorat pour la Faculté des Sciences Tlemcen.
-</Typography>
-<Box display="flex">
-{socialIcons.map((socialIcon, index) => (
-<Box key={index} mr={index !== socialIcons.length - 1 ? 1 : 0}>
-<IconButton
-aria-label={socialIcon.label}
-className={classes.socialIcon}
-href={socialIcon.href}
-size="large"
-target="_blank"
->
-{socialIcon.icon}
-</IconButton>
-</Box>
-))}
-</Box>
-</Grid>
-<Hidden lgDown>
-<Grid item xs={12} md={6} lg={4}>
-<Typography variant="h6" paragraph className="text-black">
-ADRESSE
-</Typography>
-<Typography style={{ color: "#222831" }} paragraph>
-La Faculté des Sciences est Situé au niveau du Nouveau Pôle Universitaire Abou Bakr Belkaid la Rocade,Tlemcen.
-</Typography>
-<Box display="flex">
-<Box display="flex">
-{MapIcon.map((MapIcon, index) => (
-<Box key={index} mr={index !== MapIcon.length - 1 ? 1 : 0}>
-<IconButton
-aria-label={MapIcon.label}
-className={classes.socialIcon}
-href={MapIcon.href}
-size="large"
-target="_blank"
->
-{MapIcon.icon}
-</IconButton>
-</Box>
-))}
-</Box>
-</Box>
-</Grid>
-</Hidden>
-          
+    <footer className="lg-p-top">
+    <DocUniTBorder
+      upperColor="#FFFFFF"
+      lowerColor={theme.palette.common.darkBlack}
+      animationNegativeDelay={4}
+    />
+    <div className={classes.footerInner}>
+      <Grid container spacing={isWidthUpMd ? 10 : 5}>
+        <Grid item xs={12} md={6} lg={4}>
+          <form>
+            <Box display="flex" flexDirection="column">
+              <Box mb={1}>
+                <TextField
+                  variant="outlined"
+                  multiline
+                  placeholder="prendre contact avec nous"
+                  InputProps={{
+                    className: classes.whiteBg,
+                    "aria-label": "contact",
+                  }}
+                  rows={4}
+                  fullWidth
+                  required
+                />
+              </Box>
+              <ColoredButton
+                color={theme.palette.common.white}
+                variant="outlined"
+                type="submit"
+              >
+                Envoyer Un Message
+              </ColoredButton>
+            </Box>
+          </form>
+        </Grid>
+        <Hidden lgDown>
+          <Grid item xs={12} md={6} lg={4}>
+            <Box display="flex" justifyContent="center">
+              <div>
+                {infos.map((info, index) => (
+                  <Box display="flex" mb={1} key={index}>
+                    <Box mr={2}>
+                      <IconButton
+                        className={classes.infoIcon}
+                        tabIndex={-1}
+                        disabled
+                        size="large"
+                      >
+                        {info.icon}
+                      </IconButton>
+                    </Box>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      justifyContent="center"
+                    >
+                      <Typography variant="h6" className="text-white">
+                        {info.description}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ))}
+              </div>
+            </Box>
           </Grid>
-        </div>
-      </footer>
+        </Hidden>
+        <Grid item xs={12} md={6} lg={4}>
+          <Typography variant="h6" paragraph className="text-white">
+          A PROPOS
+          </Typography>
+          <Typography style={{ color: "#8f9296" }} paragraph>
+          Gestion en ligne du processus d'inscription Post Concours au Doctorat pour la Faculté des Sciences Tlemcen.
+          </Typography>
+          <Box display="flex">
+            {socialIcons.map((socialIcon, index) => (
+              <Box key={index} mr={index !== socialIcons.length - 1 ? 1 : 0}>
+                <IconButton
+                  aria-label={socialIcon.label}
+                  className={classes.socialIcon}
+                  href={socialIcon.href}
+                  size="large"
+                >
+                  {socialIcon.icon}
+                </IconButton>
+              </Box>
+            ))}
+          </Box>
+        </Grid>
+      </Grid>
+    </div>
+  </footer>
   );
 }
 

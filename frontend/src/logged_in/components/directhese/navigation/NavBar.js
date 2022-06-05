@@ -1,4 +1,4 @@
-import React,{useRef, useCallback, useState} from "react";
+import React,{useRef, useCallback, useState,useContext} from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Hidden,Drawer,List, ListItem,
@@ -6,6 +6,7 @@ import { AppBar, Toolbar, Typography, Hidden,Drawer,List, ListItem,
   Tooltip,Box,IconButton} from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
 import Refresh from "./Refresh";
+import UserContext from "../../../../shared/components/UserContext";
 import NavigationDrawer from "../../../../shared/components/NavigationDrawer";
 import MenuIcon from "@mui/icons-material/Menu";
 import { RiListSettingsLine } from "react-icons/ri";
@@ -104,10 +105,24 @@ function NavBar(props) {
     selectedTab,
   } = props;
   const links = useRef([]);
+  const {setUserData } = useContext(UserContext);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const openMobileDrawer = useCallback(() => {
     setIsMobileOpen(true);
   }, [setIsMobileOpen]);
+
+  const logout = useCallback(() => {
+
+    setUserData({
+
+      token: undefined,
+
+      user: undefined,
+
+    });   
+     localStorage.setItem("auth-token", "");
+
+  }, [setUserData]);
 
   const closeMobileDrawer = useCallback(() => {
     setIsMobileOpen(false);
@@ -130,6 +145,7 @@ function NavBar(props) {
     },
     {link: "/",
     name: "Logout",
+    onclick:logout,
     icon: {
       desktop: (
         <MdOutlineLogout className="text-white" />

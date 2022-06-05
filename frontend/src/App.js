@@ -75,6 +75,24 @@ function App() {
 
       }
 
+      else if(role === "adj") {
+
+        const userRes = await axios.get("http://localhost:5000/users/adj", {
+
+          headers: { "x-auth-token": token },
+
+        });
+
+        setUserData({
+
+          token,
+
+          user : userRes.data,
+
+        });
+
+      }
+
       else if(role === "doc"){
 
         const userRes = await axios.get("http://localhost:5000/users/doc", {
