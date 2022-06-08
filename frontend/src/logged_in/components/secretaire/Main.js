@@ -36,12 +36,12 @@ const styles = (theme) => ({
 
   const selectDocs = useCallback(() => {
     smoothScrollTop();
-    document.title = "Doctorant";
+    document.title = "Liste des Doctorants";
     setSelectedTab("Doc");
   }, [setSelectedTab]);
   const selectDirs = useCallback(() => {
     smoothScrollTop();
-    document.title = "Enseignant";
+    document.title = "Liste des Enseignants";
     setSelectedTab("Dir");
   }, [setSelectedTab]);
   
@@ -96,7 +96,6 @@ const styles = (theme) => ({
           sd:   randomdoc.spedoc,
           lr:   randomdoc.laborata,
           inti: randomdoc.intithe,
-          ds:   randomdoc.datesout,
           dn:   randomdoc.dirnom,
           dp:   randomdoc.dirprenom,
           dg:   randomdoc.dirgrade,

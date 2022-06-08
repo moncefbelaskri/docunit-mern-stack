@@ -65,36 +65,28 @@ function Main(props) {
       const doclist1 = response.data.doc;
       const doclist2 = response.data.avnc;
       const docs = [];
-<<<<<<< HEAD
       for (let i = 0; i < doclist1.length; i += 1) {
-        const randomdoc = doclist1;
-        if(userData.user.dept === randomdoc[i].dept)
+        const randomdoc = doclist1[i];
+        if(userData.user.dept === randomdoc.dept)
         {
-          if(((userData.user.ensnom === randomdoc[i].dirnom) && (userData.user.ensprenom === randomdoc[i].dirprenom))
-          ||((userData.user.ensnom === randomdoc[i].codirnom) && (userData.user.ensprenom === randomdoc[i].codirprenom)))
+          if(((userData.user.ensnom === randomdoc.dirnom) && (userData.user.ensprenom === randomdoc.dirprenom))
+          ||((userData.user.ensnom === randomdoc.codirnom) && (userData.user.ensprenom === randomdoc.codirprenom)))
           {
         for (let j = 0; j < doclist2.length; j += 1) {     
-        const randomdoc2 = doclist2; 
-        if(doclist1[i].username === doclist2[j].usernamedoc)
+        const randomdoc2 = doclist2[j]; 
+        if(randomdoc.username === randomdoc2.usernamedoc)
         {const target = {
-=======
-
-      for (let i = 0; i < doclist2.length; i += 1) {
-        const randomdoc = doclist1;
-        const randomdoc2 = doclist2;
-        const target = {
->>>>>>> 8ea7290c672073e9646e8ca074fb735ea8e240e0
           id: i,
-          _id : randomdoc[i]._id,
-          nom: randomdoc[i].nom,
-          prénom:  randomdoc[i].prenom,
-          intit:  randomdoc[i].intithe,
-<<<<<<< HEAD
-          etav: randomdoc2[j].pctav,
-          aneactu : randomdoc2[j].aneactu,
-          etatavan: randomdoc2[j].etav,
-          datesout: randomdoc2[j].datesout,
-          username: randomdoc2[j].usernamedoc,
+          _id : randomdoc._id,
+          nom: randomdoc.nom,
+          prénom:  randomdoc.prenom,
+          intit:  randomdoc.intithe,
+          etav: randomdoc2.pctav,
+          aneactu : randomdoc2.aneactu,
+          etatavan: randomdoc2.etav,
+          datesout: randomdoc2.datesout,
+          username: randomdoc2.usernamedoc,
+          status : randomdoc2.status,
         };
         docs.push(target);
         }
@@ -104,15 +96,6 @@ function Main(props) {
       }
       setDocs(docs);
       
-=======
-          etav: randomdoc2[i].pctav + "%",
-          aneactu : randomdoc2[i].aneactu,
-        };
-        docs.push(target);
-   
-      }
-      setDocs(docs);
->>>>>>> 8ea7290c672073e9646e8ca074fb735ea8e240e0
     })
     .catch(function (error) {
       console.log(error);

@@ -12,60 +12,16 @@ function Doc(props) {
     docs,
     setDocs,
   } = props;
-  const [isAddDocPaperOpen, setIsAddDocPaperOpen] = useState(false);
-  const [isModifDocPaperOpen, setIsModifDocPaperOpen] = useState(false);
-  const [isViewDocPaperOpen, setIsViewDocPaperOpen] = useState(false);
 
-  const openAddDocModal = useCallback(() => {
-    setIsAddDocPaperOpen(true);
-  }, [setIsAddDocPaperOpen]);
-
-  const closeAddDocModal = useCallback(() => {
-    setIsAddDocPaperOpen(false);
-  }, [setIsAddDocPaperOpen]);
-
-  const openModifDocModal = useCallback(() => {
-    setIsModifDocPaperOpen(true);
-  }, [setIsModifDocPaperOpen]);
-
-  const closeModifDocModal = useCallback(() => {
-    setIsModifDocPaperOpen(false);
-  }, [setIsModifDocPaperOpen]);
-
-  const openViewDocModal = useCallback(() => {
-    setIsViewDocPaperOpen(true);
-  }, [setIsViewDocPaperOpen]);
-
-  const closeViewDocModal = useCallback(() => {
-    setIsViewDocPaperOpen(false);
-  }, [setIsViewDocPaperOpen]);
+ 
 
   useEffect(() => {
     selectDocs();
   }, [selectDocs]);
 
-  if (isAddDocPaperOpen) {
-    return <AddDoc
-      onClose={closeAddDocModal}
-      pushMessageToSnackbar={pushMessageToSnackbar}
-    />
-  }
-  if (isModifDocPaperOpen) {
-    return <ModifDoc
-      onClose={closeModifDocModal}
-      pushMessageToSnackbar={pushMessageToSnackbar}
-    />
-  }
-  if (isViewDocPaperOpen) {
-    return <ViewDoc
-      onClose={closeViewDocModal}
-      pushMessageToSnackbar={pushMessageToSnackbar}
-    />
-  }
+  
   return <DocContent
-    openAddDocModal={openAddDocModal}
-    openModifDocModal={openModifDocModal}
-    openViewDocModal={openViewDocModal}
+
     docs={docs}
     setDocs={setDocs}
     pushMessageToSnackbar={pushMessageToSnackbar} 

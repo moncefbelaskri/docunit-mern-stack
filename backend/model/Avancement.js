@@ -45,7 +45,7 @@ const avancementSchema = new mongoose.Schema({
 
     status: {
 
-        type: String,
+        type: Boolean,
         
         required : true,
     },

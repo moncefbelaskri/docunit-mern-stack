@@ -424,7 +424,7 @@ function AddDoc(props) {
       
     >
       <Typography paragraph variant="h5">
-        Doctorant
+        Informations Personnelle
       </Typography>
       <List disablePadding> 
         <Bordered disableVerticalPadding disableBorderRadius>
@@ -441,11 +441,36 @@ function AddDoc(props) {
                }}/>
             <TextField required variant="outlined" label="à" inputRef={DoctorantLieuN} />
             <TextField required variant="outlined" label="Adresse" inputRef={DoctorantAdresse} />
-            </div>     
+            </div> 
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+      <br/>
+      <Typography paragraph variant="h5">
+        Contact
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
            <div>
            <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputRef={DoctorantNumtel} />
            <TextField required variant="outlined" label="Email" name="email" type="email" inputRef={DoctorantMail}/>            
            </div> 
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+      <Typography paragraph variant="h5">
+        Informations Professionnelle
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
             <div>
             <TextField  required variant="outlined" select   label="Etat professionnel"  defaultValue={""} inputRef={DoctorantEtapro} onChange={handleChangeEtapro} >
           {currencies.map((option) => (
@@ -461,14 +486,7 @@ function AddDoc(props) {
             <TextField required variant="outlined"  label="Série du BAC " inputRef={DoctorantSeribac}/>
             <TextField required variant="outlined" type="number" name="number" label="N° du BAC " inputRef={DoctorantNumbac}/>
             </div> 
-            <div>      
-        <TextField required variant="outlined" select   label="Fiche de reinscription en" defaultValue={""} inputRef={DoctorantCatdoc} onChange={handleChangeTypedoc} >
-          {currencies2.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>                
+            <div>                    
             <TextField required variant="outlined" select   label="Dernier diplome obtenu" defaultValue={""} inputRef={DoctorantDerdip} onChange={handleChangeDerdip} >
           {currencies3.map((option) => (
             <MenuItem key={option.value} value={option.value}>
@@ -485,8 +503,28 @@ function AddDoc(props) {
                shrink: true
                }}
             />
-            </div>           
+            </div>     
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+      <Typography paragraph variant="h5">
+        Informations Doctorat
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>               
             <div>
+            <TextField required variant="outlined" select   label="Fiche de reinscription en" defaultValue={""} inputRef={DoctorantCatdoc} onChange={handleChangeTypedoc} >
+          {currencies2.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>  
             <TextField required variant="outlined" label="Date 1ère Inscription Doctorat"  type="date" inputRef={DoctorantDatepremdoc}
               InputLabelProps={{
                shrink: true
@@ -497,7 +535,20 @@ function AddDoc(props) {
             <div>
             <TextField required variant="outlined" label="Laboratoire de rattachement" inputRef={DoctorantLaborata}/>
             <TextField required variant="outlined" label="Intitulé de la thèse" inputRef={DoctorantIntithe}/>
-            </div>        
+            </div>  
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+      <Typography paragraph variant="h5">
+        Identifiants
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>      
             <div>
             <TextField required variant="outlined" label="Nom de compte" inputRef={DoctorantName}/>
             <VisibilityPasswordTextField
@@ -519,7 +570,7 @@ function AddDoc(props) {
       <br/>
 
       <Typography paragraph variant="h5">
-        Directeur de thèse
+        Informations Directeur de thèse
       </Typography>
       <List disablePadding> 
         <Bordered disableVerticalPadding disableBorderRadius>
@@ -538,7 +589,7 @@ function AddDoc(props) {
 <br/>
 
       <Typography paragraph variant="h5">
-        Co-Directeur de thèse
+      Informations Co-Directeur de thèse
       </Typography>
       <List disablePadding> 
         <Bordered disableVerticalPadding disableBorderRadius>

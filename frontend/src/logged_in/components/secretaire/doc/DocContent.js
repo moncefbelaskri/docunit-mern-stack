@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from "react";
+import React, { useState, useCallback, useContext, Fragment, useRef } from "react";
 import PropTypes from "prop-types";
 import {Divider,
   Toolbar,
@@ -11,6 +11,7 @@ import {Divider,
   TablePagination,
   TableRow,
   IconButton,
+  List, ListItem, ListItemText,
   Box, } from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -20,10 +21,16 @@ import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
 import UserContext from "../../../../shared/components/UserContext";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
+import ConfirmationDialogg from "../../../../shared/components/ConfirmationDialogg";
 import SettingsIcon from '@mui/icons-material/Settings';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import VisibilityPasswordTextField from "../../../../shared/components/VisibilityPasswordTextField";
+import TextField from '@mui/material/TextField';
+import Bordered from "../../../../shared/components/Bordered";
+import ButtonCircularProgress from "../../../../shared/components/ButtonCircularProgress";
+import MenuItem from '@mui/material/MenuItem';
 
-import axios from "axios";
+const axios = require('axios');
 
 const styles =(theme)=> ({
   tableWrapper: {
@@ -78,6 +85,42 @@ const rows = [
   },
 ];
 
+const currencies = [
+  {
+    value: 'sal',
+    label: 'Salarié(e)',
+  },
+  {
+    value: 'nonsal',
+    label: 'Non Salarié(e)',
+  },
+];
+
+const currencies2 = [
+  {
+    value: 'sci',
+    label: 'Doctorat en Sciences',
+  },
+  {
+    value: 'lmd',
+    label: 'Doctorat en LMD',
+  },
+];
+const currencies3 = [
+  {
+    value: 'mag',
+    label: 'Magister',
+  },
+  {
+    value: 'mas',
+    label: 'Master',
+  },
+  {
+    value: 'au',
+    label: 'Autre',
+  },
+];
+
 const rowsPerPage = 25;
 
 function DocContent(props) {
@@ -85,20 +128,13 @@ function DocContent(props) {
     pushMessageToSnackbar,
     setDocs,
     docs,
-    openAddDocModal,
-    openModifDocModal,
-    openViewDocModal,
-    classes, 
+    onClose,
+    classes,
+    onFormSubmit, 
   } = props;
-  const { setiddocData } = useContext(UserContext);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState(null);
-  const [isDeleteDocDialogOpen, setIsDeleteDocDialogOpen] = useState(
-    false
-  );
-  const [deleteDocDialogRow, setDeleteDocDialogRow] = useState(null);
-  const [isDeleteDocLoading, setIsDeleteDocLoading] = useState(false);
   const handleRequestSort = useCallback(
     (__, property) => {
       const _orderBy = property;
@@ -111,7 +147,19 @@ function DocContent(props) {
     },
     [setOrder, setOrderBy, order, orderBy]
   );
+  const handleChangePage = useCallback(
+    (_, page) => {
+      setPage(page);
+    },
+    [setPage]
+  );
 
+  const [isDeleteDocDialogOpen, setIsDeleteDocDialogOpen] = useState(
+    false
+  );
+  const [deleteDocDialogRow, setDeleteDocDialogRow] = useState(null);
+  const [isDeleteDocLoading, setIsDeleteDocLoading] = useState(false);
+  
   const deleteDoc = useCallback(() => {
     setIsDeleteDocLoading(true);
     setTimeout(() => {
@@ -143,32 +191,6 @@ function DocContent(props) {
     deleteDocDialogRow,
     docs,
   ]);
-
-  const handleChangePage = useCallback(
-    (_, page) => {
-      setPage(page);
-    },
-    [setPage]
-  );
-
-  const updateDoc = useCallback((row) => {
-    openModifDocModal();
-    setiddocData({
-      iddocup: row,
-    });
-  }, []);
-
-
-  const viewDoc = useCallback((row) => {
-    openViewDocModal();
-    
-    setiddocData({
-      iddocup: row,
-    });
-    
-    
-  }, []);
-
   const handleDeleteDocDialogClose = useCallback(() => {
     setIsDeleteDocDialogOpen(false);
   }, [setIsDeleteDocDialogOpen]);
@@ -180,7 +202,683 @@ function DocContent(props) {
     },
     [setIsDeleteDocDialogOpen, setDeleteDocDialogRow]
   );
+  
+  const [isCreateDocDialogOpen, setIsCreateDocDialogOpen] = useState(false);
+  const [isCreateDocLoading, setIsCreateDocLoading] = useState(false);
+  const { userData } = useContext(UserContext);
+  const DoctorantNom = useRef();
+  const DoctorantPrenom = useRef();
+  const DoctorantDateN = useRef();
+  const DoctorantLieuN = useRef();
+  const DoctorantAdresse = useRef();
+  const DoctorantNumtel = useRef();
+  const DoctorantMail = useRef();
+  const DoctorantEtapro = useRef();
+  const DoctorantAnebac = useRef();
+  const DoctorantSeribac = useRef();
+  const DoctorantNumbac = useRef();
+  const DoctorantCatdoc = useRef();
+  const DoctorantDerdip = useRef();
+  const DoctorantSpederdip = useRef();
+  const DoctorantDatederdip = useRef();
+  const DoctorantDatepremdoc = useRef();
+  const DoctorantSpedoc = useRef();
+  const DoctorantLaborata = useRef();
+  const DoctorantIntithe = useRef();
+  const DoctorantPreci = useRef();
+  const DoctorantPrecii = useRef();
+  const DoctorantName = useRef();
+  const DoctorantPassword = useRef();
+  const DoctorantdirNom = useRef();
+  const DoctorantdirPrenom = useRef();
+  const DoctorantdirGrade = useRef();
+  const DoctorantcodirNom = useRef();
+  const DoctorantcodirPrenom = useRef();
+  const DoctorantcodirGrade = useRef();
+  const [,setTypedoc] = React.useState('');
+  const [etapro, setEtapro] = React.useState('');
+  const [derdip, setDerdip] = React.useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  
+  const handleChangeTypedoc = (event) => {   
+    setTypedoc(event.target.value);
+  };
+  const handleChangeEtapro = (event) => {   
+    setEtapro(event.target.value);
+  };
+  const handleChangeDerdip = (event) => {   
 
+    setDerdip(event.target.value);
+  };
+
+  const handleCreateDocDialogClose = useCallback(() => {
+    setIsCreateDocDialogOpen(false);
+  }, [setIsCreateDocDialogOpen]);
+
+  const handleCreateDocDialogOpen = useCallback(
+    () => {
+
+      setIsCreateDocDialogOpen(true);
+    },
+    [setIsCreateDocDialogOpen]
+  );
+  const formudoc = useCallback( async () => {
+
+    setIsCreateDocLoading(true);
+
+    if(DoctorantEtapro.current.value === "sal" && DoctorantDerdip.current.value === "au")
+          {
+             await axios.post("http://localhost:5000/users/register_doc",
+           {
+            nom: DoctorantNom.current.value,
+            prenom: DoctorantPrenom.current.value,
+            username: DoctorantName.current.value,
+            password: DoctorantPassword.current.value,
+            dateN: DoctorantDateN.current.value,
+            lieuN: DoctorantLieuN.current.value,
+            adresse: DoctorantAdresse.current.value,
+            numtel: DoctorantNumtel.current.value,
+            mail: DoctorantMail.current.value,
+            etapro: DoctorantEtapro.current.value,
+            preci: DoctorantPreci.current.value,
+            anebac: DoctorantAnebac.current.value,
+            seribac: DoctorantSeribac.current.value,
+            numbac: DoctorantNumbac.current.value,
+            dept : userData.user.dept,
+            catdoc:DoctorantCatdoc.current.value,
+            derdip: DoctorantDerdip.current.value,
+            precii: DoctorantPrecii.current.value,
+            spederdip: DoctorantSpederdip.current.value,
+            datederdip: DoctorantDatederdip.current.value,
+            datepremdoc: DoctorantDatepremdoc.current.value,
+            spedoc: DoctorantSpedoc.current.value,
+            laborata: DoctorantLaborata.current.value,
+            intithe: DoctorantIntithe.current.value,
+            dirnom: DoctorantdirNom.current.value,
+          dirprenom: DoctorantdirPrenom.current.value,
+          dirgrade:  DoctorantdirGrade.current.value,
+          codirnom: DoctorantcodirNom.current.value,
+          codirprenom: DoctorantcodirPrenom.current.value,
+          codirgrade: DoctorantcodirGrade.current.value,
+
+          }
+           ,{headers: {"Content-Type": "application/json",}})
+           .then((response) => {
+            // Success 🎉
+                     
+            setIsCreateDocLoading(true);
+  
+      setTimeout(() => {
+       
+       pushMessageToSnackbar({
+           text: "ajouté avec succès",
+       });
+       window.location.reload(false);
+       }, 10);
+        }).catch((error) => {
+          if(error.response.data.msg === "doctorant existe déjà.")
+               {
+                setIsCreateDocLoading(false);
+                pushMessageToSnackbar({
+                  text: "doctorant existe déjà",
+                });
+                setIsCreateDocLoading(false);
+                }
+      });
+          }
+
+    else if(DoctorantEtapro.current.value === "sal" && DoctorantDerdip.current.value !== "au")
+             {
+               await axios.post("http://localhost:5000/users/register_doc",
+               {
+                nom: DoctorantNom.current.value,
+                prenom: DoctorantPrenom.current.value,
+                username: DoctorantName.current.value,
+            password: DoctorantPassword.current.value,
+                dateN: DoctorantDateN.current.value,
+                lieuN: DoctorantLieuN.current.value,
+                adresse: DoctorantAdresse.current.value,
+                numtel: DoctorantNumtel.current.value,
+                mail: DoctorantMail.current.value,
+                etapro: DoctorantEtapro.current.value,
+                preci: DoctorantPreci.current.value,
+                anebac: DoctorantAnebac.current.value,
+                seribac: DoctorantSeribac.current.value,
+                numbac: DoctorantNumbac.current.value,
+                dept: userData.user.dept,
+                catdoc:DoctorantCatdoc.current.value,
+                derdip: DoctorantDerdip.current.value,
+                spederdip: DoctorantSpederdip.current.value,
+                datederdip: DoctorantDatederdip.current.value,
+                datepremdoc: DoctorantDatepremdoc.current.value,
+                spedoc: DoctorantSpedoc.current.value,
+                laborata: DoctorantLaborata.current.value,
+                intithe: DoctorantIntithe.current.value,         
+                dirnom: DoctorantdirNom.current.value,
+          dirprenom: DoctorantdirPrenom.current.value,
+          dirgrade:  DoctorantdirGrade.current.value,
+          codirnom: DoctorantcodirNom.current.value,
+          codirprenom: DoctorantcodirPrenom.current.value,
+          codirgrade: DoctorantcodirGrade.current.value,
+        
+              }
+               ,{headers: {"Content-Type": "application/json",},})
+               .then((response) => {
+                // Success 🎉
+                         
+                setIsCreateDocLoading(true);
+  
+      setTimeout(() => {
+       
+       pushMessageToSnackbar({
+           text: "ajouté avec succès",
+       });
+       window.location.reload(false);
+       }, 10);
+            }).catch((error) => {
+              if(error.response.data.msg === "doctorant existe déjà.")
+                   {
+                    setIsCreateDocLoading(false);
+                    pushMessageToSnackbar({
+                      text: "doctorant existe déjà",
+                    });
+                    setIsCreateDocLoading(false);
+                  }
+          });
+             }
+      else if(DoctorantEtapro.current.value !== "sal" && DoctorantDerdip.current.value === "au")
+             {
+          await axios.post("http://localhost:5000/users/register_doc",
+            {  
+              nom: DoctorantNom.current.value,
+      prenom: DoctorantPrenom.current.value,
+      username: DoctorantName.current.value,
+            password: DoctorantPassword.current.value,
+      dateN: DoctorantDateN.current.value,
+      lieuN: DoctorantLieuN.current.value,
+      adresse: DoctorantAdresse.current.value,
+      numtel: DoctorantNumtel.current.value,
+      mail: DoctorantMail.current.value,
+      etapro: DoctorantEtapro.current.value,
+      anebac: DoctorantAnebac.current.value,
+      seribac: DoctorantSeribac.current.value,
+      numbac: DoctorantNumbac.current.value,
+      dept: userData.user.dept,
+      catdoc:DoctorantCatdoc.current.value,
+      derdip: DoctorantDerdip.current.value,
+      precii: DoctorantPrecii.current.value,
+      spederdip: DoctorantSpederdip.current.value,
+      datederdip: DoctorantDatederdip.current.value,
+      datepremdoc: DoctorantDatepremdoc.current.value,
+      spedoc: DoctorantSpedoc.current.value,
+      laborata: DoctorantLaborata.current.value,
+      intithe: DoctorantIntithe.current.value,
+      dirnom: DoctorantdirNom.current.value,
+      dirprenom: DoctorantdirPrenom.current.value,
+      dirgrade:  DoctorantdirGrade.current.value,
+      codirnom: DoctorantcodirNom.current.value,
+      codirprenom: DoctorantcodirPrenom.current.value,
+      codirgrade: DoctorantcodirGrade.current.value,
+         } 
+               ,{headers: {"Content-Type": "application/json",},})
+               .then((response) => {
+                // Success 🎉
+                         
+                setIsCreateDocLoading(true);
+  
+      setTimeout(() => {
+       
+       pushMessageToSnackbar({
+           text: "ajouté avec succès",
+       });
+       window.location.reload(false);
+       }, 10);
+            }).catch((error) => {
+              if(error.response.data.msg === "doctorant existe déjà.")
+                   {
+                    setIsCreateDocLoading(false);
+                      pushMessageToSnackbar({
+                       text: "doctorant existe déjà",
+                          });
+                          setIsCreateDocLoading(false);
+                  }
+          });
+              }
+      else 
+        {
+       await axios.post("http://localhost:5000/users/register_doc",
+          {
+            nom: DoctorantNom.current.value,
+          prenom: DoctorantPrenom.current.value,
+          username: DoctorantName.current.value,
+          password: DoctorantPassword.current.value,
+          dateN: DoctorantDateN.current.value,
+          lieuN: DoctorantLieuN.current.value,
+          adresse: DoctorantAdresse.current.value,
+          numtel: DoctorantNumtel.current.value,
+          mail: DoctorantMail.current.value,
+          etapro: DoctorantEtapro.current.value,
+          anebac: DoctorantAnebac.current.value,
+          seribac: DoctorantSeribac.current.value,
+          numbac: DoctorantNumbac.current.value,
+          dept: userData.user.dept,
+          catdoc:DoctorantCatdoc.current.value,
+          derdip: DoctorantDerdip.current.value,
+          spederdip: DoctorantSpederdip.current.value,
+          datederdip: DoctorantDatederdip.current.value,
+          datepremdoc: DoctorantDatepremdoc.current.value,
+          spedoc: DoctorantSpedoc.current.value,
+          laborata: DoctorantLaborata.current.value,
+          intithe: DoctorantIntithe.current.value,
+          dirnom: DoctorantdirNom.current.value,
+          dirprenom: DoctorantdirPrenom.current.value,
+          dirgrade:  DoctorantdirGrade.current.value,
+          codirnom: DoctorantcodirNom.current.value,
+          codirprenom: DoctorantcodirPrenom.current.value,
+          codirgrade: DoctorantcodirGrade.current.value,
+          }
+          ,
+          {headers: {"Content-Type": "application/json",},})
+          .then((response) => { 
+            // Success 🎉
+               
+            setIsCreateDocLoading(true);
+  
+     setTimeout(() => {
+      
+      pushMessageToSnackbar({
+          text: "ajouté avec succès",
+      });
+      window.location.reload(false);
+      }, 10);
+    
+        }).catch((error) => {
+          if(error.response.data.msg === "doctorant existe déjà.")
+               {
+                setIsCreateDocLoading(false);
+                pushMessageToSnackbar({
+                  text: "doctorant existe déjà",
+                });
+                setIsCreateDocLoading(false);
+              }
+      });
+        }     
+    
+      }
+  ,[ setIsCreateDocLoading,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantName,DoctorantPassword
+    ,DoctorantdirNom,DoctorantdirPrenom,DoctorantdirGrade,DoctorantcodirNom,DoctorantcodirPrenom,DoctorantcodirGrade]);
+
+  const handleUpload = useCallback(async () => {
+    setIsCreateDocLoading(true);
+    if(DoctorantNom.current.value === "" ||
+    DoctorantPrenom.current.value === "" ||
+    DoctorantDateN.current.value === "" ||
+    DoctorantLieuN.current.value === "" ||
+    DoctorantAdresse.current.value === "" ||
+    DoctorantNumtel.current.value === "" ||
+    DoctorantMail.current.value === "" ||
+    DoctorantEtapro.current.value === "" ||
+    DoctorantAnebac.current.value === "" ||
+    DoctorantSeribac.current.value === "" ||
+    DoctorantNumbac.current.value === "" ||
+    DoctorantCatdoc.current.value === "" ||
+    DoctorantDerdip.current.value === "" ||
+    DoctorantSpederdip.current.value === "" ||
+    DoctorantDatederdip.current.value === "" ||
+    DoctorantDatepremdoc.current.value === "" ||
+    DoctorantSpedoc.current.value === "" ||
+    DoctorantIntithe.current.value === "" ||
+    DoctorantLaborata.current.value === "" ||   
+    DoctorantName.current.value === "" ||
+    DoctorantPassword.current.value === ""  ||
+    DoctorantdirNom.current.value === ""  ||
+    DoctorantdirPrenom.current.value === ""  ||
+    DoctorantdirGrade.current.value === ""  ||
+    DoctorantcodirNom.current.value === ""  ||
+    DoctorantcodirPrenom.current.value === ""  ||
+    DoctorantcodirGrade.current.value === ""  
+    ) {     
+      setIsCreateDocLoading(false);     
+    }
+    else if(DoctorantEtapro.current.value === "sal" && DoctorantPreci.current.value === "" )
+      {
+        setIsCreateDocLoading(false);     
+      }
+      else if(DoctorantDerdip.current.value === "au" && DoctorantPrecii.current.value === "" )
+      {
+        setIsCreateDocLoading(false);     
+      }
+    else{
+
+    formudoc();
+      
+  }
+  }, [setIsCreateDocLoading , onClose, pushMessageToSnackbar]);
+
+
+  const [isViewDocDialogOpen, setIsViewDocDialogOpen] = useState(false);
+  const [viewDocDialogRow, setViewDocDialogRow] = useState(null);
+  const handleViewDocDialogClose = useCallback(() => {
+    setIsViewDocDialogOpen(false);
+  }, [setIsViewDocDialogOpen]);
+
+  const handleViewDocDialogOpen = useCallback(
+    (row) => {
+      setIsViewDocDialogOpen(true);
+      setViewDocDialogRow(row);
+    },
+    [setIsViewDocDialogOpen,setViewDocDialogRow]
+  );
+  
+
+  const [isUpdateDocDialogOpen, setIsUpdateDocDialogOpen] = useState(false);
+  const [updateDocDialogRow, setUpdateDocDialogRow] = useState(null);
+  const [isUpdateDocLoading, setIsUpdateDocLoading] = useState(false);
+  const [Id, setId] = useState();
+  const handleUpdateDocDialogClose = useCallback(() => {
+    setIsUpdateDocDialogOpen(false);
+  }, [setIsUpdateDocDialogOpen]);
+
+  const handleUpdateDocDialogOpen = useCallback(
+    (row) => {
+      setIsUpdateDocDialogOpen(true);
+      setUpdateDocDialogRow(row);
+      setId(row._id);
+    },
+    [setIsUpdateDocDialogOpen,setUpdateDocDialogRow]
+  );
+
+  const formudocc = useCallback( async () => {
+
+    setIsUpdateDocLoading(true);
+
+    if(DoctorantEtapro.current.value === "sal" && DoctorantDerdip.current.value === "au")
+          {
+            await axios.put("http://localhost:5000/users/update/doc/" + Id,
+           {
+            nom: DoctorantNom.current.value,
+            prenom: DoctorantPrenom.current.value,
+            username: DoctorantName.current.value,
+            password: DoctorantPassword.current.value,
+            dateN: DoctorantDateN.current.value,
+            lieuN: DoctorantLieuN.current.value,
+            adresse: DoctorantAdresse.current.value,
+            numtel: DoctorantNumtel.current.value,
+            mail: DoctorantMail.current.value,
+            etapro: DoctorantEtapro.current.value,
+            preci: DoctorantPreci.current.value,
+            anebac: DoctorantAnebac.current.value,
+            seribac: DoctorantSeribac.current.value,
+            numbac: DoctorantNumbac.current.value,
+            dept : userData.user.dept,
+            catdoc:DoctorantCatdoc.current.value,
+            derdip: DoctorantDerdip.current.value,
+            precii: DoctorantPrecii.current.value,
+            spederdip: DoctorantSpederdip.current.value,
+            datederdip: DoctorantDatederdip.current.value,
+            datepremdoc: DoctorantDatepremdoc.current.value,
+            spedoc: DoctorantSpedoc.current.value,
+            laborata: DoctorantLaborata.current.value,
+            intithe: DoctorantIntithe.current.value,
+            dirnom: DoctorantdirNom.current.value,
+          dirprenom: DoctorantdirPrenom.current.value,
+          dirgrade:  DoctorantdirGrade.current.value,
+          codirnom: DoctorantcodirNom.current.value,
+          codirprenom: DoctorantcodirPrenom.current.value,
+          codirgrade: DoctorantcodirGrade.current.value,
+
+          }
+           ,{headers: {"Content-Type": "application/json",}})
+           .then((response) => {
+            // Success 🎉
+            setIsUpdateDocLoading(true);
+  
+            setTimeout(() => {
+             
+             pushMessageToSnackbar({
+                 text: "modifié avec succès",
+             });
+             window.location.reload(false);
+             }, 10);
+        }).catch((error) => {
+          if(error.response.data.msg === "doctorant existe déjà.")
+               {
+                setIsUpdateDocLoading(false);
+                pushMessageToSnackbar({
+                  text: "doctorant existe déjà",
+                });
+                setIsUpdateDocLoading(false);
+                }
+      });
+          }
+
+    else if(DoctorantEtapro.current.value === "sal" && DoctorantDerdip.current.value !== "au")
+             {
+              await axios.put("http://localhost:5000/users/update/doc/" + Id,
+               {
+                nom: DoctorantNom.current.value,
+            prenom: DoctorantPrenom.current.value,
+            username: DoctorantName.current.value,
+            password: DoctorantPassword.current.value,
+            dateN: DoctorantDateN.current.value,
+            lieuN: DoctorantLieuN.current.value,
+            adresse: DoctorantAdresse.current.value,
+            numtel: DoctorantNumtel.current.value,
+            mail: DoctorantMail.current.value,
+            etapro: DoctorantEtapro.current.value,
+            preci: DoctorantPreci.current.value,
+            anebac: DoctorantAnebac.current.value,
+            seribac: DoctorantSeribac.current.value,
+            numbac: DoctorantNumbac.current.value,
+            dept : userData.user.dept,
+            catdoc:DoctorantCatdoc.current.value,
+            derdip: DoctorantDerdip.current.value,
+            precii: DoctorantPrecii.current.value,
+            spederdip: DoctorantSpederdip.current.value,
+            datederdip: DoctorantDatederdip.current.value,
+            datepremdoc: DoctorantDatepremdoc.current.value,
+            spedoc: DoctorantSpedoc.current.value,
+            laborata: DoctorantLaborata.current.value,
+            intithe: DoctorantIntithe.current.value,
+            dirnom: DoctorantdirNom.current.value,
+          dirprenom: DoctorantdirPrenom.current.value,
+          dirgrade:  DoctorantdirGrade.current.value,
+          codirnom: DoctorantcodirNom.current.value,
+          codirprenom: DoctorantcodirPrenom.current.value,
+          codirgrade: DoctorantcodirGrade.current.value,
+        
+              }
+               ,{headers: {"Content-Type": "application/json",},})
+               .then((response) => {
+                // Success 🎉
+                setIsUpdateDocLoading(true);
+  
+                setTimeout(() => {
+                 
+                 pushMessageToSnackbar({
+                     text: "modifié avec succès",
+                 });
+                 window.location.reload(false);
+                 }, 10);
+            }).catch((error) => {
+              if(error.response.data.msg === "doctorant existe déjà.")
+                   {
+                    setIsUpdateDocLoading(false);
+                    pushMessageToSnackbar({
+                      text: "doctorant existe déjà",
+                    });
+                    setIsUpdateDocLoading(false);
+                  }
+          });
+             }
+      else if(DoctorantEtapro.current.value !== "sal" && DoctorantDerdip.current.value === "au")
+             {
+              await axios.put("http://localhost:5000/users/update/doc/" + Id,
+            {  
+              nom: DoctorantNom.current.value,
+            prenom: DoctorantPrenom.current.value,
+            username: DoctorantName.current.value,
+            password: DoctorantPassword.current.value,
+            dateN: DoctorantDateN.current.value,
+            lieuN: DoctorantLieuN.current.value,
+            adresse: DoctorantAdresse.current.value,
+            numtel: DoctorantNumtel.current.value,
+            mail: DoctorantMail.current.value,
+            etapro: DoctorantEtapro.current.value,
+            preci: DoctorantPreci.current.value,
+            anebac: DoctorantAnebac.current.value,
+            seribac: DoctorantSeribac.current.value,
+            numbac: DoctorantNumbac.current.value,
+            dept : userData.user.dept,
+            catdoc:DoctorantCatdoc.current.value,
+            derdip: DoctorantDerdip.current.value,
+            precii: DoctorantPrecii.current.value,
+            spederdip: DoctorantSpederdip.current.value,
+            datederdip: DoctorantDatederdip.current.value,
+            datepremdoc: DoctorantDatepremdoc.current.value,
+            spedoc: DoctorantSpedoc.current.value,
+            laborata: DoctorantLaborata.current.value,
+            intithe: DoctorantIntithe.current.value,
+            dirnom: DoctorantdirNom.current.value,
+          dirprenom: DoctorantdirPrenom.current.value,
+          dirgrade:  DoctorantdirGrade.current.value,
+          codirnom: DoctorantcodirNom.current.value,
+          codirprenom: DoctorantcodirPrenom.current.value,
+          codirgrade: DoctorantcodirGrade.current.value,
+         } 
+               ,{headers: {"Content-Type": "application/json",},})
+               .then((response) => {
+                // Success 🎉
+                setIsUpdateDocLoading(true);
+  
+                setTimeout(() => {
+                 
+                 pushMessageToSnackbar({
+                     text: "modifié avec succès",
+                 });
+                 window.location.reload(false);
+                 }, 10);
+            }).catch((error) => {
+              if(error.response.data.msg === "doctorant existe déjà.")
+                   {
+                    setIsUpdateDocLoading(false);
+                      pushMessageToSnackbar({
+                       text: "doctorant existe déjà",
+                          });
+                          setIsUpdateDocLoading(false);
+                  }
+          });
+              }
+      else 
+        {
+          await axios.put("http://localhost:5000/users/update/doc/" + Id,
+          {
+            nom: DoctorantNom.current.value,
+            prenom: DoctorantPrenom.current.value,
+            username: DoctorantName.current.value,
+            password: DoctorantPassword.current.value,
+            dateN: DoctorantDateN.current.value,
+            lieuN: DoctorantLieuN.current.value,
+            adresse: DoctorantAdresse.current.value,
+            numtel: DoctorantNumtel.current.value,
+            mail: DoctorantMail.current.value,
+            etapro: DoctorantEtapro.current.value,
+            preci: DoctorantPreci.current.value,
+            anebac: DoctorantAnebac.current.value,
+            seribac: DoctorantSeribac.current.value,
+            numbac: DoctorantNumbac.current.value,
+            dept : userData.user.dept,
+            catdoc:DoctorantCatdoc.current.value,
+            derdip: DoctorantDerdip.current.value,
+            precii: DoctorantPrecii.current.value,
+            spederdip: DoctorantSpederdip.current.value,
+            datederdip: DoctorantDatederdip.current.value,
+            datepremdoc: DoctorantDatepremdoc.current.value,
+            spedoc: DoctorantSpedoc.current.value,
+            laborata: DoctorantLaborata.current.value,
+            intithe: DoctorantIntithe.current.value,
+            dirnom: DoctorantdirNom.current.value,
+          dirprenom: DoctorantdirPrenom.current.value,
+          dirgrade:  DoctorantdirGrade.current.value,
+          codirnom: DoctorantcodirNom.current.value,
+          codirprenom: DoctorantcodirPrenom.current.value,
+          codirgrade: DoctorantcodirGrade.current.value,
+          }
+          ,
+          {headers: {"Content-Type": "application/json",},})
+          .then((response) => { 
+            // Success 🎉
+            setIsUpdateDocLoading(true);
+  
+            setTimeout(() => {
+             
+             pushMessageToSnackbar({
+                 text: "modifié avec succès",
+             });
+             window.location.reload(false);
+             }, 10);
+        }).catch((error) => {
+          if(error.response.data.msg === "doctorant existe déjà.")
+               {
+                setIsUpdateDocLoading(false);
+                pushMessageToSnackbar({
+                  text: "doctorant existe déjà",
+                });
+                setIsUpdateDocLoading(false);
+              }
+      });
+        }     
+      
+        }  
+  ,[ setIsUpdateDocLoading,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantName,DoctorantPassword
+    ,DoctorantdirNom,DoctorantdirPrenom,DoctorantdirGrade,DoctorantcodirNom,DoctorantcodirPrenom,DoctorantcodirGrade]);
+
+    const handleUploadd = useCallback(async () => {
+      setIsUpdateDocLoading(true);
+      if(DoctorantNom.current.value === "" ||
+      DoctorantPrenom.current.value === "" ||
+      DoctorantDateN.current.value === "" ||
+      DoctorantLieuN.current.value === "" ||
+      DoctorantAdresse.current.value === "" ||
+      DoctorantNumtel.current.value === "" ||
+      DoctorantMail.current.value === "" ||
+      DoctorantEtapro.current.value === "" ||
+      DoctorantAnebac.current.value === "" ||
+      DoctorantSeribac.current.value === "" ||
+      DoctorantNumbac.current.value === "" ||
+      DoctorantCatdoc.current.value === "" ||
+      DoctorantDerdip.current.value === "" ||
+      DoctorantSpederdip.current.value === "" ||
+      DoctorantDatederdip.current.value === "" ||
+      DoctorantDatepremdoc.current.value === "" ||
+      DoctorantSpedoc.current.value === "" ||
+      DoctorantIntithe.current.value === "" ||
+      DoctorantLaborata.current.value === "" ||   
+      DoctorantName.current.value === "" ||
+      DoctorantPassword.current.value === ""  ||
+      DoctorantdirNom.current.value === ""  ||
+      DoctorantdirPrenom.current.value === ""  ||
+      DoctorantdirGrade.current.value === ""  ||
+      DoctorantcodirNom.current.value === ""  ||
+      DoctorantcodirPrenom.current.value === ""  ||
+      DoctorantcodirGrade.current.value === ""  
+      ) {     
+        setIsUpdateDocLoading(false);     
+      }
+      else if(DoctorantEtapro.current.value === "sal" && DoctorantPreci.current.value === "" )
+        {
+          setIsUpdateDocLoading(false);     
+        }
+        else if(DoctorantDerdip.current.value === "au" && DoctorantPrecii.current.value === "" )
+        {
+          setIsUpdateDocLoading(false);     
+        }
+      else{
+  
+      formudocc();
+        
+    }
+    }, [setIsUpdateDocLoading , onClose, pushMessageToSnackbar]);
 
 
   return (
@@ -190,7 +888,7 @@ function DocContent(props) {
         <Button
           variant="contained"
           color="secondary"
-          onClick={openAddDocModal}
+          onClick={handleCreateDocDialogOpen}
           disableElevation
         >
           Ajouter Doctorant
@@ -211,7 +909,624 @@ function DocContent(props) {
           ) : null}
           onClose={handleDeleteDocDialogClose}
           onConfirm={deleteDoc}
-          loading={isDeleteDocLoading} /><Box width="100%">
+          loading={isDeleteDocLoading} />
+          
+          <ConfirmationDialogg
+          open={isCreateDocDialogOpen}
+          title="Création d'un Doctorant"
+          content={
+            <form onSubmit={onFormSubmit}>
+            <Box
+            sx={{
+          '& .MuiTextField-root': { m: 1, width: '29.5ch' },
+        }}
+        
+        
+      >
+        <Typography paragraph variant="h5">
+        <center>Informations Personnelle</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="outlined" label="Nom" inputRef={DoctorantNom}/>            
+            <TextField required variant="outlined" label="Prénom" inputRef={DoctorantPrenom} />
+            </div>
+            <div>
+            <TextField required variant="outlined" label="Né(e) le" type="date" inputRef={DoctorantDateN}
+             InputLabelProps={{
+               shrink: true  
+               }}/>
+            <TextField required variant="outlined" label="à" inputRef={DoctorantLieuN} />
+            <TextField required variant="outlined" label="Adresse" inputRef={DoctorantAdresse} />
+            </div> 
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+      <br/>
+      <Typography paragraph variant="h5">
+      <center>Contact</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+           <div>
+           <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputRef={DoctorantNumtel} />
+           <TextField required variant="outlined" label="Email" name="email" type="email" inputRef={DoctorantMail}/>            
+           </div> 
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+      <Typography paragraph variant="h5">
+      <center>Informations Professionnelle</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField  required variant="outlined" select   label="Etat professionnel"  defaultValue={""} inputRef={DoctorantEtapro} onChange={handleChangeEtapro} >
+          {currencies.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        {etapro==="sal"? <TextField  variant="outlined" label="(Préciser)" inputRef={DoctorantPreci}/>:null}
+            </div>
+            <div>
+            <TextField required variant="outlined" type="number" name="number" inputProps={{min:1950}} label="Année d’obtention du BAC" inputRef={DoctorantAnebac}/>
+            <TextField required variant="outlined"  label="Série du BAC " inputRef={DoctorantSeribac}/>
+            <TextField required variant="outlined" type="number" name="number" label="N° du BAC " inputRef={DoctorantNumbac}/>
+            </div> 
+            <div>                    
+            <TextField required variant="outlined" select   label="Dernier diplome obtenu" defaultValue={""} inputRef={DoctorantDerdip} onChange={handleChangeDerdip} >
+          {currencies3.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>  
+            {derdip==="au"? <TextField  variant="outlined" label="(Préciser)" inputRef={DoctorantPrecii}/>:null}
+            </div>
+            <div>
+            <TextField required variant="outlined" label="Spécialité dernier diplôme obtenu" inputRef={DoctorantSpederdip}/>
+            <TextField required variant="outlined" label="Date de son obtention"  type="date" inputRef={DoctorantDatederdip}
+              InputLabelProps={{
+               shrink: true
+               }}
+            />
+            </div>     
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+      <Typography paragraph variant="h5">
+      <center>Informations Doctorat</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>               
+            <div>
+            <TextField required variant="outlined" select   label="Fiche de reinscription en" defaultValue={""} inputRef={DoctorantCatdoc} onChange={handleChangeTypedoc} >
+          {currencies2.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>  
+            <TextField required variant="outlined" label="Date 1ère Inscription Doctorat"  type="date" inputRef={DoctorantDatepremdoc}
+              InputLabelProps={{
+               shrink: true
+               }}
+              />
+            <TextField required variant="outlined" label="Spécialité du Doctorat" inputRef={DoctorantSpedoc}/>
+            </div>
+            <div>
+            <TextField required variant="outlined" label="Laboratoire de rattachement" inputRef={DoctorantLaborata}/>
+            <TextField required variant="outlined" label="Intitulé de la thèse" inputRef={DoctorantIntithe}/>
+            </div>  
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+      <Typography paragraph variant="h5">
+      <center>Identifiants</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>      
+            <div>
+            <TextField required variant="outlined" label="Nom de compte" inputRef={DoctorantName}/>
+            <VisibilityPasswordTextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth              
+              label="Mot de passe"
+              autoComplete="off"
+              inputRef={DoctorantPassword}
+              onVisibilityChange={setIsPasswordVisible}
+              isVisible={isPasswordVisible}
+              />            </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+
+      <Typography paragraph variant="h5">
+      <center>Informations Directeur de thèse</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="outlined" label="Nom" inputRef={DoctorantdirNom}/>
+            <TextField required variant="outlined" label="Prénom" inputRef={DoctorantdirPrenom}/>
+            <TextField required variant="outlined" label="Grade" inputRef={DoctorantdirGrade}/>
+            </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+<br/>
+
+      <Typography paragraph variant="h5">
+      <center>Informations Co-Directeur de thèse</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="outlined" label="Nom" inputRef={DoctorantcodirNom}/>
+            <TextField required variant="outlined" label="Prénom" inputRef={DoctorantcodirPrenom}/>
+            <TextField required variant="outlined" label="Grade" inputRef={DoctorantcodirGrade}/>
+            </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+       
+    </Box>
+      </form>
+          }
+        actions={
+          <Fragment>
+            <Box mr={1}>
+              <Button onClick={handleCreateDocDialogClose} disabled={isCreateDocLoading}>
+                Retour
+              </Button>
+            </Box>
+            <Button
+              type="submit" 
+              variant="contained"
+              color="secondary"
+              disabled={isCreateDocLoading}
+              onClick={handleUpload}
+            >
+              Valider {isCreateDocLoading && <ButtonCircularProgress />}
+            </Button>
+          </Fragment>
+        }
+          />
+          
+          <ConfirmationDialogg
+          open={isViewDocDialogOpen}
+          title="Données d'un Doctorant"
+          content={viewDocDialogRow ? (
+            <Box
+            sx={{
+          '& .MuiTextField-root': { m: 1, width: '29.5ch' },
+        }}
+        
+        
+      >
+          <Typography paragraph variant="h5">
+          <center>Informations Personnelle</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="standard" label="Nom" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.nom}/>            
+            <TextField required variant="standard" label="Prénom" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.prénom}/>
+            </div>
+            <div>
+            <TextField required variant="standard" label="Né(e) le" type="date" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.da}/>
+            <TextField required variant="standard" label="à" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.li}/>
+            <TextField required variant="standard" label="Adresse" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.ad} />
+            </div>  
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+      <br/>
+      <Typography paragraph variant="h5">
+      <center> Contact</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>   
+           <div>
+           <TextField required variant="standard" label="N° de téléphone " name="phone" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.nt} />
+           <TextField required variant="standard" label="Email" name="email" type="email" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.email}/>            
+           </div> 
+           </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+
+      <Typography paragraph variant="h5">
+      <center> Informations Professionnelle</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField  required variant="standard"  label="Etat professionnel"  inputProps={{ readOnly: true }}  defaultValue={viewDocDialogRow.ep}/>
+        {viewDocDialogRow.ep==="sal"? <TextField  variant="standard" label="(Préciser)" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.pr}/>:null}
+            </div>
+            <div>
+            <TextField required variant="standard" type="number" name="number"  label="Année d’obtention du BAC" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.an}/>
+            <TextField required variant="standard"  label="Série du BAC " inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.seb}/>
+            <TextField required variant="standard" type="number" name="number" label="N° du BAC " inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.nb}/>
+            </div> 
+            <div>      
+        <TextField required variant="standard"    label="Fiche de reinscription en" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.cd}/>           
+            <TextField required variant="standard"    label="Dernier diplome obtenu" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.dd}/>  
+            {viewDocDialogRow.dd==="au"? <TextField  variant="standard" label="(Préciser)" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.prr}/>:null}
+            </div>
+            <div>
+            <TextField required variant="standard" label="Spécialité dernier diplôme obtenu" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.sdd}/>
+            <TextField required variant="standard" label="Date de son obtention"  type="date" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.dad}/>
+            </div>  
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+
+      <Typography paragraph variant="h5">
+      <center>Informations Doctorat</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>             
+            <div>
+            <TextField required variant="standard"    label="Fiche de reinscription en" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.cd}/>           
+            <TextField required variant="standard" label="Date 1ère Inscription Doctorat"  type="date" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.dap}/>
+            <TextField required variant="standard" label="Spécialité du Doctorat" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.sd}/>
+            </div>
+            <div>
+            <TextField required variant="standard" label="Laboratoire de rattachement" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.lr}/>          
+            <TextField required variant="standard" label="Intitulé de la thèse" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.inti}/>
+            </div> 
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+      <Typography paragraph variant="h5">
+      <center>Identifiants</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>              
+            <div>
+            <TextField required variant="standard" label="Nom de compte" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.ndc}/>
+            <VisibilityPasswordTextField
+              variant="standard"
+              margin="normal"
+              required
+              fullWidth              
+              label="Mot de passe"
+              autoComplete="off"
+              inputProps={{ readOnly: true }}
+              defaultValue={viewDocDialogRow.mdp}
+              onVisibilityChange={setIsPasswordVisible}
+              isVisible={isPasswordVisible}
+              />            
+              </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+
+      <Typography paragraph variant="h5">
+      <center>Informations Directeur de thèse</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="standard" label="Nom" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.dn}/>
+            <TextField required variant="standard" label="Prénom" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.dp}/>
+            <TextField required variant="standard" label="Grade" inputProps={{ readOnly: true }} defaultValue={viewDocDialogRow.dg}/>
+            </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+<br/>
+
+      <Typography paragraph variant="h5">
+      <center>Informations Co-Directeur de thèse</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="standard" label="Nom"  inputProps={{ readOnly: true }} defaultValue={ viewDocDialogRow.cdn}/>
+            <TextField required variant="standard" label="Prénom"  inputProps={{ readOnly: true }} defaultValue={ viewDocDialogRow.cdp}/>
+            <TextField required variant="standard" label="Grade" inputProps={{ readOnly: true }} defaultValue={ viewDocDialogRow.cdg}/>
+            </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+       
+    </Box>
+         ) : null }
+         actions={
+          <Fragment>
+            <Box mr={1}>
+              <Button onClick={handleViewDocDialogClose}>
+                Retour
+              </Button>
+            </Box>
+          </Fragment>
+        }
+          />
+          
+          <ConfirmationDialogg
+          open={isUpdateDocDialogOpen}
+          title="Modification d'un Doctorant"
+          content={updateDocDialogRow ? (
+            <Box
+            sx={{
+          '& .MuiTextField-root': { m: 1, width: '29.5ch' },
+        }}
+        
+        
+      >
+         <Typography paragraph variant="h5">
+         <center>Informations Personnelle</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="outlined" label="Nom" defaultValue={updateDocDialogRow.nom} inputRef={DoctorantNom}/>            
+            <TextField required variant="outlined" label="Prénom" defaultValue={updateDocDialogRow.prénom} inputRef={DoctorantPrenom} />
+            </div>
+            <div>
+            <TextField required variant="outlined" label="Né(e) le" type="date" defaultValue={updateDocDialogRow.da} inputRef={DoctorantDateN}
+             InputLabelProps={{
+               shrink: true  
+               }}/>
+            <TextField required variant="outlined" label="à" defaultValue={updateDocDialogRow.li} inputRef={DoctorantLieuN} />
+            <TextField required variant="outlined" label="Adresse" defaultValue={updateDocDialogRow.ad} inputRef={DoctorantAdresse} />
+            </div>     
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+      <br/>
+      <Typography paragraph variant="h5">
+      <center> Contact</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+           <div>
+           <TextField required variant="outlined" label="N° de téléphone " name="phone" defaultValue={updateDocDialogRow.nt}  inputRef={DoctorantNumtel} />
+           <TextField required variant="outlined" label="Email" name="email" type="email" defaultValue={updateDocDialogRow.email} inputRef={DoctorantMail}/>            
+           </div> 
+           </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+      <Typography paragraph variant="h5">
+      <center> Informations Professionnelle</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField  required variant="outlined" select   label="Etat professionnel"  defaultValue={updateDocDialogRow.ep} inputRef={DoctorantEtapro} onChange={handleChangeEtapro} >
+          {currencies.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        {etapro==="sal"? <TextField  variant="outlined" label="(Préciser)" defaultValue={updateDocDialogRow.pr} inputRef={DoctorantPreci}/>:null}
+          </div>
+            <div>
+            <TextField required variant="outlined" type="number" name="number" inputProps={{min:1950}} label="Année d’obtention du BAC" defaultValue={updateDocDialogRow.an} inputRef={DoctorantAnebac}/>
+            <TextField required variant="outlined"  label="Série du BAC "  defaultValue={updateDocDialogRow.seb} inputRef={DoctorantSeribac}/>
+            <TextField required variant="outlined" type="number" name="number" label="N° du BAC " defaultValue={updateDocDialogRow.nb} inputRef={DoctorantNumbac}/>
+            </div> 
+            <div>                    
+            <TextField required variant="outlined" select   label="Dernier diplome obtenu" defaultValue={updateDocDialogRow.dd} inputRef={DoctorantDerdip} onChange={handleChangeDerdip} >
+          {currencies3.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>  
+        {derdip==="au"? <TextField  variant="outlined" label="(Préciser)" defaultValue={updateDocDialogRow.prr} inputRef={DoctorantPrecii}/>:null}
+            </div>
+            <div>
+            <TextField required variant="outlined" label="Spécialité dernier diplôme obtenu" defaultValue={updateDocDialogRow.sdd} inputRef={DoctorantSpederdip}/>
+            <TextField required variant="outlined" label="Date de son obtention"  type="date" defaultValue={updateDocDialogRow.dad} inputRef={DoctorantDatederdip}
+              InputLabelProps={{
+               shrink: true
+               }}
+            />
+            </div>      
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+      <Typography paragraph variant="h5">
+      <center>Informations Doctorat</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>     
+            <div>
+            <TextField required variant="outlined" select   label="Fiche de reinscription en" defaultValue={updateDocDialogRow.cd} inputRef={DoctorantCatdoc} onChange={handleChangeTypedoc} >
+          {currencies2.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>  
+            <TextField required variant="outlined" label="Date 1ère Inscription Doctorat"  type="date" defaultValue={updateDocDialogRow.dap} inputRef={DoctorantDatepremdoc}
+              InputLabelProps={{
+               shrink: true
+               }}
+              />
+            <TextField required variant="outlined" label="Spécialité du Doctorat" defaultValue={updateDocDialogRow.sd} inputRef={DoctorantSpedoc}/>
+            </div>
+            <div>
+            <TextField required variant="outlined" label="Laboratoire de rattachement" defaultValue={updateDocDialogRow.lr} inputRef={DoctorantLaborata}/>
+            <TextField required variant="outlined" label="Intitulé de la thèse" defaultValue={updateDocDialogRow.inti} inputRef={DoctorantIntithe}/>
+            </div> 
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+      <Typography paragraph variant="h5">
+      <center>Identifiants</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>           
+            <div>
+            <TextField required variant="outlined" label="Nom de compte" defaultValue={updateDocDialogRow.ndc} inputRef={DoctorantName}/>
+            <VisibilityPasswordTextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth              
+              label="Mot de passe"
+              autoComplete="off"
+              defaultValue={updateDocDialogRow.mdp}
+              inputRef={DoctorantPassword}
+              onVisibilityChange={setIsPasswordVisible}
+              isVisible={isPasswordVisible}
+              />            </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+
+      <Typography paragraph variant="h5">
+      <center>Informations Directeur de thèse</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="outlined" label="Nom" defaultValue={ updateDocDialogRow.dn} inputRef={DoctorantdirNom} />
+            <TextField required variant="outlined" label="Prénom" defaultValue={updateDocDialogRow.dp} inputRef={DoctorantdirPrenom}/>
+            <TextField required variant="outlined" label="Grade" defaultValue={updateDocDialogRow.dg} inputRef={DoctorantdirGrade} />
+            </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+<br/>
+
+      <Typography paragraph variant="h5">
+      <center>Informations Co-Directeur de thèse</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="outlined" label="Nom" defaultValue={ updateDocDialogRow.cdn} inputRef={DoctorantcodirNom}/>
+            <TextField required variant="outlined" label="Prénom" defaultValue={ updateDocDialogRow.cdp} inputRef={DoctorantcodirPrenom}/>
+            <TextField required variant="outlined" label="Grade" defaultValue={ updateDocDialogRow.cdg} inputRef={DoctorantcodirGrade}/>
+            </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+    </Box>
+         ) : null }
+         actions={
+          <Fragment>
+            <Box mr={1}>
+              <Button onClick={handleUpdateDocDialogClose} disabled={isUpdateDocLoading}>
+                Retour
+              </Button>
+            </Box>
+            <Button
+              type="submit" 
+              variant="contained"
+              color="secondary"
+              disabled={isUpdateDocLoading}
+              onClick={handleUploadd}
+            >
+              Valider {isUpdateDocLoading && <ButtonCircularProgress />}
+            </Button>
+          </Fragment>
+        }
+            />
+          
+
+          <Box width="100%">
               <div className={classes.tableWrapper}>
                   {docs.length > 0 ? (
                       <Table aria-labelledby="tableTitle">
@@ -246,18 +1561,18 @@ function DocContent(props) {
                                                   <IconButton
                                                       className={classes.iconButton}
                                                       onClick={() => {
-                                                        viewDoc(row);
-                                                      }}
-                                                      aria-label="Delete"
+                                                        handleViewDocDialogOpen(row);
+                                                    } }
+                                                      aria-label="View"
                                                       size="large">
                                                       <RemoveRedEyeIcon className={classes.blackIcon} />
                                                   </IconButton>
                                                   <IconButton
                                                       className={classes.iconButton}
                                                       onClick={() => {
-                                                        updateDoc(row);
-                                                      }}
-                                                      aria-label="Delete"
+                                                        handleUpdateDocDialogOpen(row);
+                                                    } }
+                                                      aria-label="Update"
                                                       size="large">
                                                       <SettingsIcon className={classes.blackIcon} />
                                                   </IconButton>      
@@ -311,8 +1626,6 @@ function DocContent(props) {
 }
 
 DocContent.propTypes = {
-  openAddDocModal: PropTypes.func.isRequired,
-  openModifDocModal: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   docs: PropTypes.arrayOf(PropTypes.object).isRequired,
   setDocs: PropTypes.func.isRequired,

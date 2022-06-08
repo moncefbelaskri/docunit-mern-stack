@@ -1,4 +1,4 @@
-import React, { useState, useCallback , useContext } from "react";
+import React, { useState, useCallback , useContext, useRef, Fragment } from "react";
 import PropTypes from "prop-types";
 import {Divider,
   Toolbar,
@@ -11,6 +11,7 @@ import {Divider,
   TablePagination,
   TableRow,
   IconButton,
+  List, ListItem, ListItemText,
   Box, } from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -20,8 +21,13 @@ import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
 import UserContext from "../../../../shared/components/UserContext";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
+import ConfirmationDialogg from "../../../../shared/components/ConfirmationDialogg";
 import SettingsIcon from '@mui/icons-material/Settings';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import VisibilityPasswordTextField from "../../../../shared/components/VisibilityPasswordTextField";
+import TextField from '@mui/material/TextField';
+import Bordered from "../../../../shared/components/Bordered";
+import ButtonCircularProgress from "../../../../shared/components/ButtonCircularProgress";
 
 const axios = require('axios');
 
@@ -84,19 +90,14 @@ function DirContent(props) {
     pushMessageToSnackbar,
     setDirs,
     dirs,
-    openAddDirModal,
-    openModifDirModal,
-    openViewDirModal,
+    onClose,
     classes,
+    onFormSubmit,
   } = props;
-  const { setiddirData } = useContext(UserContext);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState(null);
-  const [isDeleteDirDialogOpen, setIsDeleteDirDialogOpen] = useState(false);
-  const [deleteDirDialogRow, setDeleteDirDialogRow] = useState(null);
-  const [isDeleteDirLoading, setIsDeleteDirLoading] = useState(false);
-  
+
   const handleRequestSort = useCallback(
     (__, property) => {
       const _orderBy = property;
@@ -109,7 +110,28 @@ function DirContent(props) {
     },
     [setOrder, setOrderBy, order, orderBy]
   );
+  const handleChangePage = useCallback(
+    (_, page) => {
+      setPage(page);
+    },
+    [setPage]
+  );
+  const handleDeleteDirDialogClose = useCallback(() => {
+    setIsDeleteDirDialogOpen(false);
+  }, [setIsDeleteDirDialogOpen]);
 
+  const handleDeleteDirDialogOpen = useCallback(
+    (row) => {
+
+      setIsDeleteDirDialogOpen(true);
+      setDeleteDirDialogRow(row);
+    },
+    [setIsDeleteDirDialogOpen, setDeleteDirDialogRow]
+  );
+
+  const [isDeleteDirDialogOpen, setIsDeleteDirDialogOpen] = useState(false);
+  const [deleteDirDialogRow, setDeleteDirDialogRow] = useState(null);
+  const [isDeleteDirLoading, setIsDeleteDirLoading] = useState(false);
   const deleteDir = useCallback(() => {
     setIsDeleteDirLoading(true);
     setTimeout(() => {
@@ -141,41 +163,202 @@ function DirContent(props) {
     deleteDirDialogRow,
     dirs,
   ]);
-
-  const handleChangePage = useCallback(
-    (_, page) => {
-      setPage(page);
-    },
-    [setPage]
-  );
-  const updateDir = useCallback((row) => {
-    openModifDirModal();
-    setiddirData({
-      iddirup: row,
-    });
-  }, []);
-
-  const viewDir = useCallback((row) => {
-    openViewDirModal();
-    setiddirData({
-      iddirup: row,
-    });
-  }, []);
-
-  const handleDeleteDirDialogClose = useCallback(() => {
-    setIsDeleteDirDialogOpen(false);
-  }, [setIsDeleteDirDialogOpen]);
-
-  const handleDeleteDirDialogOpen = useCallback(
-    (row) => {
-
-      setIsDeleteDirDialogOpen(true);
-      setDeleteDirDialogRow(row);
-    },
-    [setIsDeleteDirDialogOpen, setDeleteDirDialogRow]
-  );
-
   
+
+  const [isCreateDirDialogOpen, setIsCreateDirDialogOpen] = useState(false);
+  const [isCreateDirLoading, setIsCreateDirLoading] = useState(false);
+  const { userData } = useContext(UserContext);
+  const EnsNom = useRef();
+  const EnsPrenom = useRef();
+  const EnsGrade = useRef();
+  const EnsEtabori = useRef();
+  const EnsLaborata = useRef();
+  const EnsNumtel = useRef();
+  const EnsMail = useRef();
+  const EnsName = useRef();
+  const EnsPassword = useRef();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  var existed = null;
+  const handleCreateDirDialogClose = useCallback(() => {
+    setIsCreateDirDialogOpen(false);
+  }, [setIsCreateDirDialogOpen]);
+
+  const handleCreateDirDialogOpen = useCallback(
+    () => {
+
+      setIsCreateDirDialogOpen(true);
+    },
+    [setIsCreateDirDialogOpen]
+  );
+  const formuens = useCallback( async () => {
+    
+    setIsCreateDirLoading(true);
+        await axios.post("http://localhost:5000/users/register_ens",
+      {
+       ensnom: EnsNom.current.value,
+       ensprenom: EnsPrenom.current.value,
+       ensgrade: EnsGrade.current.value,
+       ensetabori: EnsEtabori.current.value,
+       enslaborata: EnsLaborata.current.value,
+       ensnumtel: EnsNumtel.current.value,  
+       ensmail: EnsMail.current.value,
+       ensusername: EnsName.current.value,
+       enspassword: EnsPassword.current.value,
+       ensdept : userData.user.dept,
+     }
+      ,{headers: {"Content-Type": "application/json",}})          
+     .then(() => {
+       // Success 🎉
+   }).catch((error) => {
+     if(error.response.data.msg === "enseignant existe déjà.")
+          {
+            setIsCreateDirLoading(false);
+           pushMessageToSnackbar({
+             text: "Enseignant existe déjà",
+           });
+           existed = "yes";
+           setIsCreateDirLoading(false);
+         }
+ });    
+ if(existed !== "yes") {
+  setIsCreateDirLoading(true);
+  
+setTimeout(() => {
+  
+  pushMessageToSnackbar({
+      text: "ajouté avec succès",
+  });
+  window.location.reload(false);
+  }, 10);
+
+}          
+      },[ setIsCreateDirLoading,pushMessageToSnackbar,onClose,EnsNom,EnsPrenom,EnsGrade,EnsEtabori,EnsLaborata,EnsNumtel,EnsMail,EnsName,EnsPassword]);
+   
+    
+  const handleUpload = useCallback(async () => {
+    setIsCreateDirLoading(true);
+    if(EnsNom.current.value === "" ||
+    EnsPrenom.current.value === "" ||
+    EnsGrade.current.value === "" ||
+    EnsEtabori.current.value === "" ||
+    EnsLaborata.current.value === "" ||
+    EnsNumtel.current.value === "" ||
+    EnsName.current.value === "" ||
+    EnsPassword.current.value === "" ||
+    EnsMail.current.value === ""
+    ) {
+      setIsCreateDirLoading(false);  
+    }
+    else{
+
+    formuens();
+    
+  }
+  
+  }, [setIsCreateDirLoading , onClose, pushMessageToSnackbar]);
+
+
+  const [isViewDirDialogOpen, setIsViewDirDialogOpen] = useState(false);
+  const [viewDirDialogRow, setViewDirDialogRow] = useState(null);
+  const handleViewDirDialogClose = useCallback(() => {
+    setIsViewDirDialogOpen(false);
+  }, [setIsViewDirDialogOpen]);
+
+  const handleViewDirDialogOpen = useCallback(
+    (row) => {
+      setIsViewDirDialogOpen(true);
+      setViewDirDialogRow(row);
+    },
+    [setIsViewDirDialogOpen,setViewDirDialogRow]
+  );
+  
+
+  const [isUpdateDirDialogOpen, setIsUpdateDirDialogOpen] = useState(false);
+  const [updateDirDialogRow, setUpdateDirDialogRow] = useState(null);
+  const [isUpdateDirLoading, setIsUpdateDirLoading] = useState(false);
+  const [Id, setId] = useState();
+
+  const handleUpdateDirDialogClose = useCallback(() => {
+    setIsUpdateDirDialogOpen(false);
+  }, [setIsUpdateDirDialogOpen]);
+
+  const handleUpdateDirDialogOpen = useCallback(
+    (row) => {
+      setIsUpdateDirDialogOpen(true);
+      setUpdateDirDialogRow(row);
+      setId(row._id);
+    },
+    [setIsUpdateDirDialogOpen,setUpdateDirDialogRow]
+  );
+
+  const formuenss = useCallback( async () => {
+    
+    setIsUpdateDirLoading(true);
+    await axios.put("http://localhost:5000/users/update/ens/" +Id,
+  {
+    ensnom: EnsNom.current.value,
+   ensprenom: EnsPrenom.current.value,
+   ensgrade: EnsGrade.current.value,
+   ensetabori: EnsEtabori.current.value,
+   enslaborata: EnsLaborata.current.value,
+   ensnumtel: EnsNumtel.current.value,  
+   ensmail: EnsMail.current.value,
+   ensusername: EnsName.current.value,
+   enspassword: EnsPassword.current.value,
+   ensdept : userData.user.dept,
+ }
+  ,{headers: {"Content-Type": "application/json",}})          
+ .then(() => {
+   // Success 🎉
+}).catch((error) => {
+ if(error.response.data.msg === "enseignant existe déjà.")
+      {
+        setIsUpdateDirLoading(false);
+       pushMessageToSnackbar({
+         text: "Enseignant existe déjà",
+       });
+       existed = "yes";
+       setIsUpdateDirLoading(false);
+     }
+});    
+if(existed !== "yes") {
+  setIsUpdateDirLoading(true);
+
+setTimeout(() => {
+
+pushMessageToSnackbar({
+  text: "modifié avec succès",
+});
+window.location.reload(false);
+}, 10);
+
+}          
+  },[ setIsUpdateDirLoading,pushMessageToSnackbar,onClose,EnsNom,EnsPrenom,EnsMail,EnsName,EnsPassword]);
+
+
+const handleUploadd = useCallback(async () => {
+  setIsUpdateDirLoading(true);
+if(EnsNom.current.value === "" ||
+EnsPrenom.current.value === "" ||
+EnsGrade.current.value === "" ||
+EnsEtabori.current.value === "" ||
+EnsLaborata.current.value === "" ||
+EnsNumtel.current.value === "" ||
+EnsName.current.value === "" ||
+EnsPassword.current.value === "" ||
+EnsMail.current.value === ""
+) {
+  setIsUpdateDirLoading(false);
+  
+}
+else{
+
+formuenss();
+
+}
+
+}, [setIsUpdateDirLoading , onClose, pushMessageToSnackbar]);
+
 
   return (
     <Paper>
@@ -184,10 +367,10 @@ function DirContent(props) {
         <Button
           variant="contained"
           color="secondary"
-          onClick={openAddDirModal}
+          onClick={handleCreateDirDialogOpen}
           disableElevation
         >
-          Ajouter Enseignant
+         <center> Ajouter Enseignant</center>
         </Button>
       </Toolbar>
       <Divider />
@@ -205,7 +388,335 @@ function DirContent(props) {
           ) : null}
           onClose={handleDeleteDirDialogClose}
           onConfirm={deleteDir}
-          loading={isDeleteDirLoading} /><Box width="100%">
+          loading={isDeleteDirLoading} 
+          />
+          <ConfirmationDialogg
+          open={isCreateDirDialogOpen}
+          title="Création d'un Enseignant"
+          content={
+            <form onSubmit={onFormSubmit}>
+            <Box
+            sx={{
+          '& .MuiTextField-root': { m: 1, width: '29.5ch' },
+        }}
+        
+        
+      >
+        <Typography paragraph variant="h5">      
+        <center> Informations Personnelle</center>
+        </Typography>
+        <List disablePadding> 
+          <Bordered disableVerticalPadding disableBorderRadius>
+            <ListItem  disableGutters className="listItemLeftPadding">
+              <ListItemText>
+              <div>
+              <TextField required variant="outlined" label="Nom" inputRef={EnsNom}/>
+              <TextField required variant="outlined" label="Prénom" inputRef={EnsPrenom}/>                          
+              </div> 
+              </ListItemText>
+            </ListItem>          
+          </Bordered>
+        </List>
+  
+    <br/>
+        <Typography paragraph variant="h5">      
+        <center>Contact</center>
+        </Typography>
+        <List disablePadding> 
+          <Bordered disableVerticalPadding disableBorderRadius>
+            <ListItem  disableGutters className="listItemLeftPadding">
+              <ListItemText>
+              <div>
+              <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputRef={EnsNumtel}/>
+              <TextField  required variant="outlined" label="Email" name="email" type="email" inputRef={EnsMail}/>
+              </div> 
+              </ListItemText>
+            </ListItem>          
+          </Bordered>
+        </List>
+  
+        <br/>
+              <Typography paragraph variant="h5">      
+              <center>Informations Professionnelle</center>
+        </Typography>
+        <List disablePadding> 
+          <Bordered disableVerticalPadding disableBorderRadius>
+            <ListItem  disableGutters className="listItemLeftPadding">
+              <ListItemText>
+              <div>
+              <TextField required variant="outlined" label="Grade" inputRef={EnsGrade}/>
+              <TextField required variant="outlined" label="Etablissement d'origine" inputRef={EnsEtabori}/>
+              <TextField required variant="outlined" label="Laboratoire de rattachement" inputRef={EnsLaborata}/>
+              </div> 
+              </ListItemText>
+            </ListItem>          
+          </Bordered>
+        </List>
+  
+        <br/>
+              <Typography paragraph variant="h5">      
+              <center>Identifiants</center>
+        </Typography>
+        <List disablePadding> 
+          <Bordered disableVerticalPadding disableBorderRadius>
+            <ListItem  disableGutters className="listItemLeftPadding">
+              <ListItemText>
+              <div>
+              <TextField required variant="outlined" label="Nom de compte" inputRef={EnsName}/>
+              <VisibilityPasswordTextField
+                variant="outlined"
+                margin="normal"
+                required
+                label="Mot de passe"
+                inputRef={EnsPassword}
+                onVisibilityChange={setIsPasswordVisible}
+                isVisible={isPasswordVisible}
+              />        
+              </div>
+              </ListItemText>
+            </ListItem>          
+          </Bordered>
+        </List>
+         
+      </Box>
+      </form>
+          }
+        actions={
+          <Fragment>
+            <Box mr={1}>
+              <Button onClick={handleCreateDirDialogClose} disabled={isCreateDirLoading}>
+                Retour
+              </Button>
+            </Box>
+            <Button
+              type="submit" 
+              variant="contained"
+              color="secondary"
+              disabled={isCreateDirLoading}
+              onClick={handleUpload}
+            >
+              Valider {isCreateDirLoading && <ButtonCircularProgress />}
+            </Button>
+          </Fragment>
+        }
+          />
+          
+          <ConfirmationDialogg
+          open={isViewDirDialogOpen}
+          title="Données d'un Enseignant"
+          content={viewDirDialogRow ? (
+            <Box
+            sx={{
+          '& .MuiTextField-root': { m: 1, width: '29.5ch' },
+        }}
+        
+        
+      >
+         <Typography paragraph variant="h5">      
+         <center>Informations Personnelle</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="standard" label="Nom" inputProps={{ readOnly: true }} defaultValue={viewDirDialogRow.nom}/>
+            <TextField required variant="standard" label="Prénom" inputProps={{ readOnly: true }} defaultValue={viewDirDialogRow.prénom}/>                
+            </div> 
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+  <br/>
+      <Typography paragraph variant="h5">      
+      <center>Contact</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="standard" label="N° de téléphone " name="phone" inputProps={{ readOnly: true }}  defaultValue={viewDirDialogRow.en}/>
+            <TextField  required variant="standard" label="Email" name="email" type="email" inputProps={{ readOnly: true }} defaultValue={viewDirDialogRow.email}/>
+            </div>   
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+            <Typography paragraph variant="h5">      
+            <center>Informations Professionnelle</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="standard" label="Grade" inputProps={{ readOnly: true }} defaultValue={viewDirDialogRow.eg}/>
+            <TextField required variant="standard" label="Etablissement d'origine" inputProps={{ readOnly: true }} defaultValue={viewDirDialogRow.eeb}/>
+            <TextField required variant="standard" label="Laboratoire de rattachement" inputProps={{ readOnly: true }} defaultValue={viewDirDialogRow.elr}/>
+            </div> 
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+            <Typography paragraph variant="h5">      
+            <center>Identifiants</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="standard" label="Nom de compte"  inputProps={{ readOnly: true }} defaultValue={viewDirDialogRow.ndc}/>
+            <VisibilityPasswordTextField
+              variant="standard"
+              margin="normal"
+              required
+              label="Mot de passe"
+              inputProps={{ readOnly: true }}
+              defaultValue={viewDirDialogRow.mdp} 
+              onVisibilityChange={setIsPasswordVisible}
+              isVisible={isPasswordVisible}
+            />        
+            </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+       
+    </Box>
+         ) : null }
+         actions={
+          <Fragment>
+            <Box mr={1}>
+              <Button onClick={handleViewDirDialogClose}>
+                Retour
+              </Button>
+            </Box>
+          </Fragment>
+        }
+          />
+          
+          <ConfirmationDialogg
+          open={isUpdateDirDialogOpen}
+          title="Modification d'un Enseignant"
+          content={updateDirDialogRow ? (
+            <Box
+            sx={{
+          '& .MuiTextField-root': { m: 1, width: '29.5ch' },
+        }}
+        
+        
+      >
+         <Typography paragraph variant="h5">      
+         <center>Informations Personnelle</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="outlined" label="Nom"  defaultValue={updateDirDialogRow.nom} inputRef={EnsNom}/>
+            <TextField required variant="outlined" label="Prénom"  defaultValue={updateDirDialogRow.prénom} inputRef={EnsPrenom}/>                               
+            </div> 
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+  <br/>
+      <Typography paragraph variant="h5">      
+      <center>Contact</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+
+            <div>
+            <TextField required variant="outlined" label="N° de téléphone " name="phone"   defaultValue={updateDirDialogRow.en} inputRef={EnsNumtel}/>
+            <TextField  required variant="outlined" label="Email" name="email" type="email"  defaultValue={updateDirDialogRow.email}inputRef={EnsMail}/>
+            </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+            <Typography paragraph variant="h5">      
+            <center>Informations Professionnelle</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+
+            <div>
+            <TextField required variant="outlined" label="Grade"  defaultValue={updateDirDialogRow.eg} inputRef={EnsGrade}/>
+            <TextField required variant="outlined" label="Etablissement d'origine"  defaultValue={updateDirDialogRow.eeb} inputRef={EnsEtabori}/>
+            <TextField required variant="outlined" label="Laboratoire de rattachement"  defaultValue={updateDirDialogRow.elr} inputRef={EnsLaborata}/>
+            </div> 
+
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+            <Typography paragraph variant="h5">      
+            <center>Identifiants</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            
+            <div>
+            <TextField required variant="outlined" label="Nom de compte"  defaultValue={updateDirDialogRow.ndc}  inputRef={EnsName}/>
+            <VisibilityPasswordTextField
+              variant="outlined"
+              margin="normal"
+              required
+              label="Mot de passe"
+              defaultValue={updateDirDialogRow.mdp} 
+              inputRef={EnsPassword}
+              onVisibilityChange={setIsPasswordVisible}
+              isVisible={isPasswordVisible}
+            />        
+            </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+       
+    </Box>
+         ) : null }
+         actions={
+          <Fragment>
+            <Box mr={1}>
+              <Button onClick={handleUpdateDirDialogClose} disabled={isUpdateDirLoading}>
+                Retour
+              </Button>
+            </Box>
+            <Button
+              type="submit" 
+              variant="contained"
+              color="secondary"
+              disabled={isUpdateDirLoading}
+              onClick={handleUploadd}
+            >
+              Valider {isUpdateDirLoading && <ButtonCircularProgress />}
+            </Button>
+          </Fragment>
+        }
+            />
+
+          <Box width="100%">
               <div className={classes.tableWrapper}>
                   {dirs.length > 0 ? (
                       <Table aria-labelledby="tableTitle">
@@ -240,18 +751,18 @@ function DirContent(props) {
                                                   <IconButton
                                                       className={classes.iconButton}
                                                       onClick={() => {
-                                                        viewDir(row);
-                                                      }}
-                                                      aria-label="Delete"
+                                                        handleViewDirDialogOpen(row);
+                                                    } }
+                                                      aria-label="View"
                                                       size="large">
                                                       <RemoveRedEyeIcon className={classes.blackIcon} />
                                                   </IconButton>
                                                   <IconButton
                                                       className={classes.iconButton}
                                                       onClick={() => {
-                                                        updateDir(row);
-                                                      }}
-                                                      aria-label="Delete"
+                                                        handleUpdateDirDialogOpen(row);
+                                                    } }
+                                                      aria-label="Update"
                                                       size="large">
                                                       <SettingsIcon className={classes.blackIcon} />
                                                   </IconButton>                                               
@@ -305,8 +816,6 @@ function DirContent(props) {
 }
 
 DirContent.propTypes = {
-  openAddDirModal: PropTypes.func.isRequired,
-  openModifDirModal: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   dirs: PropTypes.arrayOf(PropTypes.object).isRequired,
   setDirs: PropTypes.func.isRequired,

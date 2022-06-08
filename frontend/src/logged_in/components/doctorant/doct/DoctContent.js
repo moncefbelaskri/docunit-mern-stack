@@ -11,10 +11,7 @@ import StepLabel from '@mui/material/StepLabel';
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
 import TextField from '@mui/material/TextField';
 import UserContext from "../../../../shared/components/UserContext"; 
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
+
 
 const axios = require('axios');
 
@@ -41,12 +38,6 @@ const styles =(theme)=> ({
     padding: '0 22px',
     height:40,
     width:355,
-  },
-  Highlight:{
-    textAlign: 'center',
-    marginLeft:theme.spacing(-1),
-    padding: '3',
-    width:390,
   },
   rang:{
     marginLeft:theme.spacing(1),
@@ -76,10 +67,6 @@ const styles =(theme)=> ({
     toolbar: {
       justifyContent: "space-between",
     },
-    bt:{
-      marginRight:theme.spacing(40),
-      justifyContent: "space-between",
-    },
     box: {
       marginLeft: theme.spacing(15),
     },
@@ -104,13 +91,14 @@ const styles =(theme)=> ({
 function DoctContent(props) {
     const{pushMessageToSnackbar,classes,onFormSubmit,onClose}=props;
 
-
     const { userData } = useContext(UserContext);
     const [isEtavDialogOpen, setIsEtavDialogOpen] = useState(
       false
     );
     const [isEtavLoading, setIsEtavLoading] = useState(false);
     const [value, setValue] = React.useState(0);
+    const [date, setDate] = React.useState();
+    const [etat, setEtat] = React.useState();
 
     const handleEtavDialogClose = useCallback(() => {
       setIsEtavDialogOpen(false);
@@ -118,15 +106,39 @@ function DoctContent(props) {
   
     const handleEtavDialogOpen = useCallback(
       () => {
-        setIsEtavDialogOpen(true);
+            setIsEtavDialogOpen(true);
+
+            axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+      
+            const doclist1 = response.data.doc;
+            const doclist2 = response.data.avnc;
+            for (let i = 0; i < doclist1.length; i += 1) {
+              const randomdoc = doclist1[i];   
+              if(userData.user.username === randomdoc.username)
+              {for (let j = 0; j < doclist2.length; j += 1) {     
+              const randomdoc2 = doclist2[j]; 
+              if(userData.user.username === randomdoc2.usernamedoc)
+              { 
+                setValue(randomdoc2.pctav);
+                setDate(randomdoc2.datesout);
+                setEtat(randomdoc2.etav);
+              }         
+        }}
+            }     
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       },
-      [setIsEtavDialogOpen]
+      [setIsEtavDialogOpen,setValue,setDate,setEtat]
     );
+    
+
+
 
     const Avancementpct = useRef();
     const Avancementdatesout = useRef();
     const Avancementetav = useRef();
-
     const calculedate = () => {
 
       const current = new Date();
@@ -175,14 +187,6 @@ function DoctContent(props) {
         });
       }, 1500);
     }).catch((error) => {
-      if(error.response.data.msg === "inscription impossible")
-      {
-        pushMessageToSnackbar({
-          text: "Inscription impossible, vous avez dépasser les 5 ans du doctorat",
-        });
-        setIsEtavDialogOpen(false);
-        setIsEtavLoading(false);
-      }
         setIsEtavDialogOpen(false);
         setIsEtavLoading(false);
   });
@@ -219,14 +223,6 @@ else{
         setIsEtavLoading(false);
       }
 
-      if(error.response.data.msg === "inscription impossible")
-      {
-        pushMessageToSnackbar({
-          text: "Inscription impossible, vous avez dépasser les 5 ans du doctorat",
-        });
-        setIsEtavDialogOpen(false);
-        setIsEtavLoading(false);
-      }
   });
 
 }
@@ -301,7 +297,7 @@ return (
           Date prévue de soutenance
           </Typography>
           <br/>
-            <input className={classes.date} type="date" required   ref={Avancementdatesout}/>
+            <input className={classes.date} type="date" required defaultValue={date} ref={Avancementdatesout}/>
           </div>
           <br/>
           <div>
@@ -309,7 +305,7 @@ return (
           Etat d'avancement
           </Typography>  
           <br/>
-            <TextareaAutosize className={classes.Area} aria-label="Etatav" required  minRows={7} maxRows={7}   ref={Avancementetav}/>
+            <TextareaAutosize className={classes.Area} aria-label="Etatav" required defaultValue={etat} minRows={7} maxRows={7}   ref={Avancementetav}/>
           </div>
           <br/>
              <div> 
@@ -327,30 +323,69 @@ return (
   <Divider/>
   <Box
         sx={{
-      '& .MuiTextField-root': { m: 2},
+      '& .MuiTextField-root': { m: 1, width: '35ch' },
     }}       
   >
+    <Box pt={2} px={2}>
+    <Typography paragraph variant="h5">
+        <center>Informations Personnelle</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPaddingg">
+            <ListItemText>
+            <div>
+            <TextField  variant="standard" label="Nom" inputProps={{ readOnly: true }} defaultValue={userData.user.nom}/>            
+            <TextField  variant="standard" label="Prénom" inputProps={{ readOnly: true }} defaultValue={userData.user.prenom}/>
+            </div>
+            <div>
+            <TextField  variant="standard" label="Né(e) le" type="date" inputProps={{ readOnly: true }} defaultValue={userData.user.daten}/>
+            <TextField  variant="standard" label="à" inputProps={{ readOnly: true }} defaultValue={userData.user.lieun}/>
+            </div>     
+           </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+    </Box>
+
+      <Box pt={2}  px={2} >
+      <Typography paragraph variant="h5">
+      <center>Informations Doctorat</center>
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPaddingg">
+            <ListItemText>
+            <div>
+            <TextField  variant="standard"  label="Intitulé de la thèse"  inputProps={{ readOnly: true }} defaultValue={userData.user.intithe}/>
+            <TextField  variant="standard" label="Date 1ère Inscription Doctorat" type="date" inputProps={{ readOnly: true }} defaultValue={userData.user.datedoc}/>
+          </div>
+          <div>
+            <TextField  variant="standard"  label="Nom Directeur de thèse"  inputProps={{ readOnly: true }} defaultValue={userData.user.dirnom}/>
+            <TextField  variant="standard"  label="Prénom"  inputProps={{ readOnly: true }} defaultValue={userData.user.dirprenom}/>
+          </div>
+          <div>
+            <TextField  variant="standard"  label="Nom Co-Directeur de thèse"  inputProps={{ readOnly: true }} defaultValue={userData.user.codirnom}/>
+            <TextField  variant="standard"  label="Prénom"  inputProps={{ readOnly: true }} defaultValue={userData.user.codirprenom}/>
+          </div>  
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+    </Box>
+      
+
+    <Box pt={2} px={2} pb={2} >
+    <Typography  variant="h5">
+    <center>Etape Courante du Doctorat</center>
+      </Typography>
+      <br/>
   <List disablePadding> 
       <Bordered disableVerticalPadding disableBorderRadius>
         <ListItem  disableGutters className="listItemLeftPaddingg">
           <ListItemText>
           <div>
-            <TextField  variant="standard"   label="Nom" sx={{width:"35ch"}} inputProps={{ readOnly: true }} defaultValue={userData.user.nom}/>
-            <TextField  variant="standard" label="Prénom" sx={{width:"35ch"}} inputProps={{ readOnly: true }} defaultValue={userData.user.prenom}/>
-          </div>
-          <div>
-            <TextField  variant="standard"  label="Intitulé de la thèse" sx={{width:"73.5ch"}} inputProps={{ readOnly: true }} defaultValue={userData.user.intithe}/>
-          </div>
-          <div>
-            <TextField  variant="standard"  label="Nom Directeur de thèse" sx={{width:"35ch"}} inputProps={{ readOnly: true }} defaultValue={userData.user.dirnom}/>
-            <TextField  variant="standard"  label="Prénom" sx={{width:"35ch"}} inputProps={{ readOnly: true }} defaultValue={userData.user.dirprenom}/>
-          </div>
-          <div>
-            <TextField  variant="standard"  label="Nom Co-Directeur de thèse" sx={{width:"35ch"}} inputProps={{ readOnly: true }} defaultValue={userData.user.codirnom}/>
-            <TextField  variant="standard"  label="Prénom" sx={{width:"35ch"}} inputProps={{ readOnly: true }} defaultValue={userData.user.codirprenom}/>
-          </div>
-          <div>
-          <Stepper  sx={{ pt: 3, pb: 5, pl:5, width: '71ch'  }}>
+          <Stepper  sx={{ pt: 3, pb: 5, pl:5, width: '68ch'  }}>
           {steps.map((label) => (
             <Step  key={label}>
               <StepLabel StepIconProps={{classes:{active: classes.stepIcon}}}>{label}</StepLabel>
@@ -358,27 +393,14 @@ return (
           ))}
         </Stepper>
           </div>
-          <Toolbar className={classes.bt}>
-          &nbsp;&nbsp;
-      <Button
-        variant="contained"
-        color="primary"
-        disableElevation      
-      >
-        Fiche d'inscription
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        disableElevation         
-      >
-        Fiche de reinscription
-      </Button>
-          </Toolbar>
+          
           </ListItemText>
         </ListItem>          
       </Bordered>
     </List>
+    
+  </Box>
+
   </Box>
   
 

@@ -142,7 +142,7 @@ function NavBar(props) {
       },
     },
     {
-      link: "/sec/dir",
+      link: "/sec/ens",
       name: "Enseignant",
       onClick: closeMobileDrawer,
       icon: {

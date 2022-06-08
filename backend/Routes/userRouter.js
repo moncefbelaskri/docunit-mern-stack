@@ -7,7 +7,8 @@ const Avancement = require('../model/Avancement');
 const auth = require("../middleware/auth");
 const indx = require("../middleware/indx");
 const jwt = require('jsonwebtoken');
- 
+const Adj = require('../model/Adj');
+
 /* sec api */
  
 router.post('/regsec', async (req, res) => {
@@ -42,6 +43,42 @@ res.status(400).send(err);
 }
   
 });
+
+/* adj api */
+
+router.post('/regadj', async (req, res) => {
+
+
+  // checking if the user is already in the database 
+
+  const nameExist =  await Adj.findOne({username: req.body.username});
+  if (nameExist) return res.status(400).send('user already exists');
+
+
+  // password is correct
+
+  const salt = await bcrypt.genSalt(10);
+  const hashPassword = await bcrypt.hash(req.body.password, salt);
+
+
+// create a new sec 
+
+const adj = new Adj({
+ username: req.body.username,
+ password: hashPassword,
+ role : req.body.role,
+ dept : req.body.dept,
+});
+
+try{
+const savedAdj = await adj.save();
+res.send(savedAdj);
+}catch(err){
+res.status(400).send(err);
+}
+
+});
+
 
 /* register_doc api */
 
@@ -158,6 +195,7 @@ router.post("/login",  async (req, res) => {
     }
   
     const secuser = await Sec.findOne({ username : name });
+    const adjuser = await Adj.findOne({ username : name });
     const docuser = await Doctorant.findOne({ username : name });
     const ensuser = await Enseignant.findOne({ ensusername: name });
     if (secuser) {
@@ -184,6 +222,31 @@ router.post("/login",  async (req, res) => {
     });
     
   }
+
+  if (adjuser) {
+    // Compare hashed password with plain text password
+const match = await bcrypt.compareSync( password, adjuser.password );
+if (!match) {
+return res.status(400).json({ 
+errorMessage: 'password is incorrect!',
+status: false
+ })
+}
+
+   // Create JWT token   
+
+const token = jwt.sign({ id: adjuser._id }, process.env.TOKEN_SECRET);
+return res.json({
+token,
+user: {
+id: adjuser._id,
+role : adjuser.role,
+dept : adjuser.dept,
+},
+
+});
+
+}
   
   if (docuser) {
 
@@ -203,14 +266,18 @@ router.post("/login",  async (req, res) => {
         id: docuser._id,
 
         nom : docuser.nom,
-
+ 
         prenom : docuser.prenom,
+
+        daten : docuser.dateN,
+
+        lieun : docuser.lieuN,
+
+        datedoc : docuser.datepremdoc,
 
         username : docuser.username,
 
         intithe : docuser.intithe,
-
-        datepremdoc : docuser.datepremdoc,
 
         dirnom :  docuser.dirnom,
 
@@ -223,7 +290,9 @@ router.post("/login",  async (req, res) => {
         role : docuser.role,
 
         dept : docuser.dept,
+
       },
+      
           });
 
   }
@@ -295,11 +364,13 @@ router.post("/tokenIsValid", async (req, res) => {
 
     const userSec = await Sec.findById(verified.id);
 
+    const userAdj = await Adj.findById(verified.id);
+
     const userDoc = await Doctorant.findById(verified.id);
 
     const userEns = await Enseignant.findById(verified.id);
 
-    if (!userSec && !userDoc && !userEns ) {
+    if (!userSec && !userDoc && !userEns && !userAdj) {
 
       return res.json(false);
 
@@ -322,6 +393,16 @@ router.post("/tokenIsValid", async (req, res) => {
 
 router.get("/", auth , async (req, res) => {
   const user = await Sec.findById(req.user);
+  res.json({
+    id: user._id,
+    dept : user.dept,
+  });
+});
+
+/* get adj api */
+
+router.get("/adj", auth , async (req, res) => {
+  const user = await Adj.findById(req.user);
   res.json({
     id: user._id,
     dept : user.dept,
@@ -379,10 +460,7 @@ router.get("/secdoc" , async (req, res) => {
   const doc = await Doctorant.find()
   const avnc = await Avancement.find();
   return res.json({doc,avnc});
-<<<<<<< HEAD
   
-=======
->>>>>>> 8ea7290c672073e9646e8ca074fb735ea8e240e0
 });
 
 /* get ens for sec api */
@@ -507,7 +585,10 @@ router.get("/doc", auth , async (req, res) => {
   res.json({
     id: user._id,
     nom : user.nom,
-    prenom : user.prenom,
+    prenom : user.prenom, 
+    daten : user.dateN,
+    lieun : user.lieuN,
+    datedoc : user.datepremdoc,
     username : user.username,
     intithe : user.intithe,
     datepremdoc : user.datepremdoc,
@@ -541,10 +622,7 @@ router.post('/docavnc', async (req, res) => {
   try{
     let {aneactu} = req.body;
       // checking if the doc is already in the database
-    if (aneactu > 5)
-    {
-      return res.status(400).json({ msg: "inscription impossible" });
-    }
+    
 
   const avnc = new Avancement(
     { usernamedoc : req.body.usernamedoc,
@@ -552,6 +630,7 @@ router.post('/docavnc', async (req, res) => {
       datesout: req.body.datesout,
       etav : req.body.etav,
       aneactu :req.body.aneactu,
+      status: false,
     });
     
       const savedAvnc = await avnc.save();
@@ -574,15 +653,13 @@ router.post('/docavnc', async (req, res) => {
     {
       return res.status(400).json({ msg: "avancement déjà validé" });
     }
-    if (aneactu > 5)
-    {
-      return res.status(400).json({ msg: "inscription impossible" });
-    }
+    
       await Avancement.updateOne({ usernamedoc : req.params.username },
         { $set: {
           pctav: req.body.pctav,
           datesout: req.body.datesout,
           etav : req.body.etav,
+          status: false,
           aneactu,
         }}).then(
         () => {
@@ -618,12 +695,12 @@ router.post('/docavnc', async (req, res) => {
   router.put('/update/avancdoc/:username', async (req, res) => {
     try {
 
-      
       await Avancement.updateOne({ usernamedoc : req.params.username },
         { $set: {
           pctav: req.body.pctav,
           datesout: req.body.datesout,
           etav : req.body.etav,
+          status: false,
         }}).then(
         () => {
           res.status(201).json({
@@ -644,5 +721,30 @@ router.post('/docavnc', async (req, res) => {
     }
   );
 
+  router.put('/update/avancstatus/:username', async (req, res) => {
+    try {
+
+      await Avancement.updateOne({ usernamedoc : req.params.username },
+        { $set: {
+          status: req.body.status,
+        }}).then(
+        () => {
+          res.status(201).json({
+            message: 'success'
+          });
+        }
+      ).catch(
+        (error) => {
+          res.status(400).json({
+            error: error.message
+          });
+        }
+      );
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+
+    }
+  );
 
 module.exports = router;

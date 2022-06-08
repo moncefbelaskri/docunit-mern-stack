@@ -124,7 +124,7 @@ setTimeout(() => {
       
     >
       <Typography paragraph variant="h5">      
-        Enseignant
+      Informations Personnelle
       </Typography>
       <List disablePadding> 
         <Bordered disableVerticalPadding disableBorderRadius>
@@ -132,18 +132,59 @@ setTimeout(() => {
             <ListItemText>
             <div>
             <TextField required variant="outlined" label="Nom"  defaultValue={iddirData.iddirup.nom} inputRef={EnsNom}/>
-            <TextField required variant="outlined" label="Prénom"  defaultValue={iddirData.iddirup.prénom} inputRef={EnsPrenom}/>   
-                             
+            <TextField required variant="outlined" label="Prénom"  defaultValue={iddirData.iddirup.prénom} inputRef={EnsPrenom}/>                               
             </div> 
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+  <br/>
+      <Typography paragraph variant="h5">      
+      Contact
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="outlined" label="N° de téléphone " name="phone"   defaultValue={iddirData.iddirup.en} inputRef={EnsNumtel}/>
+            <TextField  required variant="outlined" label="Email" name="email" type="email"  defaultValue={iddirData.iddirup.email}inputRef={EnsMail}/>
+            </div>
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+            <Typography paragraph variant="h5">      
+            Informations Professionnelle
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+
             <div>
             <TextField required variant="outlined" label="Grade"  defaultValue={iddirData.iddirup.eg} inputRef={EnsGrade}/>
             <TextField required variant="outlined" label="Etablissement d'origine"  defaultValue={iddirData.iddirup.eeb} inputRef={EnsEtabori}/>
             <TextField required variant="outlined" label="Laboratoire de rattachement"  defaultValue={iddirData.iddirup.elr} inputRef={EnsLaborata}/>
             </div> 
-            <div>
-            <TextField required variant="outlined" label="N° de téléphone " name="phone"   defaultValue={iddirData.iddirup.en} inputRef={EnsNumtel}/>
-            <TextField  required variant="outlined" label="Email" name="email" type="email"  defaultValue={iddirData.iddirup.email}inputRef={EnsMail}/>
-            </div>
+
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+            <Typography paragraph variant="h5">      
+            Identifiants
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            
             <div>
             <TextField required variant="outlined" label="Nom de compte"  defaultValue={iddirData.iddirup.ndc}  inputRef={EnsName}/>
             <VisibilityPasswordTextField

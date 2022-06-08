@@ -124,7 +124,7 @@ setTimeout(() => {
       
     >
       <Typography paragraph variant="h5">      
-        Enseignant
+      Informations Personnelle
       </Typography>
       <List disablePadding> 
         <Bordered disableVerticalPadding disableBorderRadius>
@@ -132,18 +132,56 @@ setTimeout(() => {
             <ListItemText>
             <div>
             <TextField required variant="outlined" label="Nom" inputRef={EnsNom}/>
-            <TextField required variant="outlined" label="Prénom" inputRef={EnsPrenom}/>   
-                             
+            <TextField required variant="outlined" label="Prénom" inputRef={EnsPrenom}/>                          
             </div> 
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+  <br/>
+      <Typography paragraph variant="h5">      
+      Contact
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
+            <div>
+            <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputRef={EnsNumtel}/>
+            <TextField  required variant="outlined" label="Email" name="email" type="email" inputRef={EnsMail}/>
+            </div> 
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+            <Typography paragraph variant="h5">      
+            Informations Professionnelle
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
             <div>
             <TextField required variant="outlined" label="Grade" inputRef={EnsGrade}/>
             <TextField required variant="outlined" label="Etablissement d'origine" inputRef={EnsEtabori}/>
             <TextField required variant="outlined" label="Laboratoire de rattachement" inputRef={EnsLaborata}/>
             </div> 
-            <div>
-            <TextField required variant="outlined" label="N° de téléphone " name="phone"  inputRef={EnsNumtel}/>
-            <TextField  required variant="outlined" label="Email" name="email" type="email" inputRef={EnsMail}/>
-            </div>   
+            </ListItemText>
+          </ListItem>          
+        </Bordered>
+      </List>
+
+      <br/>
+            <Typography paragraph variant="h5">      
+            Identifiants
+      </Typography>
+      <List disablePadding> 
+        <Bordered disableVerticalPadding disableBorderRadius>
+          <ListItem  disableGutters className="listItemLeftPadding">
+            <ListItemText>
             <div>
             <TextField required variant="outlined" label="Nom de compte" inputRef={EnsName}/>
             <VisibilityPasswordTextField

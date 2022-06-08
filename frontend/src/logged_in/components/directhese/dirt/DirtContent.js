@@ -137,15 +137,15 @@ function DirtContent(props) {
   const [value, setValue] = React.useState(0);
   const [EtavDialogRow, setEtavDialogRow] = useState(null);
   const [isEtavLoading, setIsEtavLoading] = useState(false);
-  const [checked, setChecked] = React.useState(true);
+  const [setChecked] = React.useState(true);
 
   const [Date, setDate] = useState();
   const [Etat, setEtat] = useState();
  
+  const [Usern, setUsern] = useState();
 
-
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
+  const handleChange = (row) => {
+    setChecked(row.status);
   };
   const handleRequestSort = useCallback(
     (__, property) => {
@@ -179,27 +179,43 @@ function DirtContent(props) {
     (row) => {
       setIsEtavDialogOpen(true);
       setEtavDialogRow(row);
+      setUsern(row.username);
       setValue(row.etav);
       setDate(row.datesout);
       setEtat(row.etatavan);
     },
     [setIsEtavDialogOpen, setEtavDialogRow]
   );
+
+  
   const toggleDirt = useCallback(
     (row) => {
       const _dirt = [...dirt];
       const index = _dirt.findIndex((element) => element.id === row.id);
-      row.isActivated = !row.isActivated;
+      row.status = !row.status;
       _dirt[index] = row;
-      if (row.isActivated) {
-
-        pushMessageToSnackbar({
-          text: "Doctorant desactivé",
-        });
-      } else {
+      if (row.status) {
+         axios.put("http://localhost:5000/users/update/avancstatus/"+ row.username,
+        {
+          status: true,
+      },{headers: {"Content-Type": "application/json",}})
+      .then((response) => {
         pushMessageToSnackbar({
           text: "Doctorant activé",
         });
+      }).catch((error) => {});
+
+      } else {
+        axios.put("http://localhost:5000/users/update/avancstatus/"+ row.username,
+        {
+          status: false,
+      },{headers: {"Content-Type": "application/json",}})
+      .then((response) => {
+        pushMessageToSnackbar({
+          text: "Doctorant desactivé",
+        });
+      }).catch((error) => {});
+
       }
       setDirt(_dirt);
     },
@@ -207,17 +223,18 @@ function DirtContent(props) {
   );
 
 
-  const updateAvnc = useCallback(async(row) => {
+  const updateAvnc = useCallback(async() => {
 
     setIsEtavDialogOpen(true);
       setIsEtavLoading(true);
-      await axios.put("http://localhost:5000/users/update/avancdoc/"+row.username,
+      await axios.put("http://localhost:5000/users/update/avancdoc/"+Usern,
       {
         pctav: Avancementpct.current.value,
         datesout: Avancementdatesout.current.value,
         etav: Avancementetav.current.value,
     },{headers: {"Content-Type": "application/json",}})
     .then((response) => {
+      setValue(Avancementpct.current.value);
       setIsEtavDialogOpen(true);
       setIsEtavLoading(true);
       setTimeout(() => {
@@ -230,7 +247,7 @@ function DirtContent(props) {
     }).catch((error) => {
      
   });
-  }, [setIsEtavDialogOpen,setIsEtavLoading,pushMessageToSnackbar,Avancementpct,Avancementdatesout,Avancementetav]);
+  }, [setIsEtavDialogOpen,setIsEtavLoading,setUsern,Usern,setValue,pushMessageToSnackbar,Avancementpct,Avancementdatesout,Avancementetav]);
 
 
   return (
@@ -300,7 +317,9 @@ function DirtContent(props) {
           </form>
           ) : null}
           onClose={handleEtavDialogClose}
-          onConfirm={updateAvnc}
+          onConfirm={() => {
+            updateAvnc();
+          } }
           loading={isEtavLoading} />
       <Box width="100%">
               <div className={classes.tableWrapper}>
@@ -327,7 +346,7 @@ function DirtContent(props) {
                                               {row.intit}
                                           </TableCell>
                                           <TableCell component="th" scope="row" >
-                                              {row.etav}%
+                                              {row.etav } %
                                           </TableCell>
                                           <TableCell component="th" scope="row" >
                                               {row.aneactu}
@@ -343,10 +362,10 @@ function DirtContent(props) {
                                                       size="large">
                                                       <SettingsIcon className={classes.blackIcon} />
                                                   </IconButton>
-                                                  {row.isActivated ? (
+                                                  {row.status ? (
                                                     <Switch
                                                     color="secondary"
-                                                    checked={checked}
+                                                    checked={true}
                                                     onChange={handleChange}
                                                     onClick={() => {
                                                               toggleDirt(row);
@@ -357,7 +376,7 @@ function DirtContent(props) {
                                                   ) : (
                                                     <Switch
                                                     color="secondary"
-                                                    checked={checked}
+                                                    checked={false}
                                                     onChange={handleChange}
                                                     onClick={() => {
                                                               toggleDirt(row);

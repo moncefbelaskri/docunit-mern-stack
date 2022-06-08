@@ -4,6 +4,8 @@ import DoctContent from "./DoctContent";
 
 function Doct(props) {
   const {
+    doct,
+    setDoct,
     selectDoct,
     pushMessageToSnackbar,
   } = props;
@@ -14,11 +16,15 @@ function Doct(props) {
   
 
   return <DoctContent
+    doct={doct}
+    setDoct={setDoct}
     pushMessageToSnackbar={pushMessageToSnackbar}
   />
 }
 
 Doct.propTypes = {
+  doct: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setDoct: PropTypes.func.isRequired,
   pushMessageToSnackbar: PropTypes.func,
 };
 

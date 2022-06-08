@@ -15,7 +15,7 @@ const styles = () => ({
   },
 });
 
-function ViewDir(props) {
+function ViewEnse(props) {
   const {
     onClose,
   } = props;
@@ -48,19 +48,6 @@ function ViewDir(props) {
             <TextField required variant="standard" label="Nom" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.nom}/>
             <TextField required variant="standard" label="Prénom" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.prénom}/>                
             </div> 
-            </ListItemText>
-          </ListItem>          
-        </Bordered>
-      </List>
-
-  <br/>
-      <Typography paragraph variant="h5">      
-      Contact
-      </Typography>
-      <List disablePadding> 
-        <Bordered disableVerticalPadding disableBorderRadius>
-          <ListItem  disableGutters className="listItemLeftPadding">
-            <ListItemText>
             <div>
             <TextField required variant="standard" label="N° de téléphone " name="phone" inputProps={{ readOnly: true }}  defaultValue={iddirData.iddirup.en}/>
             <TextField  required variant="standard" label="Email" name="email" type="email" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.email}/>
@@ -79,7 +66,7 @@ function ViewDir(props) {
           <ListItem  disableGutters className="listItemLeftPadding">
             <ListItemText>
             <div>
-            <TextField required variant="standard" label="Grade" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.eg}/>
+            <TextField required variant="standard" label="Grade" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.grade}/>
             <TextField required variant="standard" label="Etablissement d'origine" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.eeb}/>
             <TextField required variant="standard" label="Laboratoire de rattachement" inputProps={{ readOnly: true }} defaultValue={iddirData.iddirup.elr}/>
             </div> 
@@ -131,8 +118,8 @@ function ViewDir(props) {
 }
 
 
-ViewDir.propTypes = {
+ViewEnse.propTypes = {
   onClose: PropTypes.func,
 };
 
-export default withRouter(withStyles(styles)(ViewDir));
+export default withRouter(withStyles(styles)(ViewEnse));

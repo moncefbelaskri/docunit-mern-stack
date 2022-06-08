@@ -59,7 +59,7 @@ function Routing(props) {
     <div className={classes.wrapper}>
       <Switch>
       <PropsRoute
-          path="/sec/dir"
+          path="/sec/ens"
           component={Dir}         
           pushMessageToSnackbar={pushMessageToSnackbar}
           dirs={dirs}
