@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState, Fragment, useEffect, useContext } from "react";
+import React, { memo, useCallback, useState, Fragment} from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import withStyles from '@mui/styles/withStyles';
@@ -6,9 +6,7 @@ import Routing from "./Routing";
 import NavBar from "./navigation/NavBar";
 import ConsecutiveSnackbarMessages from "../../../shared/components/ConsecutiveSnackbarMessages";
 import smoothScrollTop from "../../../shared/functions/smoothScrollTop";
-import UserContext from "../../../shared/components/UserContext"; 
 
-const axios = require('axios');
 
 
 const styles = (theme) => ({
@@ -33,7 +31,6 @@ function Main(props) {
   const [pushMessageToSnackbar, setPushMessageToSnackbar] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
 
-  const { userData } = useContext(UserContext);
 
 
   const getPushMessageFromChild = useCallback(

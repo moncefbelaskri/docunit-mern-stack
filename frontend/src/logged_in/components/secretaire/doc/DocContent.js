@@ -29,6 +29,7 @@ import TextField from '@mui/material/TextField';
 import Bordered from "../../../../shared/components/Bordered";
 import ButtonCircularProgress from "../../../../shared/components/ButtonCircularProgress";
 import MenuItem from '@mui/material/MenuItem';
+import SearchBar from 'search-bar-react';
 
 const axios = require('axios');
 
@@ -77,7 +78,7 @@ const rows = [
   }, 
   {
     id: "email",
-    label: "Email",
+    label: "Adresse email",
   }, 
   {
     id: "actions",
@@ -881,10 +882,84 @@ function DocContent(props) {
     }, [setIsUpdateDocLoading , onClose, pushMessageToSnackbar]);
 
 
+    const [searched, setSearched] = useState("");
+
+    const onChangeSearch = useCallback(
+      (searchVal) => {
+  
+        axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+          const doclist = response.data.doc;
+          const docs = [];
+          for (let i = 0; i < doclist.length; i += 1) {
+            const randomdoc = doclist[i];
+            if(userData.user.dept === randomdoc.dept){
+              if((doclist[i].nom.toLowerCase().includes(searchVal.toLowerCase())) || (doclist[i].prenom.toLowerCase().includes(searchVal.toLowerCase())) ){
+            const target = {
+              id: i,
+              _id : randomdoc._id,
+              nom: randomdoc.nom,
+              prénom:  randomdoc.prenom,
+              ndc:  randomdoc.username,
+              mdp:  randomdoc.password,
+              da:   randomdoc.dateN,
+              li:   randomdoc.lieuN,
+              ad:   randomdoc.adresse,
+              nt:   randomdoc.numtel,     
+              email : randomdoc.mail,
+              ep:   randomdoc.etapro,
+              pr:   randomdoc.preci,
+              an:   randomdoc.anebac,
+              seb:   randomdoc.seribac,
+              nb:   randomdoc.numbac,
+              cd:   randomdoc.catdoc,
+              dd:   randomdoc.derdip,
+              prr:  randomdoc.precii,
+              sdd:  randomdoc.spederdip,
+              dad:  randomdoc.datederdip,
+              dap:  randomdoc.datepremdoc,
+              sd:   randomdoc.spedoc,
+              lr:   randomdoc.laborata,
+              inti: randomdoc.intithe,
+              ds:   randomdoc.datesout,
+              dn:   randomdoc.dirnom,
+              dp:   randomdoc.dirprenom,
+              dg:   randomdoc.dirgrade,
+              cdn:  randomdoc.codirnom,
+              cdp:  randomdoc.codirprenom,
+              cdg:  randomdoc.dirgrade,
+            };
+            docs.push(target);
+          } }
+          }
+          setDocs(docs);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+  
+      },
+      [setDocs]
+    );
+  
+    const cancelSearch = useCallback(
+      () => {
+        setSearched("");
+        onChangeSearch(searched);
+      },
+      [setSearched]
+    );
+
+
   return (
     <Paper>
       <Toolbar className={classes.toolbar}>
         <Typography variant="h6">Liste des Doctorants</Typography>
+        <SearchBar
+          placeholder="Search..."
+          value={searched}
+          onChange={(searchVal) => onChangeSearch(searchVal)}
+          onClear={() => cancelSearch()}
+        />
         <Button
           variant="contained"
           color="secondary"

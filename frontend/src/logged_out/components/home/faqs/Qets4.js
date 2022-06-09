@@ -42,7 +42,7 @@ function App(props) {
   return (
     <>
       <div className={classes.containerFix} data-aos="zoom-in-up"
-            data-aos-delay="100" >
+            data-aos-delay="200" >
         <div >
           <button
             className={`question-section ${active}`}
@@ -52,7 +52,7 @@ function App(props) {
             <div>
               <div className="question-align">
                 <h3 className="question-style">
-                Comment consulter sa fiche d'inscription et de réinscription?
+                Comment contacter le support en cas de problème?
                 </h3>
                 
                 <BsChevronDown
@@ -65,7 +65,7 @@ function App(props) {
                 className={active ? `answer answer-divider ` : `answer`}
                 
               >
-                <p>Connectez vous grâce aux identifiants fournis par l'administration, vous allez être diriger vers une page qui contient vos informations personnelles et vous aurez la possibilité de consulter votre fiche d'inscription et de reinscription.
+                <p>En bas de la page d'accueil, vous avez le possibilité d'écrire un message qui sera envoyer au support du site. Veuillez juste  joindre votre email à la fin du message pour être sur d'avoir une réponse à votre requête.
                 </p>
               </div>
 

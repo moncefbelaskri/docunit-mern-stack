@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback , useContext} from "react";
 import PropTypes from "prop-types";
 import {Divider,
   Toolbar,
@@ -11,14 +11,18 @@ import {Divider,
   TableRow,
   IconButton,
   Box,
-TextField } from "@mui/material";
+ } from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
+import UserContext from "../../../../shared/components/UserContext";
 import DownloadIcon from '@mui/icons-material/Download';
 import EnhancedTableHead from "../../../../shared/components/EnhancedTableHead";
 import stableSort from "../../../../shared/functions/stableSort";
 import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { saveAs } from 'file-saver';
+import SearchBar from 'search-bar-react';
+
+const axios = require('axios');
 
 const styles = (theme) => ({
   tableWrapper: {
@@ -77,6 +81,7 @@ const rowsPerPage = 25;
 function AdjContent(props) {
   const {
     adj,
+    setAdj,
     classes,
   } = props;
   const [page, setPage] = useState(0);
@@ -103,13 +108,77 @@ function AdjContent(props) {
     [setPage]
   );
 
- 
+  const getindice = useCallback(
+    (row) => {
+       axios.post('http://localhost:5000/users/create-pdf',
+      row
+       ).then(() => 
+     axios.get('http://localhost:5000/users/get-pdf', { responseType: 'blob' }))
+     .then((res) => { 
+      const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+      saveAs(pdfBlob, 'generatedDocument.pdf')
+    }
+     )
+    },
+    []
+  );
+
+  const { userData } = useContext(UserContext);
+
+  const [searched, setSearched] = useState("");
+
+  const onChangeSearch = useCallback(
+    (searchVal) => {
+
+      axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+        const doclist = response.data.doc;
+        const adj = [];
+        for (let i = 0; i < doclist.length; i += 1) {
+          const randomdoc = doclist[i];
+          if(userData.user.dept === randomdoc.dept){
+            if((doclist[i].nom.toLowerCase().includes(searchVal.toLowerCase())) || (doclist[i].prenom.toLowerCase().includes(searchVal.toLowerCase())) ){
+          const target = {
+            id: i,
+            _id : randomdoc._id,
+            nom: randomdoc.nom,
+            prénom:  randomdoc.prenom,     
+            intit: randomdoc.intithe,
+            //anac: randomav.aneactu,
+            //datesou: randomav.datesout,
+          };
+          adj.push(target);
+        } }
+        }
+        setAdj(adj);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    },
+    [setAdj]
+  );
+  
+    const cancelSearch = useCallback(
+      () => {
+        setSearched("");
+        onChangeSearch(searched);
+      },
+      [setSearched]
+    );
+
+
 
   return (
     <Paper>
       <Toolbar className={classes.toolbar}>
         <Typography variant="h6">Liste des Doctorants</Typography>
-        
+        <SearchBar
+          placeholder="Search..."
+          value={searched}
+          onChange={(searchVal) => onChangeSearch(searchVal)}
+          onClear={() => cancelSearch()}
+        />
       </Toolbar>
       <Divider />
       <Box width="100%">
@@ -146,7 +215,7 @@ function AdjContent(props) {
                                               <Box display="flex" justifyContent="flex-end">
                                                   <IconButton
                                                       className={classes.iconButton}
-                                                      
+                                                      onClick={() => getindice(row)}
                                                       aria-label="Télécharger"
                                                       size="large">
                                                       <DownloadIcon className={classes.blackIcon} />

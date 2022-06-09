@@ -1,9 +1,9 @@
-import React, { useState, useCallback , useContext, useRef, Fragment } from "react";
+import React, { useState, useCallback , useContext, Fragment } from "react";
 import PropTypes from "prop-types";
 import {Divider,
   Toolbar,
   Typography,
-  Button,
+  Button, 
   Paper,
   Table,
   TableBody,
@@ -23,7 +23,10 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityPasswordTextField from "../../../../shared/components/VisibilityPasswordTextField";
 import TextField from '@mui/material/TextField';
 import Bordered from "../../../../shared/components/Bordered";
+import SearchBar from 'search-bar-react';
+import UserContext from "../../../../shared/components/UserContext";
 
+const axios = require('axios');
 
 const styles = (theme) => ({
   tableWrapper: {
@@ -66,7 +69,7 @@ const rows = [
   },
   {
     id: "email",
-    label: "Email",
+    label: "Adresse email",
   }, 
   {
     id: "numtel",
@@ -82,12 +85,14 @@ const rowsPerPage = 25;
 function EnseContent(props) {
   const {
     ense,
+    setEnse,
     classes,
   } = props;
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState(null);
   
+  const { userData } = useContext(UserContext);
 
   const handleRequestSort = useCallback(
     (__, property) => {
@@ -126,11 +131,61 @@ function EnseContent(props) {
     [setIsViewDirDialogOpen,setViewDirDialogRow]
   );
   
+  const [searched, setSearched] = useState("");
+
+  const onChangeSearch = useCallback(
+    (searchVal) => {
+  
+     axios.get("http://localhost:5000/users/secens").then(function (response) {
+        const enslist = response.data;
+      const ense = [];
+      for (let i = 0; i < enslist.length; i += 1) {
+        const randomens = enslist[i];
+        if(userData.user.dept === randomens.ensdept){
+          if((enslist[i].ensnom.toLowerCase().includes(searchVal.toLowerCase())) || (enslist[i].ensprenom.toLowerCase().includes(searchVal.toLowerCase())) ){
+        const targett = {
+          id: i, 
+          _id : randomens._id,
+          nom: randomens.ensnom,
+          prénom:  randomens.ensprenom,
+          grade: randomens.ensgrade,
+          eeb: randomens.ensetabori,
+          elr: randomens.enslaborata,
+          en: randomens.ensnumtel,
+          ndc:  randomens.ensusername,
+          mdp:  randomens.enspassword,
+          email: randomens.ensmail,
+        };
+        ense.push(targett);
+       } }
+      }
+      setEnse(ense);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    },
+    [setEnse]
+  );
+  
+  const cancelSearch = useCallback(
+    () => {
+      setSearched("");
+      onChangeSearch(searched);
+    },
+    [setSearched]
+  );
 
   return (
     <Paper>
       <Toolbar className={classes.toolbar}>
         <Typography variant="h6">Liste des Enseignants</Typography>
+        <SearchBar
+          placeholder="Search..."
+          value={searched}
+          onChange={(searchVal) => onChangeSearch(searchVal)}
+          onClear={() => cancelSearch()}
+        />
       </Toolbar>
       <Divider />
 

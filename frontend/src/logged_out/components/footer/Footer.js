@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useRef , useCallback } from "react";
 import PropTypes from "prop-types";
-
+import emailjs from "emailjs-com";
 import {
   Grid,
   Typography,
@@ -88,24 +88,7 @@ const infos = [
   },
  
 ];
-const MapIcon = [
-  {
-    icon: (
-      <svg
-        role="img"
-        width="24px"
-        height="24px"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <title>Map</title>
-        <path d="M10.453 14.016l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM12 2.016q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z"/>
-      </svg>
-    ),
-    label: "GoogleMap",
-    href: "https://rb.gy/3wcjec",
-  },
-];
+
 const socialIcons = [
   {
     icon: (
@@ -162,6 +145,26 @@ function Footer(props) {
   const { classes, theme } = props;
   const isWidthUpMd = useMediaQuery(theme.breakpoints.up("md"));
 
+  const form = useRef();
+
+  const sendEmail = useCallback(async (e) => {
+
+    emailjs.send("service_docunit","template_7gzrk76",{
+      message: form.current.value
+      },"33t43J5a_v1TO4FQs")
+   .then((result) => {
+       console.log(result.text);
+
+   }, (error) => {
+       console.log(error.text);
+   });
+
+   form.current.value = "";              
+   e.preventDefault();
+
+  }, []);
+
+
   return (
     <footer className="lg-p-top">
     <DocUniTBorder
@@ -172,13 +175,13 @@ function Footer(props) {
     <div className={classes.footerInner}>
       <Grid container spacing={isWidthUpMd ? 10 : 5}>
         <Grid item xs={12} md={6} lg={4}>
-          <form>
+          <form onSubmit={sendEmail}>
             <Box display="flex" flexDirection="column">
               <Box mb={1}>
                 <TextField
                   variant="outlined"
                   multiline
-                  placeholder="prendre contact avec nous"
+                  placeholder="Veuillez joindre votre adresse mail en bas de votre message."
                   InputProps={{
                     className: classes.whiteBg,
                     "aria-label": "contact",
@@ -186,12 +189,13 @@ function Footer(props) {
                   rows={4}
                   fullWidth
                   required
+                  inputRef={form}
                 />
               </Box>
               <ColoredButton
+              type="submit"
                 color={theme.palette.common.white}
                 variant="outlined"
-                type="submit"
               >
                 Envoyer Un Message
               </ColoredButton>

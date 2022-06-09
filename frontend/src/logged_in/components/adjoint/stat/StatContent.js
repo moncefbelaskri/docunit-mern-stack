@@ -11,7 +11,7 @@ import {
   Toolbar,
   ListItemText,
   } from "@mui/material";
-import {Bar,Line,Doughnut,Pie } from 'react-chartjs-2';
+import {Bar,Doughnut} from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto'
 import { Chart }            from 'react-chartjs-2'
 import withStyles from '@mui/styles/withStyles';
@@ -21,7 +21,6 @@ const axios = require('axios');
 
 
 const styles = (theme) => ({
-  toolbar: { justifyContent: "space-between" },
   tableWrapper: {
     overflowX: "auto",
   },

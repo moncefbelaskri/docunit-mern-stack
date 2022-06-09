@@ -358,7 +358,7 @@ return (
             <ListItemText>
             <div>
             <TextField  variant="standard"  label="Intitulé de la thèse"  inputProps={{ readOnly: true }} defaultValue={userData.user.intithe}/>
-            <TextField  variant="standard" label="Date 1ère Inscription Doctorat" type="date" inputProps={{ readOnly: true }} defaultValue={userData.user.datedoc}/>
+            <TextField  variant="standard" label="Date 1ère Inscription Doctorat" type="date" inputProps={{ readOnly: true }} defaultValue={userData.user.datepremdoc}/>
           </div>
           <div>
             <TextField  variant="standard"  label="Nom Directeur de thèse"  inputProps={{ readOnly: true }} defaultValue={userData.user.dirnom}/>

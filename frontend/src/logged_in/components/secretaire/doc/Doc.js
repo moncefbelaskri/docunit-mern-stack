@@ -1,9 +1,7 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, {useEffect } from "react";
 import PropTypes from "prop-types";
 import DocContent from "./DocContent";
-import AddDoc from "./AddDoc";
-import ModifDoc from "./ModifDoc";
-import ViewDoc from "./ViewDoc";
+
 
 function Doc(props) {
   const {
