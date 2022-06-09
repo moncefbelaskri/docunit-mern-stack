@@ -12,8 +12,7 @@ import {
 import withStyles from "@mui/styles/withStyles";
 import PhoneIcon from "@mui/icons-material/Phone";
 import MailIcon from "@mui/icons-material/Mail";
-
-
+import emailjs from "emailjs-com";
 import DocUniTBorder from "../../../shared/components/DocUniTBorder";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import ColoredButton from "../../../shared/components/ColoredButton";
@@ -144,25 +143,26 @@ const socialIcons = [
 function Footer(props) {
   const { classes, theme } = props;
   const isWidthUpMd = useMediaQuery(theme.breakpoints.up("md"));
-
   const form = useRef();
 
   const sendEmail = useCallback(async (e) => {
-
+ 
     emailjs.send("service_docunit","template_7gzrk76",{
       message: form.current.value
       },"33t43J5a_v1TO4FQs")
    .then((result) => {
        console.log(result.text);
-
+   
    }, (error) => {
        console.log(error.text);
    });
 
    form.current.value = "";              
    e.preventDefault();
-
+   
   }, []);
+
+  
 
 
   return (

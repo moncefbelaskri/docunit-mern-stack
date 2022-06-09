@@ -6,6 +6,7 @@ import { AppBar, Toolbar, Typography, Hidden,Drawer,List, ListItem,
   Tooltip,Box,IconButton} from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
 import Refresh from "./Refresh";
+import UserContext from "../../../../shared/components/UserContext";
 import NavigationDrawer from "../../../../shared/components/NavigationDrawer";
 import UserContext from "../../../../shared/components/UserContext";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -111,6 +112,19 @@ function NavBar(props) {
   const openMobileDrawer = useCallback(() => {
     setIsMobileOpen(true);
   }, [setIsMobileOpen]);
+
+  const logout = useCallback(() => {
+
+    setUserData({
+
+      token: undefined,
+
+      user: undefined,
+
+    });   
+     localStorage.setItem("auth-token", "");
+
+  }, [setUserData]);
 
   const closeMobileDrawer = useCallback(() => {
     setIsMobileOpen(false);

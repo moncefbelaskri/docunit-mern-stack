@@ -19,7 +19,7 @@ import Switch from '@mui/material/Switch';
 import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+import TextareaAutosize from 'react-textarea-autosize';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SearchBar from 'search-bar-react';
 

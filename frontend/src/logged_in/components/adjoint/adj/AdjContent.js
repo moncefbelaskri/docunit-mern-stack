@@ -107,7 +107,6 @@ function AdjContent(props) {
     },
     [setPage]
   );
-
   const getindice = useCallback(
     (row) => {
        axios.post('http://localhost:5000/users/create-pdf',
