@@ -10,14 +10,18 @@ import {Divider,
   TablePagination,
   TableRow,
   IconButton,
-  Box, } from "@mui/material";
+  Box,
+TextField } from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
-import PlayCirlceOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
+import DownloadIcon from '@mui/icons-material/Download';
 import EnhancedTableHead from "../../../../shared/components/EnhancedTableHead";
 import stableSort from "../../../../shared/functions/stableSort";
 import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { saveAs } from 'file-saver';
+const axios = require('axios');
+
 
 const styles = (theme) => ({
   tableWrapper: {
@@ -59,12 +63,12 @@ const rows = [
     label: "Intitulé Thèse",
   },
   {
-    id: "etav",
-    label: "Pourcentage d'avancement",
+    id: "anac",
+    label: "Année Courante",
   },
   {
     id: "datesou",
-    label: "Date Soutenance",
+    label: "Date Prévue de Soutenance",
   },
   {
     id: "action",
@@ -75,8 +79,6 @@ const rowsPerPage = 25;
 
 function AdjContent(props) {
   const {
-    pushMessageToSnackbar,
-    setAdj,
     adj,
     classes,
   } = props;
@@ -103,31 +105,28 @@ function AdjContent(props) {
     },
     [setPage]
   );
-
-  const toggleAdj = useCallback(
+  const getindice = useCallback(
     (row) => {
-      const _adj = [...adj];
-      const index = _adj.findIndex((element) => element.id === row.id);
-      row.isActivated = !row.isActivated;
-      _adj[index] = row;
-      if (row.isActivated) {
-        pushMessageToSnackbar({
-          text: "Doctorant activé",
-        });
-      } else {
-        pushMessageToSnackbar({
-          text: "Doctorant desactivé",
-        });
-      }
-      setAdj(_adj);
+       axios.post('http://localhost:5000/users/create-pdf',
+      row
+       ).then(() => 
+     axios.get('http://localhost:5000/users/get-pdf', { responseType: 'blob' }))
+     .then((res) => { 
+      const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
+      saveAs(pdfBlob, 'generatedDocument.pdf')
+    }
+     )
     },
-    [pushMessageToSnackbar, adj, setAdj]
+    []
   );
+
+ 
 
   return (
     <Paper>
       <Toolbar className={classes.toolbar}>
         <Typography variant="h6">Liste des Doctorants</Typography>
+        
       </Toolbar>
       <Divider />
       <Box width="100%">
@@ -155,36 +154,20 @@ function AdjContent(props) {
                                               {row.intit}
                                           </TableCell>
                                           <TableCell component="th" scope="row">
-                                              {row.etav}
+                                              {row.anac}
                                           </TableCell>
                                           <TableCell component="th" scope="row">
                                               {row.datesou}
                                           </TableCell>                                                                            
                                           <TableCell component="th" scope="row">
                                               <Box display="flex" justifyContent="flex-end">
-                                                  {row.isActivated ? (
-                                                      <IconButton
-                                                          className={classes.iconButton}
-                                                          onClick={() => {
-                                                              toggleAdj(row);
-                                                          } }
-                                                          aria-label="Pause"
-                                                          size="large">
-                                                          <PauseCircleOutlineIcon
-                                                              className={classes.blackIcon} />
-                                                      </IconButton>
-                                                  ) : (
-                                                      <IconButton
-                                                          className={classes.iconButton}
-                                                          color="primary"
-                                                          onClick={() => {
-                                                              toggleAdj(row);
-                                                          } }
-                                                          aria-label="Resume"
-                                                          size="large">
-                                                          <PlayCirlceOutlineIcon />
-                                                      </IconButton>
-                                                  )}                                               
+                                                  <IconButton
+                                                      className={classes.iconButton}
+                                                      onClick={() => getindice(row)}
+                                                      aria-label="Télécharger"
+                                                      size="large">
+                                                      <DownloadIcon className={classes.blackIcon} />
+                                                  </IconButton>
                                               </Box>
                                           </TableCell>
                                       </TableRow>

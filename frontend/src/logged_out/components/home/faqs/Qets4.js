@@ -42,7 +42,7 @@ function App(props) {
   return (
     <>
       <div className={classes.containerFix} data-aos="zoom-in-up"
-            data-aos-delay="100" >
+            data-aos-delay="200" >
         <div >
           <button
             className={`question-section ${active}`}

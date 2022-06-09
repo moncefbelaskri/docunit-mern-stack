@@ -4,7 +4,8 @@ import { Divider,Paper, Typography,Toolbar,Button,Box, List, ListItem, ListItemT
 import withStyles from '@mui/styles/withStyles';
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
 import Bordered from "../../../../shared/components/Bordered";
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+//import TextareaAutosize from '@mui/base/TextareaAutosize';
+import TextareaAutosize from 'react-textarea-autosize';
 import Stepper from '@mui/material/Stepper';
 import StepLabel from '@mui/material/StepLabel';
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";

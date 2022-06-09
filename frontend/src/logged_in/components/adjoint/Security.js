@@ -6,12 +6,12 @@ const Security = () => {
     const { userData } = useContext(UserContext);
       return (
         <div>
-           {userData.user ? (
-            <SecuadjComponent />
-          ) : (
-            null
-      )}
-        </div>
+        {userData.user ? (
+         <SecuadjComponent />
+       ) : (
+         null
+   )}
+     </div>
     )
 }
 

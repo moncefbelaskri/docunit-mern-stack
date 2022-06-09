@@ -55,6 +55,8 @@ function AddDir(props) {
       ,{headers: {"Content-Type": "application/json",}})          
      .then(() => {
        // Success 🎉
+       
+    
    }).catch((error) => {
      if(error.response.data.msg === "enseignant existe déjà.")
           {
@@ -68,17 +70,17 @@ function AddDir(props) {
  });    
  if(existed !== "yes") {
   setIsLoading(true);
-  
 setTimeout(() => {
   
   pushMessageToSnackbar({
       text: "ajouté avec succès",
   });
   window.location.reload(false);
+  onClose();
   }, 10);
 
 }          
-      },[ setIsLoading,pushMessageToSnackbar,onClose,EnsNom,EnsPrenom,EnsGrade,EnsEtabori,EnsLaborata,EnsNumtel,EnsMail,EnsName,EnsPassword]);
+      },[ setIsLoading,onClose ,pushMessageToSnackbar,onClose,EnsNom,EnsPrenom,EnsGrade,EnsEtabori,EnsLaborata,EnsNumtel,EnsMail,EnsName,EnsPassword]);
    
     
   const handleUpload = useCallback(async () => {
@@ -102,7 +104,7 @@ setTimeout(() => {
     
   }
   
-  }, [setIsLoading , onClose, pushMessageToSnackbar]);
+  }, [setIsLoading , onClose , pushMessageToSnackbar]);
 
   return (
     <Fragment>
@@ -119,10 +121,10 @@ setTimeout(() => {
           <Box
           sx={{
         '& .MuiTextField-root': { m: 1, width: '29.5ch' },
-      }}
+       }}
       
       
-    >
+        >
       <Typography paragraph variant="h5">      
         Enseignant
       </Typography>

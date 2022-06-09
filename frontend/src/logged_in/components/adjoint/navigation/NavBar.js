@@ -1,4 +1,4 @@
-import React,{useRef, useCallback, useState , useContext} from "react";
+import React,{useRef, useCallback, useState,useContext} from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Hidden,Drawer,List, ListItem,
@@ -7,11 +7,12 @@ import { AppBar, Toolbar, Typography, Hidden,Drawer,List, ListItem,
 import withStyles from '@mui/styles/withStyles';
 import Refresh from "./Refresh";
 import NavigationDrawer from "../../../../shared/components/NavigationDrawer";
-import UserContext from "../../../../shared/components/UserContext";
-import AddIcon from '@mui/icons-material/Add';
-import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import { RiListSettingsLine } from "react-icons/ri";
 import MenuIcon from "@mui/icons-material/Menu";
-
+import {FaUserTie,FaUserGraduate} from 'react-icons/fa';
+import { MdOutlineLogout } from "react-icons/md";
+import UserContext from "../../../../shared/components/UserContext";
+import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 
 const styles = (theme) => ({
   appBar: {
@@ -112,46 +113,88 @@ function NavBar(props) {
   const openMobileDrawer = useCallback(() => {
     setIsMobileOpen(true);
   }, [setIsMobileOpen]);
-  const logout = useCallback(() => {
 
-    setUserData({
-
-      token: undefined,
-
-      user: undefined,
-
-    });
-
-    localStorage.setItem("auth-token", "");
-
-  }, [setUserData]);
   const closeMobileDrawer = useCallback(() => {
     setIsMobileOpen(false);
   }, [setIsMobileOpen]);
+
+  const logout = useCallback(() => {
+    setUserData({
+      token: undefined,
+      user: undefined,
+    });
+    localStorage.setItem("auth-token", "");
+  }, [setUserData]);
+
   const menuItems = [
     {
       link: "/adj",
-      name: "Adjoint de Post Graduation",
+      name: "Doctorants Valides",
       onClick: closeMobileDrawer,
       icon: {
         desktop: (
-          <AddIcon
+          <RiListSettingsLine
             className={
               selectedTab === "Adj" ? classes.textPrimary : "text-white"
             }           
           />
         ),
-        mobile: <AddIcon className="text-white" />,
+        mobile: <RiListSettingsLine className="text-white" />,
+      },
+    },
+    {
+      link: "/adj/doc",
+      name: "Doctorants",
+      onClick: closeMobileDrawer,
+      icon: {
+        desktop: (
+          <FaUserGraduate
+            className={
+              selectedTab === "Docto" ? classes.textPrimary : "text-white"
+            }           
+          />
+        ),
+        mobile: <FaUserGraduate className="text-white" />,
+      },
+    },
+    {
+      link: "/adj/ens",
+      name: "Enseignants",
+      onClick: closeMobileDrawer,
+      icon: {
+        desktop: (
+          <FaUserTie
+            className={
+              selectedTab === "Ense" ? classes.textPrimary : "text-white"
+            }           
+          />
+        ),
+        mobile: <FaUserTie className="text-white" />,
+      },
+    },
+    {
+      link: "/adj/stat",
+      name: "Statistiques",
+      onClick: closeMobileDrawer,
+      icon: {
+        desktop: (
+          <LeaderboardIcon
+            className={
+              selectedTab === "Stat" ? classes.textPrimary : "text-white"
+            }           
+          />
+        ),
+        mobile: <LeaderboardIcon className="text-white" />,
       },
     },
     {link: "/",
     name: "Logout",
-    onclick:logout,
+    onClick: logout,
     icon: {
       desktop: (
-        <PowerSettingsNewIcon className="text-white" />
+        <MdOutlineLogout className="text-white" />
       ),
-      mobile: <PowerSettingsNewIcon className="text-white" />,
+      mobile: <MdOutlineLogout className="text-white" />,
     },
   }
   ];

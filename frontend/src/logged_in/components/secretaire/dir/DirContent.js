@@ -22,6 +22,7 @@ import UserContext from "../../../../shared/components/UserContext";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
 import SettingsIcon from '@mui/icons-material/Settings';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import SearchBar from 'search-bar-react';
 
 const axios = require('axios');
 
@@ -89,6 +90,7 @@ function DirContent(props) {
     openViewDirModal,
     classes,
   } = props;
+  const { userData } = useContext(UserContext);
   const { setiddirData } = useContext(UserContext);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
@@ -96,7 +98,8 @@ function DirContent(props) {
   const [isDeleteDirDialogOpen, setIsDeleteDirDialogOpen] = useState(false);
   const [deleteDirDialogRow, setDeleteDirDialogRow] = useState(null);
   const [isDeleteDirLoading, setIsDeleteDirLoading] = useState(false);
-  
+  const [searched, setSearched] = useState("");
+
   const handleRequestSort = useCallback(
     (__, property) => {
       const _orderBy = property;
@@ -175,12 +178,59 @@ function DirContent(props) {
     [setIsDeleteDirDialogOpen, setDeleteDirDialogRow]
   );
 
-  
+  const onChangeSearch = useCallback(
+    (searchVal) => {
+
+     axios.get("http://localhost:5000/users/secens").then(function (response) {
+        const enslist = response.data;
+      const dirs = [];
+      for (let i = 0; i < enslist.length; i += 1) {
+        const randomens = enslist[i];
+        if(userData.user.dept === randomens.ensdept){
+          if((enslist[i].ensnom.toLowerCase().includes(searchVal.toLowerCase())) || (enslist[i].ensprenom.toLowerCase().includes(searchVal.toLowerCase())) ){
+        const targett = {
+          id: i, 
+          _id : randomens._id,
+          nom: randomens.ensnom,
+          prénom:  randomens.ensprenom,
+          eg: randomens.ensgrade,
+          eeb: randomens.ensetabori,
+          elr: randomens.enslaborata,
+          en: randomens.ensnumtel,
+          ndc:  randomens.ensusername,
+          mdp:  randomens.enspassword,
+          email: randomens.ensmail,
+        };
+        dirs.push(targett);
+       } }
+      }
+      setDirs(dirs);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    },
+    [setDirs]
+  );
+
+  const cancelSearch = useCallback(
+    () => {
+      setSearched("");
+      onChangeSearch(searched);
+    },
+    [setSearched]
+  );
 
   return (
     <Paper>
       <Toolbar className={classes.toolbar}>
         <Typography variant="h6">Liste des Enseignants</Typography>
+        <SearchBar
+          placeholder="Search..."
+          value={searched}
+          onChange={(searchVal) => onChangeSearch(searchVal)}
+          onClear={() => cancelSearch()}
+        />
         <Button
           variant="contained"
           color="secondary"

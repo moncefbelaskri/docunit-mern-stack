@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const pdf = require('html-pdf');
 const bcrypt = require('bcryptjs');
 const Sec = require('../model/Sec');
 const Doctorant = require('../model/Doctorant');
@@ -8,6 +9,25 @@ const auth = require("../middleware/auth");
 const indx = require("../middleware/indx");
 const jwt = require('jsonwebtoken');
 const Adj = require('../model/Adj');
+const PdfTemplate = require('../model/PdfTemplate');
+
+/* pdf post api */
+
+router.post('/create-pdf', (req, res) => {
+  pdf.create(PdfTemplate(req.body), {}).toFile('filepdf.pdf', (err) => {
+    if(err) {
+        return console.log('error');
+    }
+res.send(Promise.resolve())
+  });
+})
+
+/* pdf get api */
+
+router.get('/get-pdf', (req, res) => {
+  res.sendFile(`C:/Users/PC COM/pfe-docunit/backend/filepdf.pdf`);
+});
+
  
 /* sec api */
  

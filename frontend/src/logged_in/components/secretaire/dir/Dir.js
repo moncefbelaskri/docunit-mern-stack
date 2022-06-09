@@ -18,7 +18,9 @@ function Dir(props) {
   const [isViewDirPaperOpen, setIsViewDirPaperOpen] = useState(false);
 
   const openAddDirModal = useCallback(() => {
+    
     setIsAddDirPaperOpen(true);
+    
   }, [setIsAddDirPaperOpen]);
 
   const closeAddDirModal = useCallback(() => {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback,useRef} from "react";
+import React, { useState, useCallback,useRef , useContext} from "react";
 import PropTypes from "prop-types";
 import {Divider,
   Toolbar,
@@ -12,14 +12,16 @@ import {Divider,
   IconButton,
   Box, } from "@mui/material";
 import withStyles from '@mui/styles/withStyles';
+import UserContext from "../../../../shared/components/UserContext"; 
 import EnhancedTableHead from "../../../../shared/components/EnhancedTableHead";
 import stableSort from "../../../../shared/functions/stableSort";
 import Switch from '@mui/material/Switch';
 import getSorting from "../../../../shared/functions/getSorting";
 import HighlightedInformation from "../../../../shared/components/HighlightedInformation";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
-import TextareaAutosize from '@mui/base/TextareaAutosize';
+import TextareaAutosize from 'react-textarea-autosize';
 import SettingsIcon from '@mui/icons-material/Settings';
+import SearchBar from 'search-bar-react';
 
 const axios = require('axios');
 
@@ -128,20 +130,23 @@ function DirtContent(props) {
     onFormSubmit,
     classes,
   } = props;
+  const { userData } = useContext(UserContext);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState(null);
   const [isEtavDialogOpen, setIsEtavDialogOpen] = useState(
     false
   );
+  const [searched, setSearched] = useState("");
   const [value, setValue] = React.useState(0);
   const [EtavDialogRow, setEtavDialogRow] = useState(null);
   const [isEtavLoading, setIsEtavLoading] = useState(false);
-  const [setChecked] = React.useState();
+  const [,setChecked] = React.useState();
   
   const [Date, setDate] = useState();
   const [Etat, setEtat] = useState();
   const [Usern, setUsern] = useState();
+  
   const handleChange = (row) => {
     setChecked(row.status);
   };
@@ -174,7 +179,6 @@ function DirtContent(props) {
 
   const handleEtavDialogOpen = useCallback(
     (row) => {
-
       setUsern(row.username);
       setIsEtavDialogOpen(true);
       setEtavDialogRow(row);
@@ -183,8 +187,70 @@ function DirtContent(props) {
       setEtat(row.etatavan);
       
     },
-    [setIsEtavDialogOpen, setEtavDialogRow]
+    [setIsEtavDialogOpen, setEtavDialogRow , setUsern ,setValue ,setEtat ,setDate]
   );
+
+  const onChangeSearch = useCallback(
+    (searchVal) => {
+
+      axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+
+        const doclist1 = response.data.doc;
+        const doclist2 = response.data.avnc;
+        const dirt = [];
+        for (let i = 0; i < doclist1.length; i += 1) {
+          const randomdoc = doclist1;
+          if(userData.user.dept === randomdoc[i].dept)
+          {
+            if(((userData.user.ensnom === randomdoc[i].dirnom) && (userData.user.ensprenom === randomdoc[i].dirprenom))
+            ||((userData.user.ensnom === randomdoc[i].codirnom) && (userData.user.ensprenom === randomdoc[i].codirprenom)))
+            {
+          for (let j = 0; j < doclist2.length; j += 1) {     
+          const randomdoc2 = doclist2; 
+          if(doclist1[i].username === doclist2[j].usernamedoc)
+          {
+            if((doclist1[i].nom.toLowerCase().includes(searchVal.toLowerCase())) || (doclist1[i].prenom.toLowerCase().includes(searchVal.toLowerCase())) ){
+              
+            const target = {
+            id: i,
+            _id : randomdoc[i]._id,
+            nom: randomdoc[i].nom,
+            prénom:  randomdoc[i].prenom,
+            intit:  randomdoc[i].intithe,
+            etav: randomdoc2[j].pctav,
+            aneactu : randomdoc2[j].aneactu,
+            etatavan: randomdoc2[j].etav,
+            datesout: randomdoc2[j].datesout,
+            username: randomdoc2[j].usernamedoc,
+            status : randomdoc2[j].status,
+          };
+          dirt.push(target);
+          }
+        }
+        }
+      }
+    }
+        }
+        setDirt(dirt);
+        
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      
+    },
+    [setDirt]
+  );
+
+  const cancelSearch = useCallback(
+    () => {
+      setSearched("");
+      onChangeSearch(searched);
+    },
+    [setSearched]
+  );
+
+
   const toggleDirt = useCallback(
     (row) => {
       const _dirt = [...dirt];
@@ -211,6 +277,7 @@ function DirtContent(props) {
         pushMessageToSnackbar({
           text: "Doctorant desactivé",
         });
+        
       }).catch((error) => {});
 
       }
@@ -231,29 +298,80 @@ function DirtContent(props) {
         etav: Avancementetav.current.value,
     },{headers: {"Content-Type": "application/json",}})
     .then((response) => {
-      setValue(Avancementpct.current.value);
       setIsEtavDialogOpen(true);
       setIsEtavLoading(true);
+
+      axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+
+      const doclist1 = response.data.doc;
+      const doclist2 = response.data.avnc;
+      const dirt = [];
+
+      for (let i = 0; i < doclist1.length; i += 1) {
+        const randomdoc = doclist1;
+        if(userData.user.dept === randomdoc[i].dept)
+        {
+          if(((userData.user.ensnom === randomdoc[i].dirnom) && (userData.user.ensprenom === randomdoc[i].dirprenom))
+          ||((userData.user.ensnom === randomdoc[i].codirnom) && (userData.user.ensprenom === randomdoc[i].codirprenom)))
+          {
+        for (let j = 0; j < doclist2.length; j += 1) {     
+        const randomdoc2 = doclist2; 
+        if(doclist1[i].username === doclist2[j].usernamedoc)
+        {
+          const target = {
+          id: i,
+          _id : randomdoc[i]._id,
+          nom: randomdoc[i].nom,
+          prénom:  randomdoc[i].prenom,
+          intit:  randomdoc[i].intithe,
+          etav: randomdoc2[j].pctav,
+          aneactu : randomdoc2[j].aneactu,
+          etatavan: randomdoc2[j].etav,
+          datesout: randomdoc2[j].datesout,
+          username: randomdoc2[j].usernamedoc,
+          status : randomdoc2[j].status,
+        };
+        dirt.push(target);
+        }
+      }
+    }
+  }
+      }
+      setDirt(dirt);
+      
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
       setTimeout(() => {
         setIsEtavDialogOpen(false);
         setIsEtavLoading(false);
         pushMessageToSnackbar({
           text: "Avancement validé",
         });
-
+      
+      
         
       }, 1500);
     }).catch((error) => {
      
   });
-  }, [setIsEtavDialogOpen,setUsern,Usern,setValue,setIsEtavLoading,pushMessageToSnackbar,Avancementpct,Avancementdatesout,Avancementetav]);
+  }, [setIsEtavDialogOpen,setDirt,setUsern,Usern,setValue,value,setIsEtavLoading,pushMessageToSnackbar,Avancementpct,Avancementdatesout,Avancementetav]);
 
 
   return (
     <Paper>
       <Toolbar className={classes.toolbar}>
         <Typography variant="h6">Liste des Doctorants</Typography>
+        <SearchBar
+          placeholder="Search..."
+          value={searched}
+          onChange={(searchVal) => onChangeSearch(searchVal)}
+          onClear={() => cancelSearch()}
+        />
       </Toolbar>
+      
       <Divider />
       <ConfirmationDialog
           open={isEtavDialogOpen}
@@ -339,8 +457,7 @@ function DirtContent(props) {
                                               {row.intit}
                                           </TableCell>
                                           <TableCell component="th" scope="row" >
-                                          { row.etav } %
-                                              
+                                          {row.etav } %
                                           </TableCell>
                                           <TableCell component="th" scope="row" >
                                               {row.aneactu}

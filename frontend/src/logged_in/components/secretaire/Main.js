@@ -39,6 +39,7 @@ const styles = (theme) => ({
     document.title = "Doctorant";
     setSelectedTab("Doc");
   }, [setSelectedTab]);
+  
   const selectDirs = useCallback(() => {
     smoothScrollTop();
     document.title = "Enseignant";

@@ -22,6 +22,7 @@ import UserContext from "../../../../shared/components/UserContext";
 import ConfirmationDialog from "../../../../shared/components/ConfirmationDialog";
 import SettingsIcon from '@mui/icons-material/Settings';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import SearchBar from 'search-bar-react';
 
 import axios from "axios";
 
@@ -90,6 +91,7 @@ function DocContent(props) {
     openViewDocModal,
     classes, 
   } = props;
+  const { userData } = useContext(UserContext);
   const { setiddocData } = useContext(UserContext);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
@@ -97,6 +99,8 @@ function DocContent(props) {
   const [isDeleteDocDialogOpen, setIsDeleteDocDialogOpen] = useState(
     false
   );
+
+  const [searched, setSearched] = useState("");
   const [deleteDocDialogRow, setDeleteDocDialogRow] = useState(null);
   const [isDeleteDocLoading, setIsDeleteDocLoading] = useState(false);
   const handleRequestSort = useCallback(
@@ -180,6 +184,72 @@ function DocContent(props) {
     },
     [setIsDeleteDocDialogOpen, setDeleteDocDialogRow]
   );
+  
+  
+  const onChangeSearch = useCallback(
+    (searchVal) => {
+
+      axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+        const doclist = response.data.doc;
+        const docs = [];
+        for (let i = 0; i < doclist.length; i += 1) {
+          const randomdoc = doclist[i];
+          if(userData.user.dept === randomdoc.dept){
+            if((doclist[i].nom.toLowerCase().includes(searchVal.toLowerCase())) || (doclist[i].prenom.toLowerCase().includes(searchVal.toLowerCase())) ){
+          const target = {
+            id: i,
+            _id : randomdoc._id,
+            nom: randomdoc.nom,
+            prénom:  randomdoc.prenom,
+            ndc:  randomdoc.username,
+            mdp:  randomdoc.password,
+            da:   randomdoc.dateN,
+            li:   randomdoc.lieuN,
+            ad:   randomdoc.adresse,
+            nt:   randomdoc.numtel,     
+            email : randomdoc.mail,
+            ep:   randomdoc.etapro,
+            pr:   randomdoc.preci,
+            an:   randomdoc.anebac,
+            seb:   randomdoc.seribac,
+            nb:   randomdoc.numbac,
+            cd:   randomdoc.catdoc,
+            dd:   randomdoc.derdip,
+            prr:  randomdoc.precii,
+            sdd:  randomdoc.spederdip,
+            dad:  randomdoc.datederdip,
+            dap:  randomdoc.datepremdoc,
+            sd:   randomdoc.spedoc,
+            lr:   randomdoc.laborata,
+            inti: randomdoc.intithe,
+            ds:   randomdoc.datesout,
+            dn:   randomdoc.dirnom,
+            dp:   randomdoc.dirprenom,
+            dg:   randomdoc.dirgrade,
+            cdn:  randomdoc.codirnom,
+            cdp:  randomdoc.codirprenom,
+            cdg:  randomdoc.dirgrade,
+          };
+          docs.push(target);
+        } }
+        }
+        setDocs(docs);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  
+    },
+    [setDocs]
+  );
+
+  const cancelSearch = useCallback(
+    () => {
+      setSearched("");
+      onChangeSearch(searched);
+    },
+    [setSearched]
+  );
 
 
 
@@ -187,6 +257,12 @@ function DocContent(props) {
     <Paper>
       <Toolbar className={classes.toolbar}>
         <Typography variant="h6">Liste des Doctorants</Typography>
+        <SearchBar
+          placeholder="Search..."
+          value={searched}
+          onChange={(searchVal) => onChangeSearch(searchVal)}
+          onClear={() => cancelSearch()}
+        />
         <Button
           variant="contained"
           color="secondary"
