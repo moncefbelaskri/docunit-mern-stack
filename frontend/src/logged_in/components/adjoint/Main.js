@@ -94,15 +94,46 @@ function Main(props) {
             {
           const target = {
             id: i,
-            _id : randomdoc._id,
-            nom: randomdoc.nom,
-            prénom:  randomdoc.prenom,     
-            intit: randomdoc.intithe,
-            anac: randomav.aneactu,
-            datesou: randomav.datesout,    
+          _id : randomdoc._id,
+          nom: randomdoc.nom,
+          prénom:  randomdoc.prenom,
+          ndc:  randomdoc.username,
+          mdp:  randomdoc.password,
+          da:   randomdoc.dateN,
+          li:   randomdoc.lieuN,
+          ad:   randomdoc.adresse,
+          nt:   randomdoc.numtel,     
+          email : randomdoc.mail,
+          ep:   randomdoc.etapro,
+          pr:   randomdoc.preci,
+          an:   randomdoc.anebac,
+          seb:   randomdoc.seribac,
+          nb:   randomdoc.numbac,
+          cd:   randomdoc.catdoc,
+          dd:   randomdoc.derdip,
+          prr:  randomdoc.precii,
+          sdd:  randomdoc.spederdip,
+          dad:  randomdoc.datederdip,
+          dap:  randomdoc.datepremdoc,
+          sd:   randomdoc.spedoc,
+          lr:   randomdoc.laborata,
+          intit: randomdoc.intithe,
+          ds:   randomdoc.datesout,
+          dn:   randomdoc.dirnom,
+          dp:   randomdoc.dirprenom,
+          dg:   randomdoc.dirgrade,
+          cdn:  randomdoc.codirnom,
+          cdp:  randomdoc.codirprenom,
+          cdg:  randomdoc.dirgrade,    
+          anac: randomav.aneactu,
+          datesou: randomav.datesout,
+          etv: randomav.etav,
+          pctv: randomav.pctav,
+          dep:userData.user.dept,
           };
           adj.push(target);
         }
+      
         }
       }
     

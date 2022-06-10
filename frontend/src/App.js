@@ -19,12 +19,7 @@ function App() {
     token: undefined,
     user: undefined,
   });
-  const [iddirData, setiddirData] = useState({
-    iddirup: undefined,
-  });
-  const [iddocData, setiddocData] = useState({
-    iddocup: undefined,
-  });
+ 
  
 
   useEffect(() => {
@@ -140,7 +135,7 @@ function App() {
   }, []);
   return (
     <BrowserRouter>
-    <UserContext.Provider value={{ userData, setUserData, iddirData, setiddirData, iddocData, setiddocData}}>
+    <UserContext.Provider value={{ userData, setUserData}}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />

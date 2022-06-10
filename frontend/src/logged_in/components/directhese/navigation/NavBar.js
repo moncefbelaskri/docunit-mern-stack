@@ -8,7 +8,6 @@ import withStyles from '@mui/styles/withStyles';
 import Refresh from "./Refresh";
 import UserContext from "../../../../shared/components/UserContext";
 import NavigationDrawer from "../../../../shared/components/NavigationDrawer";
-import UserContext from "../../../../shared/components/UserContext";
 import MenuIcon from "@mui/icons-material/Menu";
 import { RiListSettingsLine } from "react-icons/ri";
 import { MdOutlineLogout } from "react-icons/md";
@@ -130,19 +129,7 @@ function NavBar(props) {
     setIsMobileOpen(false);
   }, [setIsMobileOpen]);
 
-  const logout = useCallback(() => {
-
-    setUserData({
-
-      token: undefined,
-
-      user: undefined,
-
-    });   
-     localStorage.setItem("auth-token", "");
-
-  }, [setUserData]);
-
+ 
   const menuItems = [
     {
       link: "/ens",

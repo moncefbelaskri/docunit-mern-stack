@@ -479,6 +479,7 @@ router.delete("/deleteens", indx , async (req, res) => {
 router.get("/secdoc" , async (req, res) => {
   const doc = await Doctorant.find()
   const avnc = await Avancement.find();
+
   return res.json({doc,avnc});
 });
 

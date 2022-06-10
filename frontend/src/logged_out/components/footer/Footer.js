@@ -1,6 +1,5 @@
 import React, { useRef , useCallback } from "react";
 import PropTypes from "prop-types";
-import emailjs from "emailjs-com";
 import {
   Grid,
   Typography,
