@@ -136,28 +136,31 @@ function EnseContent(props) {
   const onChangeSearch = useCallback(
     (searchVal) => {
   
-     axios.get("http://localhost:5000/users/secens").then(function (response) {
+      axios.get("http://localhost:5000/users/secens").then(function (response) {
         const enslist = response.data;
       const ense = [];
       for (let i = 0; i < enslist.length; i += 1) {
         const randomens = enslist[i];
-        if(userData.user.dept === randomens.ensdept){
-          if((enslist[i].ensnom.toLowerCase().includes(searchVal.toLowerCase())) || (enslist[i].ensprenom.toLowerCase().includes(searchVal.toLowerCase())) ){
+        if(userData.user.dept === randomens.ensdept)
+      {
+        if((randomens.ensnom.toLowerCase().includes(searchVal.toLowerCase())) || (randomens.ensprenom.toLowerCase().includes(searchVal.toLowerCase())) )
+        {
         const targett = {
           id: i, 
           _id : randomens._id,
           nom: randomens.ensnom,
           prénom:  randomens.ensprenom,
-          grade: randomens.ensgrade,
+          grade:  randomens.ensgrade,
+          email: randomens.ensmail,
           eeb: randomens.ensetabori,
           elr: randomens.enslaborata,
           en: randomens.ensnumtel,
           ndc:  randomens.ensusername,
           mdp:  randomens.enspassword,
-          email: randomens.ensmail,
         };
         ense.push(targett);
-       } }
+      }
+    }
       }
       setEnse(ense);
     })

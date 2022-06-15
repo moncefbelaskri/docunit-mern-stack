@@ -81,6 +81,7 @@ function Main(props) {
       await axios.get("http://localhost:5000/users/secdoc").then(function (response) {
         const doclist = response.data.doc;
         const avlist = response.data.avnc;
+        const enslist = response.data.ens;
         const adj = [];
         for (let i = 0; i < doclist.length; i += 1) {
           const randomdoc = doclist[i];
@@ -92,6 +93,15 @@ function Main(props) {
           {
             if(randomav.status === true)
             {
+              for (let z = 0; z < enslist.length; z += 1) {
+                const randomDens = enslist[z]; 
+                if ((randomdoc.dirnom === enslist[z].ensnom) && (randomdoc.dirprenom === enslist[z].ensprenom))
+                {  
+              for (let k = 0; k < enslist.length; k += 1) {
+                const randomCens = enslist[k]; 
+                if ((randomdoc.codirnom === enslist[k].ensnom) && (randomdoc.codirprenom === enslist[k].ensprenom))
+                         {
+              
           const target = {
             id: i,
           _id : randomdoc._id,
@@ -122,6 +132,14 @@ function Main(props) {
           dn:   randomdoc.dirnom,
           dp:   randomdoc.dirprenom,
           dg:   randomdoc.dirgrade,
+          dmail:randomDens.ensmail,
+          dnum:randomDens.ensnumtel,
+          dlt:randomDens.enslaborata,
+          detab:randomDens.ensetabori,
+          cdmail:randomCens.ensmail,
+          cdnum:randomCens.ensnumtel,
+          cdlt:randomCens.enslaborata,
+          cdetab:randomCens.ensetabori,
           cdn:  randomdoc.codirnom,
           cdp:  randomdoc.codirprenom,
           cdg:  randomdoc.dirgrade,    
@@ -133,15 +151,20 @@ function Main(props) {
           };
           adj.push(target);
         }
+      } 
+    } }
+        }
       
         }
       }
     
   }
       
-      setAdj(adj);
       
-    }})
+      
+    }
+    setAdj(adj);
+  })
     .catch(function (error) {
       console.log(error);
     });
@@ -203,10 +226,10 @@ function Main(props) {
     }
   
 }
-    
+}
     setDocto(docto);
     
-  }})
+  })
   .catch(function (error) {
     console.log(error);
   });

@@ -12,8 +12,8 @@ function ConfirmationDialog(props) {
   const { open, onClose, loading, title, content, actions } = props;
   return (
     <Dialog  PaperProps={{ style: {
-      minWidth: '59%',
-      maxWidth: '59%',
+      minWidth: '65%',
+      maxWidth: '65%',
     }}} open={open} onClose={onClose} disableEscapeKeyDown={loading}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent >

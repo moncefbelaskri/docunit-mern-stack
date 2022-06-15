@@ -210,6 +210,31 @@ function DirContent(props) {
       ,{headers: {"Content-Type": "application/json",}})          
      .then(() => {
        // Success 🎉
+       axios.get("http://localhost:5000/users/secens").then(function (response) {
+        const enslist = response.data;
+      const dirs = [];
+      for (let i = 0; i < enslist.length; i += 1) {
+        const randomens = enslist[i];
+        if(userData.user.dept === randomens.ensdept){
+         
+        const targett = {
+          id: i, 
+          _id : randomens._id,
+          nom: randomens.ensnom,
+          prénom:  randomens.ensprenom,
+          eg: randomens.ensgrade,
+          eeb: randomens.ensetabori,
+          elr: randomens.enslaborata,
+          en: randomens.ensnumtel,
+          ndc:  randomens.ensusername,
+          mdp:  randomens.enspassword,
+          email: randomens.ensmail,
+        };
+        dirs.push(targett);
+        }
+      }
+      setDirs(dirs);
+    })
    }).catch((error) => {
      if(error.response.data.msg === "enseignant existe déjà.")
           {
@@ -225,15 +250,15 @@ function DirContent(props) {
   setIsCreateDirLoading(true);
   
 setTimeout(() => {
-  
+  setIsCreateDirDialogOpen(false);
+  setIsCreateDirLoading(false);
   pushMessageToSnackbar({
       text: "ajouté avec succès",
   });
-  window.location.reload(false);
   }, 10);
 
 }          
-      },[ setIsCreateDirLoading,pushMessageToSnackbar,onClose,EnsNom,EnsPrenom,EnsGrade,EnsEtabori,EnsLaborata,EnsNumtel,EnsMail,EnsName,EnsPassword]);
+      },[ dirs,setDirs,setIsCreateDirDialogOpen, setIsCreateDirLoading,pushMessageToSnackbar,onClose,EnsNom,EnsPrenom,EnsGrade,EnsEtabori,EnsLaborata,EnsNumtel,EnsMail,EnsName,EnsPassword]);
    
     
   const handleUpload = useCallback(async () => {
@@ -285,11 +310,12 @@ setTimeout(() => {
 
   const handleUpdateDirDialogOpen = useCallback(
     (row) => {
+      setId(row._id);
       setIsUpdateDirDialogOpen(true);
       setUpdateDirDialogRow(row);
-      setId(row._id);
+      
     },
-    [setIsUpdateDirDialogOpen,setUpdateDirDialogRow]
+    [setIsUpdateDirDialogOpen,setUpdateDirDialogRow,setId]
   );
 
   const formuenss = useCallback( async () => {
@@ -311,6 +337,31 @@ setTimeout(() => {
   ,{headers: {"Content-Type": "application/json",}})          
  .then(() => {
    // Success 🎉
+   axios.get("http://localhost:5000/users/secens").then(function (response) {
+    const enslist = response.data;
+  const dirs = [];
+  for (let i = 0; i < enslist.length; i += 1) {
+    const randomens = enslist[i];
+    if(userData.user.dept === randomens.ensdept){
+     
+    const targett = {
+      id: i, 
+      _id : randomens._id,
+      nom: randomens.ensnom,
+      prénom:  randomens.ensprenom,
+      eg: randomens.ensgrade,
+      eeb: randomens.ensetabori,
+      elr: randomens.enslaborata,
+      en: randomens.ensnumtel,
+      ndc:  randomens.ensusername,
+      mdp:  randomens.enspassword,
+      email: randomens.ensmail,
+    };
+    dirs.push(targett);
+    }
+  }
+  setDirs(dirs);
+})
 }).catch((error) => {
  if(error.response.data.msg === "enseignant existe déjà.")
       {
@@ -326,15 +377,15 @@ if(existed !== "yes") {
   setIsUpdateDirLoading(true);
 
 setTimeout(() => {
-
+  setIsUpdateDirDialogOpen(false);
+  setIsUpdateDirLoading(false);
 pushMessageToSnackbar({
   text: "modifié avec succès",
 });
-window.location.reload(false);
 }, 10);
 
 }          
-  },[ setIsUpdateDirLoading,pushMessageToSnackbar,onClose,EnsNom,EnsPrenom,EnsMail,EnsName,EnsPassword]);
+  },[ dirs,setDirs,setIsUpdateDirDialogOpen,setIsUpdateDirLoading,pushMessageToSnackbar,onClose,EnsNom,EnsPrenom,EnsMail,EnsName,EnsPassword,setId,Id]);
 
 
 const handleUploadd = useCallback(async () => {
@@ -358,7 +409,7 @@ formuenss();
 
 }
 
-}, [setIsUpdateDirLoading , onClose, pushMessageToSnackbar]);
+}, [setIsUpdateDirLoading , onClose, pushMessageToSnackbar,setId,Id]);
 
 
 const [searched, setSearched] = useState("");
