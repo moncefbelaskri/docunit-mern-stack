@@ -26,7 +26,7 @@ res.send(Promise.resolve())
 /* pdf get api */
 
 router.get('/get-pdf', (req, res) => {
-  res.sendFile(`C:/Users/admin/pfehm/pfe-docunit/backend/filepdf.pdf`); 
+  res.sendFile(`C:/Users/PC COM/pfe-docunit/backend/filepdf.pdf`); 
 });
 
 /* pdf2 post api */

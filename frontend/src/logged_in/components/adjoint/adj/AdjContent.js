@@ -285,7 +285,8 @@ function AdjContent(props) {
                                               <Box display="flex" justifyContent="flex-end">
                                                   <IconButton
                                                       className={classes.iconButton}
-                                                      onClick={() => getindice(row)}
+                                                      onClick={() =>
+                                                       getindice(row)}
                                                       aria-label="Télécharger"
                                                       size="large">
                                                       <DownloadIcon className={classes.blackIcon} />

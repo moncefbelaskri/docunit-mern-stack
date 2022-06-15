@@ -63,6 +63,8 @@ const styles = (theme) => ({
   image: {
     maxWidth: "100%",
     verticalAlign: "middle",
+    borderRadius: theme.shape.borderRadius,
+    boxShadow: theme.shadows[4],
     
   },
   container: {
@@ -138,9 +140,10 @@ function Headsection(props) {
                         </Button>
                       </div>
                     </Box>
+                    
                   </Grid>
                   <Hidden mdDown>
-                    <Grid item mt={1} md={6}>
+                    <Grid item md={6}>
                       <img
                         src={`${process.env.PUBLIC_URL}/images/logged_out/headerImage4.png`}
                         className={classes.image}

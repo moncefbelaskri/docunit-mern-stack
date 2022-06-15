@@ -135,7 +135,6 @@ function EnseContent(props) {
 
   const onChangeSearch = useCallback(
     (searchVal) => {
-
       axios.get("http://localhost:5000/users/secens").then(function (response) {
         const enslist = response.data;
       const ense = [];

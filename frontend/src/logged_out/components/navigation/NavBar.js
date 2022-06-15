@@ -73,15 +73,23 @@ function NavBar(props) {
              className={classes.noDecoration}
               >     
           <div> 
-           
+          <Typography
+              variant="h4"
+              className={classes.brandText}
+              display="inline"
+              color="#272f3b"
+             
+            >
+               oc           
+            </Typography> 
            <Typography
               variant="h4"
               className={classes.brandText}
               display="inline"
-              color="primary"
+              color="#272f3b"
              
             >
-               ocUniT           
+               UniT           
             </Typography>   
               
             
