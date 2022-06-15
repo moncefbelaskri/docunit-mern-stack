@@ -8,25 +8,28 @@ import {
   DialogActions,
 } from "@mui/material";
 
-function ConfirmationDialog(props) {
-  const { open, onClose, loading, title, content, actions } = props;
+function ConfirmationDialogg(props) {
+  const { open, onClose, loading, title, content, actions,    onFormSubmit,
+  } = props;
   return (
     <Dialog  PaperProps={{ style: {
-      minWidth: '59%',
-      maxWidth: '59%',
+      minWidth: '65%',
+      maxWidth: '65%',
     }}} open={open} onClose={onClose} disableEscapeKeyDown={loading}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent >
+      <form onSubmit={onFormSubmit}>
         <DialogContentText>{content}</DialogContentText>
-      </DialogContent>
       <DialogActions>
       {actions}
       </DialogActions>
+      </form>
+      </DialogContent>
     </Dialog>
   );
 }
 
-ConfirmationDialog.propTypes = {
+ConfirmationDialogg.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   loading: PropTypes.bool,
@@ -35,4 +38,4 @@ ConfirmationDialog.propTypes = {
   onConfirm: PropTypes.func
 };
 
-export default ConfirmationDialog;
+export default ConfirmationDialogg;

@@ -30,6 +30,8 @@ import Bordered from "../../../../shared/components/Bordered";
 import ButtonCircularProgress from "../../../../shared/components/ButtonCircularProgress";
 import MenuItem from '@mui/material/MenuItem';
 import SearchBar from 'search-bar-react';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const axios = require('axios');
 
@@ -131,7 +133,6 @@ function DocContent(props) {
     docs,
     onClose,
     classes,
-    onFormSubmit, 
   } = props;
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
@@ -306,16 +307,53 @@ function DocContent(props) {
            ,{headers: {"Content-Type": "application/json",}})
            .then((response) => {
             // Success 🎉
+      axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+      const doclist = response.data.doc;
+      const docs = [];
+      for (let i = 0; i < doclist.length; i += 1) {
+        const randomdoc = doclist[i];
+        if(userData.user.dept === randomdoc.dept){
+        const target = {
+          id: i,
+          _id : randomdoc._id,
+          nom: randomdoc.nom,
+          prénom:  randomdoc.prenom,
+          ndc:  randomdoc.username,
+          mdp:  randomdoc.password,
+          da:   randomdoc.dateN,
+          li:   randomdoc.lieuN,
+          ad:   randomdoc.adresse,
+          nt:   randomdoc.numtel,     
+          email : randomdoc.mail,
+          ep:   randomdoc.etapro,
+          pr:   randomdoc.preci,
+          an:   randomdoc.anebac,
+          seb:   randomdoc.seribac,
+          nb:   randomdoc.numbac,
+          cd:   randomdoc.catdoc,
+          dd:   randomdoc.derdip,
+          prr:  randomdoc.precii,
+          sdd:  randomdoc.spederdip,
+          dad:  randomdoc.datederdip,
+          dap:  randomdoc.datepremdoc,
+          sd:   randomdoc.spedoc,
+          lr:   randomdoc.laborata,
+          inti: randomdoc.intithe,
+          dn:   randomdoc.dirnom,
+          dp:   randomdoc.dirprenom,
+          dg:   randomdoc.dirgrade,
+          cdn:  randomdoc.codirnom,
+          cdp:  randomdoc.codirprenom,
+          cdg:  randomdoc.dirgrade,
+        };
+        docs.push(target);
+      } 
+      }
+      setDocs(docs);
+    })
                      
             setIsCreateDocLoading(true);
   
-      setTimeout(() => {
-       
-       pushMessageToSnackbar({
-           text: "ajouté avec succès",
-       });
-       window.location.reload(false);
-       }, 10);
         }).catch((error) => {
           if(error.response.data.msg === "doctorant existe déjà.")
                {
@@ -326,6 +364,16 @@ function DocContent(props) {
                 setIsCreateDocLoading(false);
                 }
       });
+      
+      setIsCreateDocLoading(false);
+      setIsCreateDocDialogOpen(false);       
+      setTimeout(() => {
+       
+       pushMessageToSnackbar({
+           text: "ajouté avec succès",
+       });
+       }, 10);
+
           }
 
     else if(DoctorantEtapro.current.value === "sal" && DoctorantDerdip.current.value !== "au")
@@ -366,16 +414,53 @@ function DocContent(props) {
                ,{headers: {"Content-Type": "application/json",},})
                .then((response) => {
                 // Success 🎉
-                         
+                axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+                  const doclist = response.data.doc;
+                  const docs = [];
+                  for (let i = 0; i < doclist.length; i += 1) {
+                    const randomdoc = doclist[i];
+                    if(userData.user.dept === randomdoc.dept){
+                    const target = {
+                      id: i,
+                      _id : randomdoc._id,
+                      nom: randomdoc.nom,
+                      prénom:  randomdoc.prenom,
+                      ndc:  randomdoc.username,
+                      mdp:  randomdoc.password,
+                      da:   randomdoc.dateN,
+                      li:   randomdoc.lieuN,
+                      ad:   randomdoc.adresse,
+                      nt:   randomdoc.numtel,     
+                      email : randomdoc.mail,
+                      ep:   randomdoc.etapro,
+                      pr:   randomdoc.preci,
+                      an:   randomdoc.anebac,
+                      seb:   randomdoc.seribac,
+                      nb:   randomdoc.numbac,
+                      cd:   randomdoc.catdoc,
+                      dd:   randomdoc.derdip,
+                      prr:  randomdoc.precii,
+                      sdd:  randomdoc.spederdip,
+                      dad:  randomdoc.datederdip,
+                      dap:  randomdoc.datepremdoc,
+                      sd:   randomdoc.spedoc,
+                      lr:   randomdoc.laborata,
+                      inti: randomdoc.intithe,
+                      dn:   randomdoc.dirnom,
+                      dp:   randomdoc.dirprenom,
+                      dg:   randomdoc.dirgrade,
+                      cdn:  randomdoc.codirnom,
+                      cdp:  randomdoc.codirprenom,
+                      cdg:  randomdoc.dirgrade,
+                    };
+                    docs.push(target);
+                  } 
+                  }
+                  setDocs(docs);
+                })         
+
                 setIsCreateDocLoading(true);
   
-      setTimeout(() => {
-       
-       pushMessageToSnackbar({
-           text: "ajouté avec succès",
-       });
-       window.location.reload(false);
-       }, 10);
             }).catch((error) => {
               if(error.response.data.msg === "doctorant existe déjà.")
                    {
@@ -386,6 +471,16 @@ function DocContent(props) {
                     setIsCreateDocLoading(false);
                   }
           });
+
+          setIsCreateDocLoading(false);
+          setIsCreateDocDialogOpen(false);       
+          setTimeout(() => {
+           
+           pushMessageToSnackbar({
+               text: "ajouté avec succès",
+           });
+           }, 10);
+
              }
       else if(DoctorantEtapro.current.value !== "sal" && DoctorantDerdip.current.value === "au")
              {
@@ -424,16 +519,52 @@ function DocContent(props) {
                ,{headers: {"Content-Type": "application/json",},})
                .then((response) => {
                 // Success 🎉
-                         
+                axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+                  const doclist = response.data.doc;
+                  const docs = [];
+                  for (let i = 0; i < doclist.length; i += 1) {
+                    const randomdoc = doclist[i];
+                    if(userData.user.dept === randomdoc.dept){
+                    const target = {
+                      id: i,
+                      _id : randomdoc._id,
+                      nom: randomdoc.nom,
+                      prénom:  randomdoc.prenom,
+                      ndc:  randomdoc.username,
+                      mdp:  randomdoc.password,
+                      da:   randomdoc.dateN,
+                      li:   randomdoc.lieuN,
+                      ad:   randomdoc.adresse,
+                      nt:   randomdoc.numtel,     
+                      email : randomdoc.mail,
+                      ep:   randomdoc.etapro,
+                      pr:   randomdoc.preci,
+                      an:   randomdoc.anebac,
+                      seb:   randomdoc.seribac,
+                      nb:   randomdoc.numbac,
+                      cd:   randomdoc.catdoc,
+                      dd:   randomdoc.derdip,
+                      prr:  randomdoc.precii,
+                      sdd:  randomdoc.spederdip,
+                      dad:  randomdoc.datederdip,
+                      dap:  randomdoc.datepremdoc,
+                      sd:   randomdoc.spedoc,
+                      lr:   randomdoc.laborata,
+                      inti: randomdoc.intithe,
+                      dn:   randomdoc.dirnom,
+                      dp:   randomdoc.dirprenom,
+                      dg:   randomdoc.dirgrade,
+                      cdn:  randomdoc.codirnom,
+                      cdp:  randomdoc.codirprenom,
+                      cdg:  randomdoc.dirgrade,
+                    };
+                    docs.push(target);
+                  } 
+                  }
+                  setDocs(docs);
+                })         
                 setIsCreateDocLoading(true);
-  
-      setTimeout(() => {
-       
-       pushMessageToSnackbar({
-           text: "ajouté avec succès",
-       });
-       window.location.reload(false);
-       }, 10);
+
             }).catch((error) => {
               if(error.response.data.msg === "doctorant existe déjà.")
                    {
@@ -444,6 +575,15 @@ function DocContent(props) {
                           setIsCreateDocLoading(false);
                   }
           });
+
+          setIsCreateDocLoading(false);
+          setIsCreateDocDialogOpen(false);       
+          setTimeout(() => {
+           
+           pushMessageToSnackbar({
+               text: "ajouté avec succès",
+           });
+           }, 10);
               }
       else 
         {
@@ -482,16 +622,52 @@ function DocContent(props) {
           {headers: {"Content-Type": "application/json",},})
           .then((response) => { 
             // Success 🎉
-               
+            axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+              const doclist = response.data.doc;
+              const docs = [];
+              for (let i = 0; i < doclist.length; i += 1) {
+                const randomdoc = doclist[i];
+                if(userData.user.dept === randomdoc.dept){
+                const target = {
+                  id: i,
+                  _id : randomdoc._id,
+                  nom: randomdoc.nom,
+                  prénom:  randomdoc.prenom,
+                  ndc:  randomdoc.username,
+                  mdp:  randomdoc.password,
+                  da:   randomdoc.dateN,
+                  li:   randomdoc.lieuN,
+                  ad:   randomdoc.adresse,
+                  nt:   randomdoc.numtel,     
+                  email : randomdoc.mail,
+                  ep:   randomdoc.etapro,
+                  pr:   randomdoc.preci,
+                  an:   randomdoc.anebac,
+                  seb:   randomdoc.seribac,
+                  nb:   randomdoc.numbac,
+                  cd:   randomdoc.catdoc,
+                  dd:   randomdoc.derdip,
+                  prr:  randomdoc.precii,
+                  sdd:  randomdoc.spederdip,
+                  dad:  randomdoc.datederdip,
+                  dap:  randomdoc.datepremdoc,
+                  sd:   randomdoc.spedoc,
+                  lr:   randomdoc.laborata,
+                  inti: randomdoc.intithe,
+                  dn:   randomdoc.dirnom,
+                  dp:   randomdoc.dirprenom,
+                  dg:   randomdoc.dirgrade,
+                  cdn:  randomdoc.codirnom,
+                  cdp:  randomdoc.codirprenom,
+                  cdg:  randomdoc.dirgrade,
+                };
+                docs.push(target);
+              } 
+              }
+              setDocs(docs);
+            })  
             setIsCreateDocLoading(true);
-  
-     setTimeout(() => {
-      
-      pushMessageToSnackbar({
-          text: "ajouté avec succès",
-      });
-      window.location.reload(false);
-      }, 10);
+
     
         }).catch((error) => {
           if(error.response.data.msg === "doctorant existe déjà.")
@@ -503,10 +679,19 @@ function DocContent(props) {
                 setIsCreateDocLoading(false);
               }
       });
+
+      setIsCreateDocLoading(false);
+      setIsCreateDocDialogOpen(false);       
+      setTimeout(() => {
+       
+       pushMessageToSnackbar({
+           text: "ajouté avec succès",
+       });
+       }, 10);
         }     
     
       }
-  ,[ setIsCreateDocLoading,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantName,DoctorantPassword
+  ,[ setIsCreateDocLoading, setIsCreateDocDialogOpen ,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantName,DoctorantPassword
     ,DoctorantdirNom,DoctorantdirPrenom,DoctorantdirGrade,DoctorantcodirNom,DoctorantcodirPrenom,DoctorantcodirGrade]);
 
   const handleUpload = useCallback(async () => {
@@ -582,11 +767,14 @@ function DocContent(props) {
 
   const handleUpdateDocDialogOpen = useCallback(
     (row) => {
+      setId(row._id);
+      setEtapro(row.ep);
+      setDerdip(row.dd);
       setIsUpdateDocDialogOpen(true);
       setUpdateDocDialogRow(row);
-      setId(row._id);
+      
     },
-    [setIsUpdateDocDialogOpen,setUpdateDocDialogRow]
+    [setIsUpdateDocDialogOpen,setUpdateDocDialogRow,setId,setEtapro,setDerdip]
   );
 
   const formudocc = useCallback( async () => {
@@ -632,15 +820,52 @@ function DocContent(props) {
            ,{headers: {"Content-Type": "application/json",}})
            .then((response) => {
             // Success 🎉
+            axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+              const doclist = response.data.doc;
+              const docs = [];
+              for (let i = 0; i < doclist.length; i += 1) {
+                const randomdoc = doclist[i];
+                if(userData.user.dept === randomdoc.dept){
+                const target = {
+                  id: i,
+                  _id : randomdoc._id,
+                  nom: randomdoc.nom,
+                  prénom:  randomdoc.prenom,
+                  ndc:  randomdoc.username,
+                  mdp:  randomdoc.password,
+                  da:   randomdoc.dateN,
+                  li:   randomdoc.lieuN,
+                  ad:   randomdoc.adresse,
+                  nt:   randomdoc.numtel,     
+                  email : randomdoc.mail,
+                  ep:   randomdoc.etapro,
+                  pr:   randomdoc.preci,
+                  an:   randomdoc.anebac,
+                  seb:   randomdoc.seribac,
+                  nb:   randomdoc.numbac,
+                  cd:   randomdoc.catdoc,
+                  dd:   randomdoc.derdip,
+                  prr:  randomdoc.precii,
+                  sdd:  randomdoc.spederdip,
+                  dad:  randomdoc.datederdip,
+                  dap:  randomdoc.datepremdoc,
+                  sd:   randomdoc.spedoc,
+                  lr:   randomdoc.laborata,
+                  inti: randomdoc.intithe,
+                  dn:   randomdoc.dirnom,
+                  dp:   randomdoc.dirprenom,
+                  dg:   randomdoc.dirgrade,
+                  cdn:  randomdoc.codirnom,
+                  cdp:  randomdoc.codirprenom,
+                  cdg:  randomdoc.dirgrade,
+                };
+                docs.push(target);
+              } 
+              }
+              setDocs(docs);
+            })
             setIsUpdateDocLoading(true);
-  
-            setTimeout(() => {
-             
-             pushMessageToSnackbar({
-                 text: "modifié avec succès",
-             });
-             window.location.reload(false);
-             }, 10);
+            
         }).catch((error) => {
           if(error.response.data.msg === "doctorant existe déjà.")
                {
@@ -651,6 +876,14 @@ function DocContent(props) {
                 setIsUpdateDocLoading(false);
                 }
       });
+
+      setIsUpdateDocLoading(false);
+      setIsUpdateDocDialogOpen(false);
+      setTimeout(() => {
+        pushMessageToSnackbar({
+            text: "modifié avec succès",
+        });
+        }, 10);
           }
 
     else if(DoctorantEtapro.current.value === "sal" && DoctorantDerdip.current.value !== "au")
@@ -692,15 +925,52 @@ function DocContent(props) {
                ,{headers: {"Content-Type": "application/json",},})
                .then((response) => {
                 // Success 🎉
+                axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+                  const doclist = response.data.doc;
+                  const docs = [];
+                  for (let i = 0; i < doclist.length; i += 1) {
+                    const randomdoc = doclist[i];
+                    if(userData.user.dept === randomdoc.dept){
+                    const target = {
+                      id: i,
+                      _id : randomdoc._id,
+                      nom: randomdoc.nom,
+                      prénom:  randomdoc.prenom,
+                      ndc:  randomdoc.username,
+                      mdp:  randomdoc.password,
+                      da:   randomdoc.dateN,
+                      li:   randomdoc.lieuN,
+                      ad:   randomdoc.adresse,
+                      nt:   randomdoc.numtel,     
+                      email : randomdoc.mail,
+                      ep:   randomdoc.etapro,
+                      pr:   randomdoc.preci,
+                      an:   randomdoc.anebac,
+                      seb:   randomdoc.seribac,
+                      nb:   randomdoc.numbac,
+                      cd:   randomdoc.catdoc,
+                      dd:   randomdoc.derdip,
+                      prr:  randomdoc.precii,
+                      sdd:  randomdoc.spederdip,
+                      dad:  randomdoc.datederdip,
+                      dap:  randomdoc.datepremdoc,
+                      sd:   randomdoc.spedoc,
+                      lr:   randomdoc.laborata,
+                      inti: randomdoc.intithe,
+                      dn:   randomdoc.dirnom,
+                      dp:   randomdoc.dirprenom,
+                      dg:   randomdoc.dirgrade,
+                      cdn:  randomdoc.codirnom,
+                      cdp:  randomdoc.codirprenom,
+                      cdg:  randomdoc.dirgrade,
+                    };
+                    docs.push(target);
+                  } 
+                  }
+                  setDocs(docs);
+                })
                 setIsUpdateDocLoading(true);
   
-                setTimeout(() => {
-                 
-                 pushMessageToSnackbar({
-                     text: "modifié avec succès",
-                 });
-                 window.location.reload(false);
-                 }, 10);
             }).catch((error) => {
               if(error.response.data.msg === "doctorant existe déjà.")
                    {
@@ -711,6 +981,15 @@ function DocContent(props) {
                     setIsUpdateDocLoading(false);
                   }
           });
+          
+          setIsUpdateDocLoading(false);
+          setIsUpdateDocDialogOpen(false);
+          setTimeout(() => {
+            pushMessageToSnackbar({
+                text: "modifié avec succès",
+            });
+            }, 10);
+
              }
       else if(DoctorantEtapro.current.value !== "sal" && DoctorantDerdip.current.value === "au")
              {
@@ -750,15 +1029,53 @@ function DocContent(props) {
                ,{headers: {"Content-Type": "application/json",},})
                .then((response) => {
                 // Success 🎉
+                axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+                  const doclist = response.data.doc;
+                  const docs = [];
+                  for (let i = 0; i < doclist.length; i += 1) {
+                    const randomdoc = doclist[i];
+                    if(userData.user.dept === randomdoc.dept){
+                    const target = {
+                      id: i,
+                      _id : randomdoc._id,
+                      nom: randomdoc.nom,
+                      prénom:  randomdoc.prenom,
+                      ndc:  randomdoc.username,
+                      mdp:  randomdoc.password,
+                      da:   randomdoc.dateN,
+                      li:   randomdoc.lieuN,
+                      ad:   randomdoc.adresse,
+                      nt:   randomdoc.numtel,     
+                      email : randomdoc.mail,
+                      ep:   randomdoc.etapro,
+                      pr:   randomdoc.preci,
+                      an:   randomdoc.anebac,
+                      seb:   randomdoc.seribac,
+                      nb:   randomdoc.numbac,
+                      cd:   randomdoc.catdoc,
+                      dd:   randomdoc.derdip,
+                      prr:  randomdoc.precii,
+                      sdd:  randomdoc.spederdip,
+                      dad:  randomdoc.datederdip,
+                      dap:  randomdoc.datepremdoc,
+                      sd:   randomdoc.spedoc,
+                      lr:   randomdoc.laborata,
+                      inti: randomdoc.intithe,
+                      dn:   randomdoc.dirnom,
+                      dp:   randomdoc.dirprenom,
+                      dg:   randomdoc.dirgrade,
+                      cdn:  randomdoc.codirnom,
+                      cdp:  randomdoc.codirprenom,
+                      cdg:  randomdoc.dirgrade,
+                    };
+                    docs.push(target);
+                  } 
+                  }
+                  setDocs(docs);
+                })
                 setIsUpdateDocLoading(true);
   
-                setTimeout(() => {
-                 
-                 pushMessageToSnackbar({
-                     text: "modifié avec succès",
-                 });
-                 window.location.reload(false);
-                 }, 10);
+
             }).catch((error) => {
               if(error.response.data.msg === "doctorant existe déjà.")
                    {
@@ -769,6 +1086,14 @@ function DocContent(props) {
                           setIsUpdateDocLoading(false);
                   }
           });
+
+          setIsUpdateDocLoading(false);
+          setIsUpdateDocDialogOpen(false);
+          setTimeout(() => {
+            pushMessageToSnackbar({
+                text: "modifié avec succès",
+            });
+            }, 10);
               }
       else 
         {
@@ -809,15 +1134,52 @@ function DocContent(props) {
           {headers: {"Content-Type": "application/json",},})
           .then((response) => { 
             // Success 🎉
+      axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+      const doclist = response.data.doc;
+      const docs = [];
+      for (let i = 0; i < doclist.length; i += 1) {
+        const randomdoc = doclist[i];
+        if(userData.user.dept === randomdoc.dept){
+        const target = {
+          id: i,
+          _id : randomdoc._id,
+          nom: randomdoc.nom,
+          prénom:  randomdoc.prenom,
+          ndc:  randomdoc.username,
+          mdp:  randomdoc.password,
+          da:   randomdoc.dateN,
+          li:   randomdoc.lieuN,
+          ad:   randomdoc.adresse,
+          nt:   randomdoc.numtel,     
+          email : randomdoc.mail,
+          ep:   randomdoc.etapro,
+          pr:   randomdoc.preci,
+          an:   randomdoc.anebac,
+          seb:   randomdoc.seribac,
+          nb:   randomdoc.numbac,
+          cd:   randomdoc.catdoc,
+          dd:   randomdoc.derdip,
+          prr:  randomdoc.precii,
+          sdd:  randomdoc.spederdip,
+          dad:  randomdoc.datederdip,
+          dap:  randomdoc.datepremdoc,
+          sd:   randomdoc.spedoc,
+          lr:   randomdoc.laborata,
+          inti: randomdoc.intithe,
+          dn:   randomdoc.dirnom,
+          dp:   randomdoc.dirprenom,
+          dg:   randomdoc.dirgrade,
+          cdn:  randomdoc.codirnom,
+          cdp:  randomdoc.codirprenom,
+          cdg:  randomdoc.dirgrade,
+        };
+        docs.push(target);
+      } 
+      }
+      setDocs(docs);
+    })
             setIsUpdateDocLoading(true);
   
-            setTimeout(() => {
-             
-             pushMessageToSnackbar({
-                 text: "modifié avec succès",
-             });
-             window.location.reload(false);
-             }, 10);
         }).catch((error) => {
           if(error.response.data.msg === "doctorant existe déjà.")
                {
@@ -828,10 +1190,17 @@ function DocContent(props) {
                 setIsUpdateDocLoading(false);
               }
       });
+      setIsUpdateDocLoading(false);
+      setIsUpdateDocDialogOpen(false);
+      setTimeout(() => {
+        pushMessageToSnackbar({
+            text: "modifié avec succès",
+        });
+        }, 10);
         }     
       
         }  
-  ,[ setIsUpdateDocLoading,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantName,DoctorantPassword
+  ,[ setIsUpdateDocLoading,setId,setEtapro,setDerdip,Id,etapro,derdip, setIsUpdateDocDialogOpen ,pushMessageToSnackbar,onClose,DoctorantNom,DoctorantPrenom,DoctorantDateN,DoctorantLieuN,DoctorantAdresse,DoctorantNumtel,DoctorantMail,DoctorantEtapro,DoctorantPreci,DoctorantAnebac,DoctorantSeribac,DoctorantNumbac,DoctorantCatdoc,DoctorantDerdip,DoctorantPrecii,DoctorantSpederdip,DoctorantDatederdip,DoctorantDatepremdoc,DoctorantSpedoc,DoctorantLaborata,DoctorantIntithe,DoctorantName,DoctorantPassword
     ,DoctorantdirNom,DoctorantdirPrenom,DoctorantdirGrade,DoctorantcodirNom,DoctorantcodirPrenom,DoctorantcodirGrade]);
 
     const handleUploadd = useCallback(async () => {
@@ -879,7 +1248,7 @@ function DocContent(props) {
       formudocc();
         
     }
-    }, [setIsUpdateDocLoading , onClose, pushMessageToSnackbar]);
+    }, [setIsUpdateDocLoading , onClose, pushMessageToSnackbar , setId,setEtapro,setDerdip,Id,etapro,derdip]);
 
 
     const [searched, setSearched] = useState("");
@@ -988,9 +1357,14 @@ function DocContent(props) {
           
           <ConfirmationDialogg
           open={isCreateDocDialogOpen}
+          onClose={handleCreateDocDialogClose}
+          loading={isCreateDocLoading}
+          onFormSubmit={(e) => {
+            e.preventDefault();
+            handleUpload();
+          }}
           title="Création d'un Doctorant"
           content={
-            <form onSubmit={onFormSubmit}>
             <Box
             sx={{
           '& .MuiTextField-root': { m: 1, width: '29.5ch' },
@@ -1125,7 +1499,15 @@ function DocContent(props) {
           <ListItem  disableGutters className="listItemLeftPadding">
             <ListItemText>      
             <div>
-            <TextField required variant="outlined" label="Nom de compte" inputRef={DoctorantName}/>
+            <TextField required variant="outlined" label="Nom de compte" inputRef={DoctorantName}
+          InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <AccountCircle />
+            </InputAdornment>
+          ),
+        }}
+            />
             <VisibilityPasswordTextField
               variant="outlined"
               margin="normal"
@@ -1181,7 +1563,6 @@ function DocContent(props) {
       </List>
        
     </Box>
-      </form>
           }
         actions={
           <Fragment>
@@ -1195,7 +1576,6 @@ function DocContent(props) {
               variant="contained"
               color="secondary"
               disabled={isCreateDocLoading}
-              onClick={handleUpload}
             >
               Valider {isCreateDocLoading && <ButtonCircularProgress />}
             </Button>
@@ -1205,6 +1585,7 @@ function DocContent(props) {
           
           <ConfirmationDialogg
           open={isViewDocDialogOpen}
+          onClose={handleViewDocDialogClose}
           title="Données d'un Doctorant"
           content={viewDocDialogRow ? (
             <Box
@@ -1386,7 +1767,13 @@ function DocContent(props) {
           />
           
           <ConfirmationDialogg
-          open={isUpdateDocDialogOpen}
+           open={isUpdateDocDialogOpen}
+           onClose={handleUpdateDocDialogClose}
+           loading={isUpdateDocLoading}
+           onFormSubmit={(e) => {
+             e.preventDefault();
+             handleUploadd();
+           }}
           title="Modification d'un Doctorant"
           content={updateDocDialogRow ? (
             <Box
@@ -1452,7 +1839,7 @@ function DocContent(props) {
             </MenuItem>
           ))}
         </TextField>
-        {etapro==="sal"? <TextField  variant="outlined" label="(Préciser)" defaultValue={updateDocDialogRow.pr} inputRef={DoctorantPreci}/>:null}
+        {etapro==="sal"?  <TextField  variant="outlined" label="(Préciser)" defaultValue={updateDocDialogRow.pr} inputRef={DoctorantPreci}/> :null}
           </div>
             <div>
             <TextField required variant="outlined" type="number" name="number" inputProps={{min:1950}} label="Année d’obtention du BAC" defaultValue={updateDocDialogRow.an} inputRef={DoctorantAnebac}/>
@@ -1592,7 +1979,6 @@ function DocContent(props) {
               variant="contained"
               color="secondary"
               disabled={isUpdateDocLoading}
-              onClick={handleUploadd}
             >
               Valider {isUpdateDocLoading && <ButtonCircularProgress />}
             </Button>
@@ -1645,6 +2031,8 @@ function DocContent(props) {
                                                   <IconButton
                                                       className={classes.iconButton}
                                                       onClick={() => {
+                                   
+                                                        
                                                         handleUpdateDocDialogOpen(row);
                                                     } }
                                                       aria-label="Update"

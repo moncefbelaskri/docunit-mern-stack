@@ -30,10 +30,21 @@ function Main(props) {
  
   const { classes } = props;
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
-  const [stat, setStat] = useState([]);
   const [adj, setAdj] = useState([]);
   const [docto, setDocto] = useState([]);
   const [ense, setEnse] = useState([]);
+  const [stat1, setStat1] = useState([]);
+  const [stat2, setStat2] = useState([]);
+  const [stat3, setStat3] = useState([]);
+  const [stat4, setStat4] = useState([]);
+  const [stat5, setStat5] = useState([]);
+  const [stat6, setStat6] = useState([]);
+  const [stat7, setStat7] = useState([]);
+  const [stat8, setStat8] = useState([]);
+  const [stat9, setStat9] = useState([]);
+  const [stat10, setStat10] = useState([]);
+  const [stat11, setStat11] = useState([]);
+  const [stat12, setStat12] = useState([]);
 
   const [pushMessageToSnackbar, setPushMessageToSnackbar] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
@@ -81,6 +92,7 @@ function Main(props) {
       await axios.get("http://localhost:5000/users/secdoc").then(function (response) {
         const doclist = response.data.doc;
         const avlist = response.data.avnc;
+        const enslist = response.data.ens;
         const adj = [];
         for (let i = 0; i < doclist.length; i += 1) {
           const randomdoc = doclist[i];
@@ -92,6 +104,14 @@ function Main(props) {
           {
             if(randomav.status === true)
             {
+              for (let z = 0; z < enslist.length; z += 1) {
+                const randomDens = enslist[z]; 
+                if ((randomdoc.dirnom === enslist[z].ensnom) && (randomdoc.dirprenom === enslist[z].ensprenom))
+                {  
+              for (let k = 0; k < enslist.length; k += 1) {
+                const randomCens = enslist[k]; 
+                if ((randomdoc.codirnom === enslist[k].ensnom) && (randomdoc.codirprenom === enslist[k].ensprenom))
+                         {
           const target = {
             id: i,
           _id : randomdoc._id,
@@ -130,18 +150,28 @@ function Main(props) {
           etv: randomav.etav,
           pctv: randomav.pctav,
           dep:userData.user.dept,
+          dmail:randomDens.ensmail,
+          dnum:randomDens.ensnumtel,
+          dlt:randomDens.enslaborata,
+          detab:randomDens.ensetabori,
+          cdmail:randomCens.ensmail,
+          cdnum:randomCens.ensnumtel,
+          cdlt:randomCens.enslaborata,
+          cdetab:randomCens.ensetabori,
           };
           adj.push(target);
         }
-      
+      } 
+    } }
+        }
         }
       }
     
   }
       
-      setAdj(adj);
-      
-    }})
+}
+setAdj(adj);
+})
     .catch(function (error) {
       console.log(error);
     });
@@ -203,10 +233,10 @@ function Main(props) {
     }
   
 }
-    
+} 
     setDocto(docto);
     
-  }})
+  })
   .catch(function (error) {
     console.log(error);
   });
@@ -243,9 +273,127 @@ function Main(props) {
       });
       
       };
+      const fetchstat = async() => {
+        await axios.get("http://localhost:5000/users/secdoc").then(function (response) {
+        const statt1 = response.data.doc;
+        const statt2 = response.data.avnc;
+        const stat1 = [];
+        const stat2 = [];
+        const stat3 = [];
+        const stat4 = [];
+        const stat5 = [];
+        const stat6 = [];
+        const stat7 = [];
+        const stat8 = [];
+        const stat9 = [];
+        const stat10 = [];
+        const stat11 = [];
+        const stat12 = [];
+        for (let i = 0; i < statt1.length; i += 1) {
+          const random2 = statt2[i];
+          const random1 = statt1[i];
+          if(userData.user.dept === random1.dept)
+            {
+          if(random1.catdoc === "lmd")
+          {
+            const target = {
+              id: i,     
+            };
+            stat11.push(target);
+    
+            if(random2.aneactu<=1)
+          {const target = {
+            id: i,     
+          };
+          stat1.push(target);
+        }
+        else if(random2.aneactu<=2)
+          {const target = {
+            id: i,     
+          };
+          stat2.push(target);
+        }
+        else if(random2.aneactu<=3)
+          {const target = {
+            id: i,     
+          };
+          stat3.push(target);
+        }
+        else if(random2.aneactu<=4)
+          {const target = {
+            id: i,     
+          };
+          stat4.push(target);
+        }
+        else
+          {const target = {
+            id: i,     
+          };
+          stat5.push(target);
+        }
+      }
+      if(random1.catdoc === "sci")
+          {
+            const target = {
+            id: i,     
+          };
+          stat12.push(target);
+        
+            if(random2.aneactu<=1)
+          {const target = {
+            id: i,     
+          };
+          stat6.push(target);
+        }
+        else if(random2.aneactu<=2)
+          {const target = {
+            id: i,     
+          };
+          stat7.push(target);
+        }
+        else if(random2.aneactu<=3)
+          {const target = {
+            id: i,     
+          };
+          stat8.push(target);
+        }
+        else if(random2.aneactu<=4)
+          {const target = {
+            id: i,     
+          };
+          stat9.push(target);
+        }
+        else
+          {const target = {
+            id: i,     
+          };
+          stat10.push(target);
+        }
+      }
+      }
+    }
+        setStat1(stat1.length);
+        setStat2(stat2.length);
+        setStat3(stat3.length);
+        setStat4(stat4.length);
+        setStat5(stat5.length);
+        setStat6(stat6.length);
+        setStat7(stat7.length);
+        setStat8(stat8.length);
+        setStat9(stat9.length);
+        setStat10(stat10.length);
+        setStat11(stat11.length);
+        setStat12(stat12.length);
+    
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+        };
       fetchRandomDoctovalide();
       fetchRandomDocto();
       fetchRandomEnse();
+      fetchstat();
   }, []);
 
   return (
@@ -264,8 +412,30 @@ function Main(props) {
         <Routing    
           pushMessageToSnackbar={pushMessageToSnackbar}
           
-          stat={stat}
-          setStat={setStat}
+          stat1={stat1}
+          setStat1={setStat1}
+          stat2={stat2}
+          setStat2={setStat2}
+          stat3={stat3}
+          setStat3={setStat3}
+          stat4={stat4}
+          setStat4={setStat4}
+          stat5={stat5}
+          setStat5={setStat5}
+          stat6={stat6}
+          setStat6={setStat6}
+          stat7={stat7}
+          setStat7={setStat7}
+          stat8={stat8}
+          setStat8={setStat8}
+          stat9={stat9}
+          setStat9={setStat9}
+          stat10={stat10}
+          setStat10={setStat10}
+          stat11={stat11}
+          setStat11={setStat11}
+          stat12={stat12}
+          setStat12={setStat12}
           selectStat={selectStat}
 
           adj={adj}

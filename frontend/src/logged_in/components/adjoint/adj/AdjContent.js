@@ -115,9 +115,18 @@ function AdjContent(props) {
      axios.get('http://localhost:5000/users/get-pdf', { responseType: 'blob' }))
      .then((res) => { 
       const pdfBlob = new Blob([res.data], { type: 'application/pdf' });
-      saveAs(pdfBlob, 'generatedDocument.pdf')
+      saveAs(pdfBlob, 'Fiche de Réinscription.pdf')
     }
-     )
+  );
+     axios.post('http://localhost:5000/users/creates-pdf',
+      row
+       ).then(() => 
+     axios.get('http://localhost:5000/users/gets-pdf', { responseType: 'blob' }))
+     .then((res) => { 
+      const pdfsBlob = new Blob([res.data], { type: 'application/pdf' });
+      saveAs(pdfsBlob, 'Attestation Inscription.pdf')
+    }
+     );
     },
     []
   );
@@ -128,31 +137,93 @@ function AdjContent(props) {
 
   const onChangeSearch = useCallback(
     (searchVal) => {
-
+      
       axios.get("http://localhost:5000/users/secdoc").then(function (response) {
         const doclist = response.data.doc;
+        const avlist = response.data.avnc;
+        const enslist = response.data.ens;
         const adj = [];
         for (let i = 0; i < doclist.length; i += 1) {
           const randomdoc = doclist[i];
-          if(userData.user.dept === randomdoc.dept){
-            if((doclist[i].nom.toLowerCase().includes(searchVal.toLowerCase())) || (doclist[i].prenom.toLowerCase().includes(searchVal.toLowerCase())) ){
+          if(userData.user.dept === randomdoc.dept)
+          {
+          for (let j = 0; j < avlist.length; j += 1) {     
+          const randomav = avlist[j]; 
+          if(randomdoc.username === randomav.usernamedoc)
+          {
+            if(randomav.status === true)
+            {
+              for (let z = 0; z < enslist.length; z += 1) {
+                const randomDens = enslist[z]; 
+                if ((randomdoc.dirnom === enslist[z].ensnom) && (randomdoc.dirprenom === enslist[z].ensprenom))
+                {  
+              for (let k = 0; k < enslist.length; k += 1) {
+                const randomCens = enslist[k]; 
+                if ((randomdoc.codirnom === enslist[k].ensnom) && (randomdoc.codirprenom === enslist[k].ensprenom))
+                         {
+              if((randomdoc.nom.toLowerCase().includes(searchVal.toLowerCase())) || (randomdoc.prenom.toLowerCase().includes(searchVal.toLowerCase())) ){
           const target = {
             id: i,
-            _id : randomdoc._id,
-            nom: randomdoc.nom,
-            prénom:  randomdoc.prenom,     
-            intit: randomdoc.intithe,
-            //anac: randomav.aneactu,
-            //datesou: randomav.datesout,
+          _id : randomdoc._id,
+          nom: randomdoc.nom,
+          prénom:  randomdoc.prenom,
+          ndc:  randomdoc.username,
+          mdp:  randomdoc.password,
+          da:   randomdoc.dateN,
+          li:   randomdoc.lieuN,
+          ad:   randomdoc.adresse,
+          nt:   randomdoc.numtel,     
+          email : randomdoc.mail,
+          ep:   randomdoc.etapro,
+          pr:   randomdoc.preci,
+          an:   randomdoc.anebac,
+          seb:   randomdoc.seribac,
+          nb:   randomdoc.numbac,
+          cd:   randomdoc.catdoc,
+          dd:   randomdoc.derdip,
+          prr:  randomdoc.precii,
+          sdd:  randomdoc.spederdip,
+          dad:  randomdoc.datederdip,
+          dap:  randomdoc.datepremdoc,
+          sd:   randomdoc.spedoc,
+          lr:   randomdoc.laborata,
+          intit: randomdoc.intithe,
+          ds:   randomdoc.datesout,
+          dn:   randomdoc.dirnom,
+          dp:   randomdoc.dirprenom,
+          dg:   randomdoc.dirgrade,
+          dmail:randomDens.ensmail,
+          dnum:randomDens.ensnumtel,
+          dlt:randomDens.enslaborata,
+          detab:randomDens.ensetabori,
+          cdmail:randomCens.ensmail,
+          cdnum:randomCens.ensnumtel,
+          cdlt:randomCens.enslaborata,
+          cdetab:randomCens.ensetabori,
+          cdn:  randomdoc.codirnom,
+          cdp:  randomdoc.codirprenom,
+          cdg:  randomdoc.dirgrade,    
+          anac: randomav.aneactu,
+          datesou: randomav.datesout,
+          etv: randomav.etav,
+          pctv: randomav.pctav,
+          dep:userData.user.dept,
           };
           adj.push(target);
-        } }
         }
-        setAdj(adj);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      } }
+    } }
+        } }
+      }
+
+  }
+
+    }
+    setAdj(adj);
+  })
+    .catch(function (error) {
+      console.log(error);
+    });
 
     },
     [setAdj]
@@ -171,7 +242,7 @@ function AdjContent(props) {
   return (
     <Paper>
       <Toolbar className={classes.toolbar}>
-        <Typography variant="h6">Liste des Doctorants</Typography>
+        <Typography variant="h6">Liste des Doctorants Activés</Typography>
         <SearchBar
           placeholder="Search..."
           value={searched}

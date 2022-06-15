@@ -1,16 +1,13 @@
 const mongoose = require('mongoose');
 
-const doctorantSchema = new mongoose.Schema({
-    
+const doctorantSchema = new mongoose.Schema({   
     nom: {
         type: String,
-        required : true,
-        
+        required : true,       
     },
     prenom: {
         type: String,
-        required : true,
-       
+        required : true,     
     },
     username: {
         type: String,
@@ -134,5 +131,19 @@ const doctorantSchema = new mongoose.Schema({
         ref: 'Enseignant',
     },
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = mongoose.model('Doctorant',doctorantSchema);

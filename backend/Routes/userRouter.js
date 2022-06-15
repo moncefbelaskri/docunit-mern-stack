@@ -10,6 +10,7 @@ const indx = require("../middleware/indx");
 const jwt = require('jsonwebtoken');
 const Adj = require('../model/Adj');
 const PdfTemplate = require('../model/PdfTemplate');
+const PdfTemplates = require('../model/PdfTemplates');
 
 /* pdf post api */
 
@@ -26,6 +27,23 @@ res.send(Promise.resolve())
 
 router.get('/get-pdf', (req, res) => {
   res.sendFile(`C:/Users/admin/pfehm/pfe-docunit/backend/filepdf.pdf`); 
+});
+
+/* pdf2 post api */
+
+router.post('/creates-pdf', (req, res) => {
+  pdf.create(PdfTemplates(req.body), {}).toFile('filespdf.pdf', (err) => {
+    if(err) {
+        return console.log('error');
+    }
+res.send(Promise.resolve())
+  });
+})
+
+/* pdf2 get api */
+
+router.get('/gets-pdf', (req, res) => {
+  res.sendFile(`C:/Users/admin/pfehm/pfe-docunit/backend/filespdf.pdf`); 
 });
 
  
@@ -479,8 +497,8 @@ router.delete("/deleteens", indx , async (req, res) => {
 router.get("/secdoc" , async (req, res) => {
   const doc = await Doctorant.find()
   const avnc = await Avancement.find();
-
-  return res.json({doc,avnc});
+  const ens = await Enseignant.find();
+  return res.json({doc,avnc,ens});
 });
 
 /* get ens for sec api */
@@ -639,12 +657,6 @@ router.get("/doc", auth , async (req, res) => {
 /* doc avnc api */
 router.post('/docavnc', async (req, res) => {
   try{
-    let {aneactu} = req.body;
-      // checking if the doc is already in the database
-    if (aneactu > 5)
-    {
-      return res.status(400).json({ msg: "inscription impossible" });
-    }
 
   const avnc = new Avancement(
     { usernamedoc : req.body.usernamedoc,
@@ -674,10 +686,6 @@ router.post('/docavnc', async (req, res) => {
     if (ExDoc)
     {
       return res.status(400).json({ msg: "avancement déjà validé" });
-    }
-    if (aneactu > 5)
-    {
-      return res.status(400).json({ msg: "inscription impossible" });
     }
       await Avancement.updateOne({ usernamedoc : req.params.username },
         { $set: {

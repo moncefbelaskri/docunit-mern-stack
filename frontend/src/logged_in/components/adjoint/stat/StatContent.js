@@ -1,4 +1,4 @@
-import React,{useState,useContext,Fragment} from "react";
+import React,{Fragment} from "react";
 import PropTypes from "prop-types";
 import {
   Typography,
@@ -6,18 +6,12 @@ import {
   Box,
   Grid,
   Card,
-  Button,
-  Paper,
-  Toolbar,
-  ListItemText,
   } from "@mui/material";
 import {Bar,Doughnut} from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto'
 import { Chart }            from 'react-chartjs-2'
 import withStyles from '@mui/styles/withStyles';
-import UserContext from "../../../../shared/components/UserContext";
 
-const axios = require('axios');
 
 
 const styles = (theme) => ({
@@ -48,136 +42,25 @@ const styles = (theme) => ({
 });
 
 
-
-
-
-
-
 function StatContent(props) {
   const {
-    classes,
+    stat1,
+    stat2,
+    stat3,
+    stat4,
+    stat5,
+    stat6,
+    stat7,
+    stat8,
+    stat9,
+    stat10,
+    stat11,
+    stat12,
   } = props;
-  const { userData } = useContext(UserContext);
 
-  const [stat1, setStat1] = useState([]);
-  const [stat2, setStat2] = useState([]);
-  const [stat3, setStat3] = useState([]);
-  const [stat4, setStat4] = useState([]);
-  const [stat5, setStat5] = useState([]);
-  const [stat6, setStat6] = useState([]);
-  const [stat7, setStat7] = useState([]);
-  const [stat8, setStat8] = useState([]);
-  const [stat9, setStat9] = useState([]);
-  const [stat10, setStat10] = useState([]);
-  const [stat11, setStat11] = useState([]);
-  const [stat12, setStat12] = useState([]);
+  
 
-  const fetchstat = async() => {
-    await axios.get("http://localhost:5000/users/secdoc").then(function (response) {
-    const statt1 = response.data.doc;
-    const statt2 = response.data.avnc;
-    const stat1 = [];
-    for (let i = 0; i < statt1.length; i += 1) {
-      const random2 = statt2[i];
-      const random1 = statt1[i];
-      if(userData.user.dept === random1.dept)
-        {
-      if(random1.catdoc === "lmd")
-      {
-        const target = {
-          id: i,     
-        };
-        stat11.push(target);
-
-        if(random2.aneactu<=1)
-      {const target = {
-        id: i,     
-      };
-      stat1.push(target);
-    }
-    else if(random2.aneactu<=2)
-      {const target = {
-        id: i,     
-      };
-      stat2.push(target);
-    }
-    else if(random2.aneactu<=3)
-      {const target = {
-        id: i,     
-      };
-      stat3.push(target);
-    }
-    else if(random2.aneactu<=4)
-      {const target = {
-        id: i,     
-      };
-      stat4.push(target);
-    }
-    else
-      {const target = {
-        id: i,     
-      };
-      stat5.push(target);
-    }
-  }
-  if(random1.catdoc === "sci")
-      {
-        const target = {
-        id: i,     
-      };
-      stat12.push(target);
-    
-        if(random2.aneactu<=1)
-      {const target = {
-        id: i,     
-      };
-      stat6.push(target);
-    }
-    else if(random2.aneactu<=2)
-      {const target = {
-        id: i,     
-      };
-      stat7.push(target);
-    }
-    else if(random2.aneactu<=3)
-      {const target = {
-        id: i,     
-      };
-      stat8.push(target);
-    }
-    else if(random2.aneactu<=4)
-      {const target = {
-        id: i,     
-      };
-      stat9.push(target);
-    }
-    else
-      {const target = {
-        id: i,     
-      };
-      stat10.push(target);
-    }
-  }
-  }
-}
-    setStat1(stat1);
-    setStat2(stat2);
-    setStat3(stat3);
-    setStat4(stat4);
-    setStat5(stat5);
-    setStat6(stat6);
-    setStat7(stat7);
-    setStat8(stat8);
-    setStat9(stat9);
-    setStat10(stat10);
-    setStat11(stat11);
-    setStat12(stat12);
-
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-    };
+ 
 
     const state1 = {
 
@@ -185,10 +68,10 @@ function StatContent(props) {
       datasets: [
         {
           label: 'Année',
-          backgroundColor: ['blue','red','green','yellow','orange'],
-          borderColor: ['blue','red','green','yellow','orange'],
-          data: [stat1.length, stat2.length, stat3.length, stat4.length, stat5.length],
-          barThickness: 1, 
+          backgroundColor: ['#3F51B5','#e53935','green','#FFD700','#FB8C00'],
+          borderColor: '#FFFFFF',
+          hoverBorderColor: '#FFFFFF',
+          data: [stat1, stat2, stat3, stat4, stat5],
         }
       ],
      
@@ -200,9 +83,10 @@ function StatContent(props) {
       datasets: [
         {
           label: 'Année',
-          backgroundColor: ['blue','red','green','yellow','orange'],
-          borderColor: ['blue','red','green','yellow','orange'],
-          data: [stat6.length, stat7.length, stat8.length, stat9.length, stat10.length]
+          backgroundColor: ['#3F51B5','#e53935','green','#FFD700','#FB8C00'],
+          borderColor: '#FFFFFF',
+          hoverBorderColor: '#FFFFFF',
+          data: [stat6, stat7, stat8, stat9, stat10]
         }
       ]
     }
@@ -215,36 +99,86 @@ function StatContent(props) {
       datasets: [
         {
           label: 'Type Doctorat',
-          backgroundColor: ['blue'],
-          borderColor: ['blue'],
-          data: [stat11.length, stat12.length],
+          backgroundColor: '#3F51B5',
+          borderColor: '#FFFFFF',
+          data: [stat11, stat12],
           barThickness: 50,
         }
       ]
     }
 
+    const device1 = [
+      {
+        title: '1ère Année',
+        value: stat1,
+        color: '#3F51B5'
+      },
+      {
+        title: '2ème Année',
+        value: stat2,
+        color: '#E53935'
+      },
+      {
+        title: '3ème Année',
+        value: stat3,
+        color: 'green'
+      },
+      {
+        title: '4ème Année',
+        value: stat4,
+        color: 'yellow'
+      },
+      {
+        title: '5ème Année',
+        value: stat5,
+        color: '#FB8C00'
+      }
+    ];
+
+    const device2 = [
+      {
+        title: '1ère Année',
+        value: stat6,
+        color: '#3F51B5'
+      },
+      {
+        title: '2ème Année',
+        value: stat7,
+        color: '#E53935'
+      },
+      {
+        title: '3ème Année',
+        value: stat8,
+        color: 'green'
+      },
+      {
+        title: '4ème Année',
+        value: stat9,
+        color: 'yellow'
+      },
+      {
+        title: '5ème Année',
+        value: stat10,
+        color: '#FB8C00'
+      }
+    ];
+
+    const device3 = [
+      {
+        title: 'LMD',
+        value: stat11,
+        color: '#3F51B5'
+      },
+      {
+        title: 'Classique',
+        value: stat12,
+        color: '#3F51B5'
+      }
+    ];
+
+
   return (
     <Fragment>
-<Paper >
-      <Toolbar className={classes.toolbar}>
-          <Box mr={2}>
-            <ListItemText
-              primary="Générer les Statistiques"
-            />
-          </Box>
-          <Button
-        variant="contained"
-        color="secondary"
-        onClick={fetchstat}
-        disableElevation
-      >
-        Statistiques
-      </Button>
-        </Toolbar>
-        </Paper>
-
-
-
     <Grid container spacing={3} mt={4}>
 
     <Grid item xs={12} md={4}>
@@ -260,9 +194,43 @@ function StatContent(props) {
     <Bar
       data={state3}
       width={'1000px'}
-      height={'1000px'}
+      height={'1070px'}
     />
     </Box>
+    <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            pt: 2
+          }}
+        >
+          {device3.map(({
+            color,
+            title,
+            value
+          }) => (
+            <Box
+              key={title}
+              sx={{
+                p: 1,
+                textAlign: 'center'
+              }}
+            >
+              <Typography
+                color="textPrimary"
+                variant="body1"
+              >
+                {title}
+              </Typography>
+              <Typography
+                style={{ color }}
+                variant="h4"
+              >
+                {value}
+              </Typography>
+            </Box>
+          ))}
+          </Box>
     </CardContent>
      </Card>
     </Grid>
@@ -280,6 +248,40 @@ function StatContent(props) {
       data={state1}
     />
     </Box>
+    <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            pt: 2
+          }}
+        >
+          {device1.map(({
+            color,
+            title,
+            value
+          }) => (
+            <Box
+              key={title}
+              sx={{
+                p: 1,
+                textAlign: 'center'
+              }}
+            >
+              <Typography
+                color="textPrimary"
+                variant="body1"
+              >
+                {title}
+              </Typography>
+              <Typography
+                style={{ color }}
+                variant="h4"
+              >
+                {value}
+              </Typography>
+            </Box>
+          ))}
+          </Box>
     </CardContent>
      </Card>
     </Grid>
@@ -298,6 +300,40 @@ function StatContent(props) {
       data={state2}
     />
     </Box>
+    <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            pt: 2
+          }}
+        >
+          {device2.map(({
+            color,
+            title,
+            value
+          }) => (
+            <Box
+              key={title}
+              sx={{
+                p: 1,
+                textAlign: 'center'
+              }}
+            >
+              <Typography
+                color="textPrimary"
+                variant="body1"
+              >
+                {title}
+              </Typography>
+              <Typography
+                style={{ color }}
+                variant="h4"
+              >
+                {value}
+              </Typography>
+            </Box>
+          ))}
+          </Box>
     </CardContent>
      </Card>
     </Grid>
